@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using Grasshopper.Kernel;
+using Grasshopper;
 
 namespace GH_Eto
 {
@@ -18,7 +19,7 @@ namespace GH_Eto
             get
             {
                 //Return a 24x24 pixel bitmap to represent this GHA library.
-                return null;
+                return Properties.Resources.cat_icon;
             }
         }
         public override string Description
@@ -52,6 +53,16 @@ namespace GH_Eto
                 //Return a string representing your preferred contact details.
                 return @"will.wang6@gmail.com";
             }
+        }
+    }
+
+    public class EDG_GHCategoryIcon : GH_AssemblyPriority
+    {
+        public override GH_LoadingInstruction PriorityLoad()
+        {
+            Instances.ComponentServer.AddCategoryIcon("Synapse", Properties.Resources.cat_icon);
+            Instances.ComponentServer.AddCategorySymbolName("Synapse", 'S');
+            return GH_LoadingInstruction.Proceed;
         }
     }
 }

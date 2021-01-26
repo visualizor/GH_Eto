@@ -36,22 +36,6 @@
       <HintPath>C:\Program Files\Rhino 7\System\Eto.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Eto.CodeEditor">
-      <HintPath>C:\Program Files\Rhino 7\System\Eto.CodeEditor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Eto.CodeEditor.WPF">
-      <HintPath>C:\Program Files\Rhino 7\System\Eto.CodeEditor.WPF.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Eto.Serialization.Xaml">
-      <HintPath>C:\Program Files\Rhino 7\System\Eto.Serialization.Xaml.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Eto.Wpf">
-      <HintPath>C:\Program Files\Rhino 7\System\Eto.Wpf.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -79,6 +63,20 @@
     <Compile Include="EtoWindow.cs" />
     <Compile Include="GH_EtoInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cat_icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -90,6 +88,7 @@
   -->
   <PropertyGroup>
     <PostBuildEvent>Copy "$(TargetPath)" "$(TargetDir)$(ProjectName).gha"
+Copy "$(TargetPath)" "C:\Users\wwang\AppData\Roaming\Grasshopper\Libraries\$(ProjectName).gha"
 Erase "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
