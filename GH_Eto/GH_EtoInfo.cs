@@ -11,7 +11,7 @@ namespace GH_Eto
         {
             get
             {
-                return "EtoGH";
+                return "Synapse";
             }
         }
         public override Bitmap Icon
@@ -27,7 +27,7 @@ namespace GH_Eto
             get
             {
                 //Return a short string describing the purpose of this GHA library.
-                return "make Eto accessible in Grasshopper visual scripting environment";
+                return "cross platform UI";
             }
         }
         public override Guid Id
@@ -56,7 +56,7 @@ namespace GH_Eto
         }
     }
 
-    public class EDG_GHCategoryIcon : GH_AssemblyPriority
+    public class GH_EtoCategoryIcon : GH_AssemblyPriority
     {
         public override GH_LoadingInstruction PriorityLoad()
         {

@@ -5,6 +5,7 @@ using Eto.Drawing;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using System.ComponentModel;
 
 using Grasshopper.Kernel;
 using Grasshopper;
@@ -31,32 +32,44 @@ namespace GH_Eto
         /// new tabs/panels will automatically be created.
         /// </summary>
         public EtoWindow()
-          : base("EtoWindow", "Window",
+          : base("SynapseWindow", "SWindow",
               "mian window",
-              "EtoGH", "Containers")
+              "Synapse", "Containers")
         {
         }
 
         internal Form EWindow = null;
+        private void EWClosing(object s, CancelEventArgs e)
+        {
+            EWindow = new Form()
+            {
+                Height = 200,
+                Width = 400,
+                Title = "an Eto window",
+            };
+        }
         protected void SetProp(object subject, string pname, object pval)
         {
             PropertyInfo prop = subject.GetType().GetProperty(pname);
             prop.SetValue(subject, pval);
         }
 
+
+
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddBooleanParameter("Show", "S", "true to show window", GH_ParamAccess.item, false);
+            pManager.AddBooleanParameter("Show", "S", "set on true to show window", GH_ParamAccess.item, false);
             pManager.AddTextParameter("Property", "P", "property of window to set", GH_ParamAccess.list);
             pManager[1].DataMapping = GH_DataMapping.Flatten;
             pManager[1].Optional = true;
             pManager.AddGenericParameter("Property Value", "V", "what to set to for the property", GH_ParamAccess.list);
             pManager[2].DataMapping = GH_DataMapping.Flatten;
             pManager[2].Optional = true;
-            pManager.AddGenericParameter("Contents", "C", "contents to include on this window", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Contents", "C", "contents to include on this window", GH_ParamAccess.list);
+            pManager[3].DataMapping = GH_DataMapping.Flatten;
             pManager[3].Optional = true;
         }
 
@@ -80,15 +93,8 @@ namespace GH_Eto
             bool param1 = DA.GetDataList(1, props);
             List<GH_ObjectWrapper> vals = new List<GH_ObjectWrapper>();
             bool param2 = DA.GetDataList(2, vals);
-            GH_ObjectWrapper ghobj = new GH_ObjectWrapper();
-            DA.GetData(3, ref ghobj);
-
-            if (param1 && param2)
-                if (props.Count!=vals.Count)
-                {
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "property list and value list must match");
-                    return;
-                }
+            List<GH_ObjectWrapper> contents = new List<GH_ObjectWrapper>();
+            DA.GetDataList(3, contents);
 
             if (EWindow == null)
                 EWindow = new Form()
@@ -97,35 +103,39 @@ namespace GH_Eto
                     Width = 400,
                     Title = "an Eto window",
                 };
-            else if (EWindow.Visible)
+            else if (EWindow.Visible && run)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "window already shown\n close first for changes");
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "open window cannot be modified");
                 return;
             }
+            EWindow.Closing += EWClosing;
 
             for (int i = 0; i < props.Count; i++)
             {
                 string n = props[i];
-                var val = vals[i].Value;
+                object val;
+                try { val = vals[i].Value; }
+                catch(ArgumentOutOfRangeException)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "P, V should correspond each other");
+                    return;
+                }
+
                 if (n=="Size" || n == "size")
                 {
-                    if (val is Size winsize)
+                    if (val is GH_Point pt)
                     {
+                        Size winsize = new Size((int)pt.Value.X, (int)pt.Value.Y);
                         SetProp(EWindow, "Size", winsize);
                     }
-                    else if (val is Point3d pt)
+                    else if (val is GH_Vector vec)
                     {
-                        winsize = new Size((int)pt.X, (int)pt.Y);
+                        Size winsize = new Size((int)vec.Value.X, (int)vec.Value.Y);
                         SetProp(EWindow, "Size", winsize);
                     }
-                    else if (val is Vector3d vec)
+                    else if (val is GH_String sstr)
                     {
-                        winsize = new Size((int)vec.X, (int)vec.Y);
-                        SetProp(EWindow, "Size", winsize);
-                    }
-                    else if (val is string sstr)
-                    {
-                        string[] xy = sstr.Split(',');
+                        string[] xy = sstr.Value.Split(',');
                         bool xp = int.TryParse(xy[0], out int x);
                         bool yp = int.TryParse(xy[1], out int y);
                         if (xp && yp)
@@ -141,12 +151,12 @@ namespace GH_Eto
                 }
                 else if (n=="Opacity" || n == "opacity" || n=="Transparency" || n=="transparency")
                 {
-                    if (val is double perct)
-                        SetProp(EWindow, "Opacity", perct);
-                    else if (val is string pstr)
+                    if (val is GH_Number perct)
+                        SetProp(EWindow, "Opacity", perct.Value);
+                    else if (val is GH_String pstr)
                     {
-                        if (double.TryParse(pstr, out perct))
-                            SetProp(EWindow, "Opacity", perct);
+                        if (double.TryParse(pstr.Value, out double pc))
+                            SetProp(EWindow, "Opacity", pc);
                     }
                     else
                         try { SetProp(EWindow, "Opacity", val); }
@@ -154,34 +164,34 @@ namespace GH_Eto
                 }
                 else if (n=="BackgroundColor" || n=="background color" || n=="backgroundcolor" || n=="backgroundColor" || n=="Color" || n == "color")
                 {
-                    if (val is Color clr)
-                        SetProp(EWindow, "BackgroundColor", clr);
-                    else if (val is string cstr)
+                    if (val is GH_Colour gclr)
+                        SetProp(EWindow, "BackgroundColor", Color.FromArgb(gclr.Value.ToArgb()));
+                    else if (val is GH_String cstr)
                     {
-                        if (Color.TryParse(cstr, out clr))
+                        if (Color.TryParse(cstr.Value, out Color clr))
                             SetProp(EWindow, "BackgroundColor", clr);
                     }
-                    else if (val is Point3d pt)
+                    else if (val is GH_Point pt)
                     {
-                        clr = Color.FromArgb((int)pt.X, (int)pt.Y, (int)pt.Z);
+                        Color clr = Color.FromArgb((int)pt.Value.X, (int)pt.Value.Y, (int)pt.Value.Z);
                         SetProp(EWindow, "BackgroundColor", clr);
                     }
-                    else if (val is Vector3d vec)
+                    else if (val is GH_Vector vec)
                     {
-                        clr = Color.FromArgb((int)vec.X, (int)vec.Y, (int)vec.Z);
+                        Color clr = Color.FromArgb((int)vec.Value.X, (int)vec.Value.Y, (int)vec.Value.Z);
                         SetProp(EWindow, "BackgroundColor", clr);
                     }
                     else if (val is IEnumerable<int> nums)
                     {
                         int[] c = nums.ToArray();
-                        if (c.Length==3)
+                        if (c.Length == 3)
                         {
-                            clr = Color.FromArgb(c[0], c[1], c[2]);
+                            Color clr = Color.FromArgb(c[0], c[1], c[2]);
                             SetProp(EWindow, "BackgroundColor", clr);
                         }
                         else if (c.Length == 4)
                         {
-                            clr = Color.FromArgb(c[0], c[1], c[2], c[3]);
+                            Color clr = Color.FromArgb(c[0], c[1], c[2], c[3]);
                             SetProp(EWindow, "BackgroundColor", clr);
                         }
                     }
@@ -191,30 +201,28 @@ namespace GH_Eto
                 }
                 else if (n=="Loaction" || n=="location" || n=="position" || n == "Position")
                 {
-                    if (val is Point3d pt)
-                        SetProp(EWindow, "Location", new Size((int)pt.X, (int)pt.Y));
-                    else if (val is Vector3d vec)
-                        SetProp(EWindow, "Location", new Size((int)vec.X, (int)vec.Y));
-                    else if (val is string locstr)
+                    if (val is GH_Point pt)
+                        SetProp(EWindow, "Location", new Eto.Drawing.Point((int)pt.Value.X, (int)pt.Value.Y));
+                    else if (val is GH_Vector vec)
+                        SetProp(EWindow, "Location", new Eto.Drawing.Point((int)vec.Value.X, (int)vec.Value.Y));
+                    else if (val is GH_String locstr)
                     {
-                        if (Point3d.TryParse(locstr, out pt))
-                            SetProp(EWindow, "Location", new Size((int)pt.X, (int)pt.Y));
+                        if (Point3d.TryParse(locstr.Value, out Point3d rhpt))
+                            SetProp(EWindow, "Location", new Eto.Drawing.Point((int)rhpt.X, (int)rhpt.Y));
                     }
-                    else if (val is Rhino.Geometry.Point rhpt)
-                        SetProp(EWindow, "Location", new Size((int)rhpt.Location.X, (int)rhpt.Location.Y);
                     else
                         try { SetProp(EWindow, "Location", val); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
                 else if (n == "Padding" || n == "padding")
                 {
-                    if (val is Point3d pt)
-                        SetProp(EWindow, "Padding", new Padding((int)pt.X, (int)pt.Y));
-                    else if (val is Vector3d vec)
-                        SetProp(EWindow, "Padding", new Padding((int)vec.X, (int)vec.Y));
-                    else if (val is string pstr)
+                    if (val is GH_Point pt)
+                        SetProp(EWindow, "Padding", new Padding((int)pt.Value.X, (int)pt.Value.Y));
+                    else if (val is GH_Vector vec)
+                        SetProp(EWindow, "Padding", new Padding((int)vec.Value.X, (int)vec.Value.Y));
+                    else if (val is GH_String pstr)
                     {
-                        string[] subs = pstr.Split(',');
+                        string[] subs = pstr.Value.Split(',');
                         if (subs.Length == 2)
                         {
                             bool i0 = int.TryParse(subs[0], out int n0);
@@ -240,17 +248,62 @@ namespace GH_Eto
                         else if (pd.Length==4)
                             SetProp(EWindow, "Padding", new Padding(pd[0], pd[1], pd[2], pd[3]));
                     }
-                    else if (val is int pad)
-                        SetProp(EWindow, "Padding", new Padding(pad));
+                    else if (val is GH_Integer pad)
+                        SetProp(EWindow, "Padding", new Padding(pad.Value));
                     else
                         try { SetProp(EWindow, "Padding", val); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
                 else if (n=="WindowStyle" || n=="window style")
                 {
-
+                    if (val is GH_Boolean b)
+                    {
+                        WindowStyle style;
+                        if (b.Value) style = WindowStyle.Default;
+                        else style = WindowStyle.None;
+                        SetProp(EWindow, "WindowStyle", style);
+                    }
+                    else if (val is GH_String bstr)
+                    {
+                        if (int.TryParse(bstr.Value, out int ws))
+                            switch (ws)
+                            {
+                                case 0:
+                                    SetProp(EWindow, "WindowStyle", WindowStyle.Default);
+                                    break;
+                                case 1:
+                                    SetProp(EWindow, "WindowStyle", WindowStyle.None);
+                                    break;
+                                case 2:
+                                    SetProp(EWindow, "WindowStyle", WindowStyle.Utility);
+                                    break;
+                                default:
+                                    break;
+                            }
+                    }
+                    else if (val is GH_Integer inum)
+                        SetProp(EWindow, "WindowStyle", inum.Value);
+                    else if (val is GH_Number num)
+                        SetProp(EWindow, "WindowStyle", (int)num.Value);
+                    else
+                        try { SetProp(EWindow, "WindowStyle", val); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
+                else
+                    try { SetProp(EWindow, n, val); }
+                    catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
             }
+
+            DynamicLayout bucket = new DynamicLayout();
+            foreach (GH_ObjectWrapper ghobj in contents)
+                if (ghobj.Value is Control ctrl)
+                    bucket.Add(ctrl);
+            EWindow.Content = bucket;
+
+            if (run)
+                EWindow.Show();
+            else
+                EWindow.Close();
         }
 
         /// <summary>
@@ -261,7 +314,7 @@ namespace GH_Eto
         {
             get
             {
-                return null;
+                return Properties.Resources.cat_icon;
             }
         }
 
