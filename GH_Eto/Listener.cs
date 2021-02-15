@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Eto.Forms;
 using Eto.Drawing;
 
@@ -21,26 +22,44 @@ namespace GH_Eto
         {
         }
 
+        private Guid[] srcs; // gh comp linked to this
         private bool listening = false;
-        private string listenee = "";
+        private List<string> listenees = new List<string>(); // eto comp this listens to
+        private Dictionary<string, bool> btnpress = new Dictionary<string, bool>(); // button press state
 
         private void Relisten(Control ctrl)
         {
             if (ctrl is Button btn)
             {
-                listenee = btn.ID;
-                btn.Click += OnBtnClick;
+                listenees.Add(btn.ID);
+                btnpress[btn.ID] = false;
+                btn.MouseDown += OnBtnDn;
+                btn.MouseUp += OnBtnUp;
             }
-            //TODO: insert more conditions
+            //TODO: insert more control types
         }
         private GH_ObjectWrapper GetCtrlValue(Control ctrl)
         {
-            //TODO: insert more conditions
-             return new GH_ObjectWrapper(true);
+            if (ctrl is Button btn)
+                return new GH_ObjectWrapper(btnpress[btn.ID]);
+            
+            return new GH_ObjectWrapper();
         }
 
-        public void OnBtnClick(object s, EventArgs e)
+        public void OnBtnDn(object s, EventArgs e)
         {
+            if (s is Button btn)
+                btnpress[btn.ID] = true;
+            else
+                return;
+            ExpireSolution(true);
+        }
+        public void OnBtnUp(object s, EventArgs e)
+        {
+            if (s is Button btn)
+                btnpress[btn.ID] = false;
+            else
+                return;
             ExpireSolution(true);
         }
 
@@ -49,7 +68,8 @@ namespace GH_Eto
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Synapse Object", "S", "what to listen to", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Synapse Object", "S", "what to listen to", GH_ParamAccess.tree);
+            pManager[0].Optional = true;
         }
 
         /// <summary>
@@ -57,7 +77,21 @@ namespace GH_Eto
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Value", "V", "the value heard", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Value", "V", "the value heard", GH_ParamAccess.tree);
+        }
+
+        protected override void BeforeSolveInstance()
+        {
+            foreach (var src in Params.Input[0].Sources)
+                if (!srcs.Contains(src.InstanceGuid))
+                {
+                    listenees.Clear();
+                    btnpress.Clear();
+                    listening = false;
+                    break;
+                }
+            base.BeforeSolveInstance();
+            srcs = Params.Input[0].Sources.Select(s => s.InstanceGuid).ToArray();
         }
 
         /// <summary>
@@ -66,28 +100,48 @@ namespace GH_Eto
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            GH_ObjectWrapper obj = new GH_ObjectWrapper();
-            DA.GetData(0, ref obj);
-            if (obj.Value is Control ctrl)
+            DA.GetDataTree(0, out GH_Structure<IGH_Goo> objtree);
+            if (objtree.IsEmpty)
             {
-                if (ctrl.ID != listenee)
-                {
-                    Relisten(ctrl);
-                    listening = true;
-                }
-                else if (!listening)
-                {
-                    listening = true;
-                }
-                else
-                {
-                    DA.SetData(0, GetCtrlValue(ctrl));
-                }
-            }
-            else
-            {
+                listenees.Clear();
+                btnpress.Clear();
                 listening = false;
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " No Eto components listened");
+                return;
             }
+
+            GH_Structure<GH_ObjectWrapper> outputs = new GH_Structure<GH_ObjectWrapper>();
+            for (int bi = 0; bi<objtree.Branches.Count; bi++)
+            {
+                List<IGH_Goo> objs = objtree.Branches[bi];
+                GH_Path pth = objtree.Paths[bi];
+                for (int ii=0; ii < objs.Count; ii++)
+                {
+                    GH_ObjectWrapper obj = objs[ii] as GH_ObjectWrapper;
+                    if (obj.Value is Control ctrl)
+                    {
+                        if (!listenees.Contains(ctrl.ID))
+                        {
+                            Relisten(ctrl);
+                            listening = true;
+                        }
+                        else if (!listening)
+                        {
+                            listening = true;
+                        }
+                        else
+                        {
+                            outputs.Append(GetCtrlValue(ctrl), pth);
+                        }
+                    }
+                    else
+                    {
+                        listening = false;
+                    }
+                }
+                
+            }
+            DA.SetDataTree(0, outputs);
         }
 
         /// <summary>
