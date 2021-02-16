@@ -6,6 +6,7 @@ using Eto.Drawing;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Grasshopper.Kernel.Data;
+using Rhino.Geometry;
 
 namespace GH_Eto
 {
@@ -48,13 +49,74 @@ namespace GH_Eto
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            List<string> pnames = new List<string>();
+            List<string> props = new List<string>();
             List<GH_ObjectWrapper> vals = new List<GH_ObjectWrapper>();
-            DA.GetDataList(0, pnames);
+            DA.GetDataList(0, props);
             DA.GetDataList(1, vals);
 
             Button btn = new Button() { Text = "a button", ID = Guid.NewGuid().ToString() };
-            // TODO: set properties
+            for (int i = 0; i< props.Count; i++)
+            {
+                string n = props[i];
+                object val;
+                try { val = vals[i].Value; }
+                catch (ArgumentOutOfRangeException)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "P, V should correspond each other");
+                    return;
+                }
+
+                // TODO: more intelligent properties. see github issue #7
+                if (n.ToLower() == "size")
+                {
+                    if (val is GH_Point pt)
+                    {
+                        Size winsize = new Size((int)pt.Value.X, (int)pt.Value.Y);
+                        Util.SetProp(btn, "Size", winsize);
+                    }
+                    else if (val is GH_Vector vec)
+                    {
+                        Size winsize = new Size((int)vec.Value.X, (int)vec.Value.Y);
+                        Util.SetProp(btn, "Size", winsize);
+                    }
+                    else if (val is GH_String sstr)
+                    {
+                        string[] xy = sstr.Value.Split(',');
+                        bool xp = int.TryParse(xy[0], out int x);
+                        bool yp = int.TryParse(xy[1], out int y);
+                        if (xp && yp)
+                            Util.SetProp(btn, "Size", new Size(x, y));
+                    }
+                    else
+                        try { Util.SetProp(btn, "Size", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                }
+                else if (n.ToLower() == "location" || n.ToLower() == "position")
+                {
+                    if (val is GH_Point pt)
+                        Util.SetProp(btn, "Location", new Eto.Drawing.Point((int)pt.Value.X, (int)pt.Value.Y));
+                    else if (val is GH_Vector vec)
+                        Util.SetProp(btn, "Location", new Eto.Drawing.Point((int)vec.Value.X, (int)vec.Value.Y));
+                    else if (val is GH_String locstr)
+                    {
+                        if (Point3d.TryParse(locstr.Value, out Point3d rhpt))
+                            Util.SetProp(btn, "Location", new Eto.Drawing.Point((int)rhpt.X, (int)rhpt.Y));
+                    }
+                    else
+                        try { Util.SetProp(btn, "Location", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                }
+                else if (n.ToLower() =="text" || n.ToLower() == "label")
+                {
+                    if (val is GH_String txt)
+                        Util.SetProp(btn, "Text", txt.Value);
+                    else
+                        Util.SetProp(btn, "Text", val.ToString());
+                }
+                else
+                    try { Util.SetProp(btn, n, Util.GetGooVal(val)); }
+                    catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+            }
 
             DA.SetData(0, new GH_ObjectWrapper(btn));
         }

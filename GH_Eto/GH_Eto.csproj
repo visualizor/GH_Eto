@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EtoButton.cs" />
+    <Compile Include="EtoTextBox.cs" />
     <Compile Include="EtoWindow.cs" />
     <Compile Include="GH_EtoInfo.cs" />
     <Compile Include="Listener.cs" />
@@ -70,6 +71,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

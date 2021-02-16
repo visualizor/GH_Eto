@@ -36,12 +36,19 @@ namespace GH_Eto
                 btn.MouseDown += OnBtnDn;
                 btn.MouseUp += OnBtnUp;
             }
+            else if (ctrl is TextBox tb)
+            {
+                listenees.Add(tb.ID);
+                tb.TextChanged += OnTBText;
+            }
             //TODO: insert more control types
         }
         private GH_ObjectWrapper GetCtrlValue(Control ctrl)
         {
             if (ctrl is Button btn)
                 return new GH_ObjectWrapper(btnpress[btn.ID]);
+            else if (ctrl is TextBox tb)
+                return new GH_ObjectWrapper(tb.Text);
             
             return new GH_ObjectWrapper();
         }
@@ -60,6 +67,10 @@ namespace GH_Eto
                 btnpress[btn.ID] = false;
             else
                 return;
+            ExpireSolution(true);
+        }
+        public void OnTBText(object s, EventArgs e)
+        {
             ExpireSolution(true);
         }
 
@@ -82,6 +93,7 @@ namespace GH_Eto
 
         protected override void BeforeSolveInstance()
         {
+            if (srcs is null) srcs = new Guid[] { };
             foreach (var src in Params.Input[0].Sources)
                 if (!srcs.Contains(src.InstanceGuid))
                 {

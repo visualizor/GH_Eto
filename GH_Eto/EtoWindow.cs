@@ -48,12 +48,6 @@ namespace GH_Eto
                 Title = "an Eto window",
             };
         }
-        protected void SetProp(object subject, string pname, object pval)
-        {
-            PropertyInfo prop = subject.GetType().GetProperty(pname);
-            prop.SetValue(subject, pval);
-        }
-
 
 
         /// <summary>
@@ -126,12 +120,12 @@ namespace GH_Eto
                     if (val is GH_Point pt)
                     {
                         Size winsize = new Size((int)pt.Value.X, (int)pt.Value.Y);
-                        SetProp(EWindow, "Size", winsize);
+                        Util.SetProp(EWindow, "Size", winsize);
                     }
                     else if (val is GH_Vector vec)
                     {
                         Size winsize = new Size((int)vec.Value.X, (int)vec.Value.Y);
-                        SetProp(EWindow, "Size", winsize);
+                        Util.SetProp(EWindow, "Size", winsize);
                     }
                     else if (val is GH_String sstr)
                     {
@@ -139,47 +133,47 @@ namespace GH_Eto
                         bool xp = int.TryParse(xy[0], out int x);
                         bool yp = int.TryParse(xy[1], out int y);
                         if (xp && yp)
-                            SetProp(EWindow, "Size", new Size(x,y));
+                            Util.SetProp(EWindow, "Size", new Size(x,y));
                     }
                     else
-                        try { SetProp(EWindow, "Size", val); }
+                        try { Util.SetProp(EWindow, "Size", Util.GetGooVal(val)); }
                         catch (Exception ex){ AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
                 else if (n=="Title" || n == "title")
                 {
-                    SetProp(EWindow, "Title", val.ToString());
+                    Util.SetProp(EWindow, "Title", Util.GetGooVal(val).ToString());
                 }
                 else if (n=="Opacity" || n == "opacity" || n=="Transparency" || n=="transparency")
                 {
                     if (val is GH_Number perct)
-                        SetProp(EWindow, "Opacity", perct.Value);
+                        Util.SetProp(EWindow, "Opacity", perct.Value);
                     else if (val is GH_String pstr)
                     {
                         if (double.TryParse(pstr.Value, out double pc))
-                            SetProp(EWindow, "Opacity", pc);
+                            Util.SetProp(EWindow, "Opacity", pc);
                     }
                     else
-                        try { SetProp(EWindow, "Opacity", val); }
+                        try { Util.SetProp(EWindow, "Opacity", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
                 else if (n=="BackgroundColor" || n=="background color" || n=="backgroundcolor" || n=="backgroundColor" || n=="Color" || n == "color")
                 {
                     if (val is GH_Colour gclr)
-                        SetProp(EWindow, "BackgroundColor", Color.FromArgb(gclr.Value.ToArgb()));
+                        Util.SetProp(EWindow, "BackgroundColor", Color.FromArgb(gclr.Value.ToArgb()));
                     else if (val is GH_String cstr)
                     {
                         if (Color.TryParse(cstr.Value, out Color clr))
-                            SetProp(EWindow, "BackgroundColor", clr);
+                            Util.SetProp(EWindow, "BackgroundColor", clr);
                     }
                     else if (val is GH_Point pt)
                     {
                         Color clr = Color.FromArgb((int)pt.Value.X, (int)pt.Value.Y, (int)pt.Value.Z);
-                        SetProp(EWindow, "BackgroundColor", clr);
+                        Util.SetProp(EWindow, "BackgroundColor", clr);
                     }
                     else if (val is GH_Vector vec)
                     {
                         Color clr = Color.FromArgb((int)vec.Value.X, (int)vec.Value.Y, (int)vec.Value.Z);
-                        SetProp(EWindow, "BackgroundColor", clr);
+                        Util.SetProp(EWindow, "BackgroundColor", clr);
                     }
                     else if (val is IEnumerable<int> nums)
                     {
@@ -187,39 +181,39 @@ namespace GH_Eto
                         if (c.Length == 3)
                         {
                             Color clr = Color.FromArgb(c[0], c[1], c[2]);
-                            SetProp(EWindow, "BackgroundColor", clr);
+                            Util.SetProp(EWindow, "BackgroundColor", clr);
                         }
                         else if (c.Length == 4)
                         {
                             Color clr = Color.FromArgb(c[0], c[1], c[2], c[3]);
-                            SetProp(EWindow, "BackgroundColor", clr);
+                            Util.SetProp(EWindow, "BackgroundColor", clr);
                         }
                     }
                     else
-                        try { SetProp(EWindow, "BackgroundColor", val); }
+                        try { Util.SetProp(EWindow, "BackgroundColor", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
                 else if (n=="Loaction" || n=="location" || n=="position" || n == "Position")
                 {
                     if (val is GH_Point pt)
-                        SetProp(EWindow, "Location", new Eto.Drawing.Point((int)pt.Value.X, (int)pt.Value.Y));
+                        Util.SetProp(EWindow, "Location", new Eto.Drawing.Point((int)pt.Value.X, (int)pt.Value.Y));
                     else if (val is GH_Vector vec)
-                        SetProp(EWindow, "Location", new Eto.Drawing.Point((int)vec.Value.X, (int)vec.Value.Y));
+                        Util.SetProp(EWindow, "Location", new Eto.Drawing.Point((int)vec.Value.X, (int)vec.Value.Y));
                     else if (val is GH_String locstr)
                     {
                         if (Point3d.TryParse(locstr.Value, out Point3d rhpt))
-                            SetProp(EWindow, "Location", new Eto.Drawing.Point((int)rhpt.X, (int)rhpt.Y));
+                            Util.SetProp(EWindow, "Location", new Eto.Drawing.Point((int)rhpt.X, (int)rhpt.Y));
                     }
                     else
-                        try { SetProp(EWindow, "Location", val); }
+                        try { Util.SetProp(EWindow, "Location", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
                 else if (n == "Padding" || n == "padding")
                 {
                     if (val is GH_Point pt)
-                        SetProp(EWindow, "Padding", new Padding((int)pt.Value.X, (int)pt.Value.Y));
+                        Util.SetProp(EWindow, "Padding", new Padding((int)pt.Value.X, (int)pt.Value.Y));
                     else if (val is GH_Vector vec)
-                        SetProp(EWindow, "Padding", new Padding((int)vec.Value.X, (int)vec.Value.Y));
+                        Util.SetProp(EWindow, "Padding", new Padding((int)vec.Value.X, (int)vec.Value.Y));
                     else if (val is GH_String pstr)
                     {
                         string[] subs = pstr.Value.Split(',');
@@ -228,7 +222,7 @@ namespace GH_Eto
                             bool i0 = int.TryParse(subs[0], out int n0);
                             bool i1 = int.TryParse(subs[1], out int n1);
                             if (i0 && i1)
-                                SetProp(EWindow, "Padding", new Padding(n0, n1));
+                                Util.SetProp(EWindow, "Padding", new Padding(n0, n1));
                         }
                         else if (subs.Length ==4)
                         {
@@ -237,21 +231,21 @@ namespace GH_Eto
                             bool i2 = int.TryParse(subs[2], out int n2);
                             bool i3 = int.TryParse(subs[3], out int n3);
                             if (i0 && i1 && i2 && i3)
-                                SetProp(EWindow, "Padding", new Padding(n0, n1, n2,n3));
+                                Util.SetProp(EWindow, "Padding", new Padding(n0, n1, n2,n3));
                         }
                     }
                     else if (val is IEnumerable<int> nums)
                     {
                         int[] pd = nums.ToArray();
                         if (pd.Length==2)
-                            SetProp(EWindow, "Padding", new Padding(pd[0], pd[1]));
+                            Util.SetProp(EWindow, "Padding", new Padding(pd[0], pd[1]));
                         else if (pd.Length==4)
-                            SetProp(EWindow, "Padding", new Padding(pd[0], pd[1], pd[2], pd[3]));
+                            Util.SetProp(EWindow, "Padding", new Padding(pd[0], pd[1], pd[2], pd[3]));
                     }
                     else if (val is GH_Integer pad)
-                        SetProp(EWindow, "Padding", new Padding(pad.Value));
+                        Util.SetProp(EWindow, "Padding", new Padding(pad.Value));
                     else
-                        try { SetProp(EWindow, "Padding", val); }
+                        try { Util.SetProp(EWindow, "Padding", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
                 else if (n=="WindowStyle" || n=="window style")
@@ -261,7 +255,7 @@ namespace GH_Eto
                         WindowStyle style;
                         if (b.Value) style = WindowStyle.Default;
                         else style = WindowStyle.None;
-                        SetProp(EWindow, "WindowStyle", style);
+                        Util.SetProp(EWindow, "WindowStyle", style);
                     }
                     else if (val is GH_String bstr)
                     {
@@ -269,35 +263,44 @@ namespace GH_Eto
                             switch (ws)
                             {
                                 case 0:
-                                    SetProp(EWindow, "WindowStyle", WindowStyle.Default);
+                                    Util.SetProp(EWindow, "WindowStyle", WindowStyle.Default);
                                     break;
                                 case 1:
-                                    SetProp(EWindow, "WindowStyle", WindowStyle.None);
+                                    Util.SetProp(EWindow, "WindowStyle", WindowStyle.None);
                                     break;
                                 case 2:
-                                    SetProp(EWindow, "WindowStyle", WindowStyle.Utility);
+                                    Util.SetProp(EWindow, "WindowStyle", WindowStyle.Utility);
                                     break;
                                 default:
                                     break;
                             }
                     }
                     else if (val is GH_Integer inum)
-                        SetProp(EWindow, "WindowStyle", inum.Value);
+                        Util.SetProp(EWindow, "WindowStyle", inum.Value);
                     else if (val is GH_Number num)
-                        SetProp(EWindow, "WindowStyle", (int)num.Value);
+                        Util.SetProp(EWindow, "WindowStyle", (int)num.Value);
                     else
-                        try { SetProp(EWindow, "WindowStyle", val); }
+                        try { Util.SetProp(EWindow, "WindowStyle", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
                 else
-                    try { SetProp(EWindow, n, val); }
+                    try { Util.SetProp(EWindow, n, Util.GetGooVal(val)); }
                     catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
             }
 
             DynamicLayout bucket = new DynamicLayout();
-            foreach (GH_ObjectWrapper ghobj in contents)
-                if (ghobj.Value is Control ctrl)
-                    bucket.Add(ctrl);
+            try
+            {
+                foreach (GH_ObjectWrapper ghobj in contents)
+                    if (ghobj.Value is Control ctrl)
+                        bucket.Add(ctrl);
+            }
+            catch (Exception ex)
+            {
+                if (ex is NullReferenceException || ex is ArgumentNullException)
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " invalid controls detected");
+                else throw ex;
+            }
             EWindow.Content = bucket;
 
             if (run)
