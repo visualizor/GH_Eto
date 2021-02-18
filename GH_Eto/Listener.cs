@@ -18,7 +18,7 @@ namespace Synapse
         public Listener()
           : base("Listener", "Value",
               "listen to a Synapse component",
-              "Synapse", "Containers")
+              "Synapse", "Parameters")
         {
         }
 
@@ -130,7 +130,12 @@ namespace Synapse
                 for (int ii=0; ii < objs.Count; ii++)
                 {
                     GH_ObjectWrapper obj = objs[ii] as GH_ObjectWrapper;
-                    if (obj.Value is Control ctrl)
+                    if (obj.Value is Container cont)
+                    {
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Synapse containers cannot be listened for values\n You can listen to controls inside them\n Try go upstream");
+                        continue;
+                    }
+                    else if (obj.Value is Control ctrl)
                     {
                         if (!listenees.Contains(ctrl.ID))
                         {
@@ -163,7 +168,7 @@ namespace Synapse
         {
             get
             {
-                return null;
+                return Properties.Resources.listen;
             }
         }
 

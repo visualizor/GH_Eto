@@ -15,7 +15,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoStackLO class.
         /// </summary>
         public EtoStackLO()
-          : base("SynapseStack", "Stack",
+          : base("SynapseStack", "SStack",
               "stack layout",
               "Synapse", "Containers")
         {
@@ -176,7 +176,7 @@ namespace Synapse
         {
             get
             {
-                return null;
+                return Properties.Resources.stack;
             }
         }
 

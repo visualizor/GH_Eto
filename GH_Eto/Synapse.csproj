@@ -84,6 +84,24 @@
   <ItemGroup>
     <None Include="Resources\cat_icon.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\btn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\color.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stack.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\listen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\numupdn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tb.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
