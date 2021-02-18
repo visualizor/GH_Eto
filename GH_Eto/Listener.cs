@@ -8,7 +8,7 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Grasshopper.Kernel.Data;
 
-namespace GH_Eto
+namespace Synapse
 {
     public class Listener : GH_Component
     {

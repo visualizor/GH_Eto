@@ -3,9 +3,9 @@ using System.Drawing;
 using Grasshopper.Kernel;
 using Grasshopper;
 
-namespace GH_Eto
+namespace Synapse
 {
-    public class GH_EtoInfo : GH_AssemblyInfo
+    public class SynapseInfo : GH_AssemblyInfo
     {
         public override string Name
         {

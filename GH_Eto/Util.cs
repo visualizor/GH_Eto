@@ -7,7 +7,7 @@ using Eto.Drawing;
 using Grasshopper.Kernel.Types;
 using Grasshopper.Kernel.Data;
 
-namespace GH_Eto
+namespace Synapse
 {
     public class Util
     {

@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Eto.Forms;
+
+using Eto.Drawing;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-using Grasshopper.Kernel.Data;
-using Grasshopper;
 
 namespace Synapse
 {
-    public class EtoTextBox : GH_Component
+    public class EtoColor : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the EtoTextBox class.
+        /// Initializes a new instance of the EtoColor class.
         /// </summary>
-        public EtoTextBox()
-          : base("SynapseTextBox", "STextBox",
-              "text box",
-              "Synapse", "Controls")
+        public EtoColor()
+          : base("SynapseColor", "SColor",
+              "color object for synapse controls",
+              "Synapse", "Parameters")
         {
         }
 
@@ -26,12 +24,10 @@ namespace Synapse
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Property", "P", "property to set", GH_ParamAccess.list);
-            pManager[0].DataMapping = GH_DataMapping.Flatten;
-            pManager[0].Optional = true;
-            pManager.AddGenericParameter("Property Value", "V", "values for the property", GH_ParamAccess.list);
-            pManager[1].DataMapping = GH_DataMapping.Flatten;
-            pManager[1].Optional = true;
+            pManager.AddIntegerParameter("Alpha", "A", "alpha channel", GH_ParamAccess.item, 255);
+            pManager.AddIntegerParameter("Red", "R", "red channel", GH_ParamAccess.item, 123);
+            pManager.AddIntegerParameter("Green", "G", "green channel", GH_ParamAccess.item, 231);
+            pManager.AddIntegerParameter("Blue", "B", "blue channel", GH_ParamAccess.item, 132);
         }
 
         /// <summary>
@@ -39,7 +35,7 @@ namespace Synapse
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Control", "C", "control to go into a container or the listener", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Color", "C", "synapse color object", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -48,14 +44,16 @@ namespace Synapse
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            List<string> pnames = new List<string>();
-            List<GH_ObjectWrapper> vals = new List<GH_ObjectWrapper>();
-            DA.GetDataList(0, pnames);
-            DA.GetDataList(1, vals);
+            int a = 255;
+            int r = 123;
+            int g = 231;
+            int b = 132;
+            DA.GetData(0, ref a);
+            DA.GetData(1, ref r);
+            DA.GetData(2, ref g);
+            DA.GetData(3, ref b);
 
-            TextBox tb = new TextBox() { ID = Guid.NewGuid().ToString() };
-            // TODO: add intelligent props, see github issue #2
-            DA.SetData(0, new GH_ObjectWrapper(tb));
+            DA.SetData(0, new GH_ObjectWrapper(Color.FromArgb(r, g, b, a)));
         }
 
         /// <summary>
@@ -65,6 +63,8 @@ namespace Synapse
         {
             get
             {
+                //You can add image files to your project resources and access them like this:
+                // return Resources.IconForThisComponent;
                 return null;
             }
         }
@@ -74,7 +74,7 @@ namespace Synapse
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("e468093c-8877-48e1-ae3a-a1f1f3d91706"); }
+            get { return new Guid("3450a1eb-9c23-4253-8a90-7d50df63ede3"); }
         }
     }
 }

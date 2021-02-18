@@ -8,7 +8,7 @@ using Grasshopper.Kernel.Types;
 using Grasshopper.Kernel.Data;
 using Rhino.Geometry;
 
-namespace GH_Eto
+namespace Synapse
 {
     public class EtoButton : GH_Component
     {

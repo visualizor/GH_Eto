@@ -7,7 +7,7 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Grasshopper.Kernel.Data;
 
-namespace GH_Eto
+namespace Synapse
 {
     public class EtoStackLO : GH_Component
     {
@@ -81,6 +81,80 @@ namespace GH_Eto
                     }
                     else
                         try { Util.SetProp(stack, "Spacing", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                }
+                else if (n.ToLower() == "orientation")
+                {
+                    if (val is GH_String ghstr)
+                        switch (ghstr.Value.ToLower())
+                        {
+                            case "horizontal":
+                                stack.Orientation = Orientation.Horizontal;
+                                break;
+                            case "vertical":
+                                stack.Orientation = Orientation.Vertical;
+                                break;
+                            case "h":
+                                stack.Orientation = Orientation.Horizontal;
+                                break;
+                            case "v":
+                                stack.Orientation = Orientation.Vertical;
+                                break;
+                            default:
+                                break;
+                        }
+                    else if (val is GH_Integer ghi)
+                    {
+                        if (ghi.Value == 0)
+                            stack.Orientation = Orientation.Horizontal;
+                        else if (ghi.Value == 1)
+                            stack.Orientation = Orientation.Vertical;
+                    }
+                    else if (val is Orientation or)
+                        stack.Orientation = or;
+                    else
+                        try { Util.SetProp(stack, "Orientation", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                }
+                else if (n.ToLower() == "padding")
+                {
+                    if (val is GH_Integer ghi)
+                        stack.Padding = new Padding(ghi.Value);
+                    else if (val is GH_Number ghn)
+                        stack.Padding = new Padding((int)ghn.Value);
+                    else if (val is GH_String ghstr)
+                    {
+                        string s = ghstr.Value;
+                        if (!s.Contains(","))
+                            try { Util.SetProp(stack, "Padding", Util.GetGooVal(val)); }
+                            catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                        else
+                        {
+                            string[] nums = s.Split(',');
+                            if (nums.Length == 2)
+                            {
+                                bool a = int.TryParse(nums[0], out int na);
+                                bool b = int.TryParse(nums[1], out int nb);
+                                if (a && b)
+                                    stack.Padding = new Padding(na, nb);
+                            }
+                            else if (nums.Length == 4)
+                            {
+                                bool a = int.TryParse(nums[0], out int na);
+                                bool b = int.TryParse(nums[1], out int nb);
+                                bool c = int.TryParse(nums[2], out int nc);
+                                bool d = int.TryParse(nums[3], out int nd);
+                                if (a && b && c && d)
+                                    stack.Padding = new Padding(na, nb, nc, nd);
+                            }
+                            else
+                                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " couldn't parse padding integers");
+                        }
+                    }
+                    else if (val is Padding pad)
+                        stack.Padding = pad;
+                    else
+                        try { Util.SetProp(stack, "Padding", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
                 else

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("GH_Eto")]
+[assembly: AssemblyTitle("Synapse")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("GH_Eto")]
+[assembly: AssemblyProduct("Synapse")]
 [assembly: AssemblyCopyright("Copyright ©Will Wang  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

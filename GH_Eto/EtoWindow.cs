@@ -20,7 +20,7 @@ using Rhino.Geometry;
 // folder in Grasshopper.
 // You can use the _GrasshopperDeveloperSettings Rhino command for that.
 
-namespace GH_Eto
+namespace Synapse
 {
     public class EtoWindow : GH_Component
     {
@@ -156,7 +156,7 @@ namespace GH_Eto
                         try { Util.SetProp(EWindow, "Opacity", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
-                else if (n=="BackgroundColor" || n=="background color" || n=="backgroundcolor" || n=="backgroundColor" || n=="Color" || n == "color")
+                else if (n.ToLower()=="backgroundcolor" || n.ToLower()=="color" || n.ToLower()=="background color")
                 {
                     if (val is GH_Colour gclr)
                         Util.SetProp(EWindow, "BackgroundColor", Color.FromArgb(gclr.Value.ToArgb()));
@@ -168,12 +168,12 @@ namespace GH_Eto
                     else if (val is GH_Point pt)
                     {
                         Color clr = Color.FromArgb((int)pt.Value.X, (int)pt.Value.Y, (int)pt.Value.Z);
-                        Util.SetProp(EWindow, "BackgroundColor", clr);
+                        EWindow.BackgroundColor = clr;
                     }
                     else if (val is GH_Vector vec)
                     {
                         Color clr = Color.FromArgb((int)vec.Value.X, (int)vec.Value.Y, (int)vec.Value.Z);
-                        Util.SetProp(EWindow, "BackgroundColor", clr);
+                        EWindow.BackgroundColor = clr;
                     }
                     else if (val is IEnumerable<int> nums)
                     {
@@ -181,14 +181,16 @@ namespace GH_Eto
                         if (c.Length == 3)
                         {
                             Color clr = Color.FromArgb(c[0], c[1], c[2]);
-                            Util.SetProp(EWindow, "BackgroundColor", clr);
+                            EWindow.BackgroundColor = clr;
                         }
                         else if (c.Length == 4)
                         {
                             Color clr = Color.FromArgb(c[0], c[1], c[2], c[3]);
-                            Util.SetProp(EWindow, "BackgroundColor", clr);
+                            EWindow.BackgroundColor = clr;
                         }
                     }
+                    else if (val is Color etoclr)
+                        EWindow.BackgroundColor = etoclr;
                     else
                         try { Util.SetProp(EWindow, "BackgroundColor", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
