@@ -48,14 +48,33 @@ namespace Synapse
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            List<string> pnames = new List<string>();
+            List<string> props = new List<string>();
             List<GH_ObjectWrapper> vals = new List<GH_ObjectWrapper>();
-            DA.GetDataList(0, pnames);
+            DA.GetDataList(0, props);
             DA.GetDataList(1, vals);
 
             TextBox tb = new TextBox() { ID = Guid.NewGuid().ToString() };
-            // TODO: add intelligent props, see github issue #2
-            DA.SetData(0, new GH_ObjectWrapper(tb));
+            
+            for (int i = 0; i < props.Count; i++)
+            {
+                string n = props[i];
+                object val;
+                try { val = vals[i].Value; }
+                catch (ArgumentOutOfRangeException)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "P, V should correspond each other");
+                    return;
+                }
+
+                if (n.ToLower() == "size")
+                {
+                    // TODO: add intelligent props, see github issue #2
+                }
+                else
+                    try { Util.SetProp(tb, n, Util.GetGooVal(val)); }
+                    catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+            }
+                DA.SetData(0, new GH_ObjectWrapper(tb));
         }
 
         /// <summary>
