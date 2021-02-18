@@ -106,12 +106,37 @@ namespace Synapse
                         try { Util.SetProp(btn, "Location", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
-                else if (n.ToLower() =="text" || n.ToLower() == "label")
+                else if (n.ToLower() == "text" || n.ToLower() == "label")
                 {
                     if (val is GH_String txt)
-                        Util.SetProp(btn, "Text", txt.Value);
+                        btn.Text = txt.Value;
                     else
-                        Util.SetProp(btn, "Text", val.ToString());
+                        btn.Text = val.ToString();
+                }
+                else if (n.ToLower() == "tooltip" || n.ToLower() == "tool tip" || n.ToLower() == "hint")
+                {
+                    if (val is GH_String txt)
+                        btn.ToolTip = txt.Value;
+                    else
+                        btn.ToolTip = val.ToString();
+                }
+                else if (n.ToLower() == "font" || n.ToLower() == "typeface")
+                {
+                    if (val is GH_String txt)
+                    {
+                        string fam = txt.Value;
+                        try
+                        {
+                            Font efont = new Font(fam, (float)8.25);
+                            btn.Font = efont;
+                        }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                    }
+                    else if (val is Font f)
+                        btn.Font = f;
+                    else
+                        try { Util.SetProp(btn, "Font", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
                 else
                     try { Util.SetProp(btn, n, Util.GetGooVal(val)); }

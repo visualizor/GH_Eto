@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="EtoButton.cs" />
     <Compile Include="EtoColor.cs" />
+    <Compile Include="EtoFont.cs" />
     <Compile Include="EtoStackLO.cs" />
     <Compile Include="EtoTextBox.cs" />
     <Compile Include="EtoWindow.cs" />
@@ -101,6 +102,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\tb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fonts.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
