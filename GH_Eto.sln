@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.1231
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GH_Eto", "GH_Eto\GH_Eto.csproj", "{7E97C848-B5B6-4593-96FB-D0D1EA60B367}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Synapse", "GH_Eto\Synapse.csproj", "{7E97C848-B5B6-4593-96FB-D0D1EA60B367}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
