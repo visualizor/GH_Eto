@@ -46,6 +46,11 @@ namespace Synapse
                 listenees.Add(cb.ID);
                 cb.CheckedChanged += OnCBCheck;
             }
+            else if (ctrl is Slider sl)
+            {
+                listenees.Add(sl.ID);
+                sl.ValueChanged += OnSlide;
+            }
         }
         private GH_ObjectWrapper GetCtrlValue(Control ctrl)
         {
@@ -55,7 +60,10 @@ namespace Synapse
                 return new GH_ObjectWrapper(tb.Text);
             else if (ctrl is CheckBox cb)
                 return new GH_ObjectWrapper(cb.Checked);
-            
+            else if (ctrl is Slider sl)
+                return new GH_ObjectWrapper(sl.Value);
+
+
             return new GH_ObjectWrapper();
         }
 
@@ -83,6 +91,12 @@ namespace Synapse
         {
             ExpireSolution(true);
         }
+        public void OnSlide(object s, EventArgs e)
+        {
+            Slider sl = s as Slider;
+            sl.ToolTip = sl.Value.ToString();
+            ExpireSolution(true);
+        }
 
         /// <summary>
         /// Registers all the input parameters for this component.
@@ -101,6 +115,9 @@ namespace Synapse
             pManager.AddGenericParameter("Value", "V", "the value heard", GH_ParamAccess.tree);
         }
 
+        /// <summary>
+        /// clear listenees and reset btn press states when wired to a different component
+        /// </summary>
         protected override void BeforeSolveInstance()
         {
             if (srcs is null) srcs = new Guid[] { };

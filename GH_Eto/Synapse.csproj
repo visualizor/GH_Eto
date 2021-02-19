@@ -65,6 +65,7 @@
     <Compile Include="EtoColor.cs" />
     <Compile Include="EtoFont.cs" />
     <Compile Include="EtoNumUD.cs" />
+    <Compile Include="EtoSlider.cs" />
     <Compile Include="EtoStackLO.cs" />
     <Compile Include="EtoTextBox.cs" />
     <Compile Include="EtoWindow.cs" />
