@@ -157,6 +157,30 @@ namespace Synapse
                         try { Util.SetProp(stack, "Padding", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
+                else if (n.ToLower() == "size")
+                {
+                    if (val is GH_Point pt)
+                    {
+                        Size size = new Size((int)pt.Value.X, (int)pt.Value.Y);
+                        stack.Size = size;
+                    }
+                    else if (val is GH_Vector vec)
+                    {
+                        Size size = new Size((int)vec.Value.X, (int)vec.Value.Y);
+                        stack.Size = size;
+                    }
+                    else if (val is GH_String sstr)
+                    {
+                        string[] xy = sstr.Value.Split(',');
+                        bool xp = int.TryParse(xy[0], out int x);
+                        bool yp = int.TryParse(xy[1], out int y);
+                        if (xp && yp)
+                            stack.Size = new Size(x, y);
+                    }
+                    else
+                        try { Util.SetProp(stack, "Size", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                }
                 else
                     try { Util.SetProp(stack, n, Util.GetGooVal(val)); }
                     catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }

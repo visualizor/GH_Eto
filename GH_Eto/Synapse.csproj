@@ -61,8 +61,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EtoButton.cs" />
+    <Compile Include="EtoCheckBox.cs" />
     <Compile Include="EtoColor.cs" />
     <Compile Include="EtoFont.cs" />
+    <Compile Include="EtoNumUD.cs" />
     <Compile Include="EtoStackLO.cs" />
     <Compile Include="EtoTextBox.cs" />
     <Compile Include="EtoWindow.cs" />
