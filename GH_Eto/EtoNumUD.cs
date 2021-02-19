@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using Eto.Forms;
+using Eto.Drawing;
 using Grasshopper.Kernel;
-using Rhino.Geometry;
+using Grasshopper.Kernel.Types;
 
 namespace Synapse
 {
@@ -45,6 +46,65 @@ namespace Synapse
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            List<string> props = new List<string>();
+            List<GH_ObjectWrapper> vals = new List<GH_ObjectWrapper>();
+            DA.GetDataList(0, props);
+            DA.GetDataList(1, vals);
+
+            NumericStepper numsteps = new NumericStepper() { ID = Guid.NewGuid().ToString(), };
+
+            for (int i = 0; i < props.Count; i++)
+            {
+                string n = props[i];
+                object val;
+                try { val = vals[i].Value; }
+                catch (ArgumentOutOfRangeException)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "P, V should correspond each other");
+                    return;
+                }
+
+                if (n.ToLower() == "minvalue" || n.ToLower() == "minimum")
+                {
+                    if (val is GH_String gstr)
+                    {
+                        if (double.TryParse(gstr.Value, out double sli))
+                            numsteps.MinValue = sli;
+                    }
+                    else if (val is GH_Integer gint)
+                        numsteps.MinValue = gint.Value;
+                    else if (val is GH_Number gnum)
+                        numsteps.MinValue = gnum.Value;
+                    else if (val is GH_Boolean gbool)
+                        if (gbool.Value)
+                            numsteps.MinValue = 1;
+                        else
+                            numsteps.MinValue = 0;
+                    else
+                        try { Util.SetProp(numsteps, "MinValue", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                }
+                else if (n.ToLower() == "maxvalue" || n.ToLower() == "maximum")
+                {
+                    if (val is GH_String gstr)
+                    {
+                        if (double.TryParse(gstr.Value, out double sli))
+                            numsteps.MaxValue = sli;
+                    }
+                    else if (val is GH_Integer gint)
+                        numsteps.MaxValue = gint.Value;
+                    else if (val is GH_Number gnum)
+                        numsteps.MaxValue = gnum.Value;
+                    else if (val is GH_Boolean gbool)
+                        if (gbool.Value)
+                            numsteps.MaxValue = 1;
+                        else
+                            numsteps.MaxValue = 0;
+                    else
+                        try { Util.SetProp(numsteps, "MaxValue", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                }
+            }
         }
 
         /// <summary>

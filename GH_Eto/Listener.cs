@@ -51,6 +51,11 @@ namespace Synapse
                 listenees.Add(sl.ID);
                 sl.ValueChanged += OnSlide;
             }
+            else if (ctrl is NumericStepper numsteps)
+            {
+                listenees.Add(numsteps.ID);
+                numsteps.ValueChanged += OnNumStepped;
+            }
         }
         private GH_ObjectWrapper GetCtrlValue(Control ctrl)
         {
@@ -62,7 +67,8 @@ namespace Synapse
                 return new GH_ObjectWrapper(cb.Checked);
             else if (ctrl is Slider sl)
                 return new GH_ObjectWrapper(sl.Value);
-
+            else if (ctrl is NumericStepper numsteps)
+                return new GH_ObjectWrapper(numsteps.Value);
 
             return new GH_ObjectWrapper();
         }
@@ -95,6 +101,10 @@ namespace Synapse
         {
             Slider sl = s as Slider;
             sl.ToolTip = sl.Value.ToString();
+            ExpireSolution(true);
+        }
+        public void OnNumStepped(object s, EventArgs e)
+        {
             ExpireSolution(true);
         }
 
