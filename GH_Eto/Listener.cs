@@ -41,7 +41,11 @@ namespace Synapse
                 listenees.Add(tb.ID);
                 tb.TextChanged += OnTBText;
             }
-            //TODO: insert more control types
+            else if (ctrl is CheckBox cb)
+            {
+                listenees.Add(cb.ID);
+                cb.CheckedChanged += OnCBCheck;
+            }
         }
         private GH_ObjectWrapper GetCtrlValue(Control ctrl)
         {
@@ -49,6 +53,8 @@ namespace Synapse
                 return new GH_ObjectWrapper(btnpress[btn.ID]);
             else if (ctrl is TextBox tb)
                 return new GH_ObjectWrapper(tb.Text);
+            else if (ctrl is CheckBox cb)
+                return new GH_ObjectWrapper(cb.Checked);
             
             return new GH_ObjectWrapper();
         }
@@ -70,6 +76,10 @@ namespace Synapse
             ExpireSolution(true);
         }
         public void OnTBText(object s, EventArgs e)
+        {
+            ExpireSolution(true);
+        }
+        public void OnCBCheck(object s, EventArgs e)
         {
             ExpireSolution(true);
         }
@@ -102,8 +112,8 @@ namespace Synapse
                     listening = false;
                     break;
                 }
-            base.BeforeSolveInstance();
             srcs = Params.Input[0].Sources.Select(s => s.InstanceGuid).ToArray();
+            base.BeforeSolveInstance();
         }
 
         /// <summary>
@@ -153,7 +163,7 @@ namespace Synapse
                     }
                     else
                     {
-                        listening = false;
+                        listening = false; // not a eto control
                     }
                 }
                 

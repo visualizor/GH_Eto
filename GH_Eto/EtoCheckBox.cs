@@ -53,7 +53,7 @@ namespace Synapse
             DA.GetDataList(0, props);
             DA.GetDataList(1, vals);
 
-            CheckBox cb = new CheckBox() { Text = "a checkbox" };
+            CheckBox cb = new CheckBox() { Text = "a checkbox", ID = Guid.NewGuid().ToString() };
 
             for (int i = 0; i < props.Count; i++)
             {
@@ -145,7 +145,7 @@ namespace Synapse
         {
             get
             {
-                return null;
+                return Properties.Resources.checkbox;
             }
         }
 

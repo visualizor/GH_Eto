@@ -23,6 +23,12 @@ namespace Synapse
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
+            pManager.AddTextParameter("Property", "P", "property to set", GH_ParamAccess.list);
+            pManager[0].DataMapping = GH_DataMapping.Flatten;
+            pManager[0].Optional = true;
+            pManager.AddGenericParameter("Property Value", "V", "values for the property", GH_ParamAccess.list);
+            pManager[1].DataMapping = GH_DataMapping.Flatten;
+            pManager[1].Optional = true;
         }
 
         /// <summary>
@@ -30,6 +36,7 @@ namespace Synapse
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
+            pManager.AddGenericParameter("Control", "C", "control to go into a container or the listener", GH_ParamAccess.item);
         }
 
         /// <summary>
