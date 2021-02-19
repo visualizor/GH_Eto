@@ -56,7 +56,7 @@ namespace Synapse
         }
     }
 
-    public class GH_EtoCategoryIcon : GH_AssemblyPriority
+    public class SynapseCategoryIcon : GH_AssemblyPriority
     {
         public override GH_LoadingInstruction PriorityLoad()
         {

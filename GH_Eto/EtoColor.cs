@@ -24,10 +24,10 @@ namespace Synapse
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddIntegerParameter("Alpha", "A", "alpha channel", GH_ParamAccess.item, 255);
-            pManager.AddIntegerParameter("Red", "R", "red channel", GH_ParamAccess.item, 123);
-            pManager.AddIntegerParameter("Green", "G", "green channel", GH_ParamAccess.item, 231);
-            pManager.AddIntegerParameter("Blue", "B", "blue channel", GH_ParamAccess.item, 132);
+            pManager.AddIntegerParameter("Alpha", "A", "alpha channel\nuse integer channels (0 - 255)", GH_ParamAccess.item, 255);
+            pManager.AddIntegerParameter("Red", "R", "red channel\nuse integer channels (0 - 255)", GH_ParamAccess.item, 123);
+            pManager.AddIntegerParameter("Green", "G", "green channel\nuse integer channels (0 - 255)", GH_ParamAccess.item, 231);
+            pManager.AddIntegerParameter("Blue", "B", "blue channel\nuse integer channels (0 - 255)", GH_ParamAccess.item, 132);
         }
 
         /// <summary>
