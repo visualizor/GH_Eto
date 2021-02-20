@@ -67,6 +67,7 @@
     <Compile Include="Containers\EtoStackLO.cs" />
     <Compile Include="Ctrls\EtoTextBox.cs" />
     <Compile Include="Containers\EtoWindow.cs" />
+    <Compile Include="Params\EtoTableXY.cs" />
     <Compile Include="SynapseInfo.cs" />
     <Compile Include="Params\ValQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -118,6 +119,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\table.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tablexy.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

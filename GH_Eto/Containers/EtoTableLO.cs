@@ -32,13 +32,13 @@ namespace Synapse.Containers
             pManager.AddGenericParameter("Property Value", "V", "values for the property", GH_ParamAccess.list);
             pManager[1].DataMapping = GH_DataMapping.Flatten;
             pManager[1].Optional = true;
-            pManager.AddGenericParameter("TableDimension", "D", "number of columns and row as x,y\nsuch as a text string \"2,3\"\nor a point object whose x and y coordinates are read", GH_ParamAccess.item);
             pManager.AddGenericParameter("Controls", "C", "controls to go into this container", GH_ParamAccess.list);
+            pManager[2].DataMapping = GH_DataMapping.Flatten;
+            pManager[2].Optional = true;
+            pManager.AddTextParameter("ControlLocation", "L", "zero-index location coordinates such as \"0,2\" meaning putting control on the first column third row\nuse a text string", GH_ParamAccess.list);
             pManager[3].DataMapping = GH_DataMapping.Flatten;
             pManager[3].Optional = true;
-            pManager.AddTextParameter("ControlLocation", "L", "zero-index location coordinates such as \"0,2\" meaning putting control on the first column third row", GH_ParamAccess.list);
-            pManager[4].DataMapping = GH_DataMapping.Flatten;
-            pManager[4].Optional = true;
+            pManager.AddGenericParameter("TableDimension", "D", "number of columns and row as x,y\nsuch as a text string \"2,3\"\nor a point object whose x and y coordinates are read", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -63,9 +63,9 @@ namespace Synapse.Containers
             List<string> locs = new List<string>();
             DA.GetDataList(0, props);
             DA.GetDataList(1, vals);
-            DA.GetData(2, ref sizeobj);
-            DA.GetDataList(3, ctrls);
-            DA.GetDataList(4, locs);
+            DA.GetData(4, ref sizeobj);
+            DA.GetDataList(2, ctrls);
+            DA.GetDataList(3, locs);
 
             TableLayout table;
             if (sizeobj.Value is GH_Point gpt)
@@ -73,7 +73,13 @@ namespace Synapse.Containers
             else if (sizeobj.Value is GH_String gstr)
             {
                 string[] xy = gstr.Value.Split(',');
-                table = new TableLayout(new Size(int.Parse(xy[0]), int.Parse(xy[1])));
+                try { table = new TableLayout(new Size(int.Parse(xy[0]), int.Parse(xy[1]))); }
+                catch (Exception ex)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, ex.Message);
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, " likely a bad format string input, try something like \"2,3\"");
+                    return;
+                }
             }
             else if (sizeobj.Value is GH_Vector gvec)
                 table = new TableLayout(new Size((int)gvec.Value.X, (int)gvec.Value.Y));
@@ -82,6 +88,13 @@ namespace Synapse.Containers
                 int x = (int)grec.Value.X.Length;
                 int y = (int)grec.Value.Y.Length;
                 table = new TableLayout(new Size(x, y));
+            }
+            else if (sizeobj.Value is Size s)
+                table = new TableLayout(s);
+            else
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, " Dimesion cannot be understood\n Try something like\"2,3\" as a text string");
+                return;
             }
 
             //set props
