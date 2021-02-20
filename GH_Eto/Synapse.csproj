@@ -57,6 +57,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Containers\EtoTableLO.cs" />
     <Compile Include="Ctrls\EtoButton.cs" />
     <Compile Include="Ctrls\EtoCheckBox.cs" />
     <Compile Include="Params\EtoColor.cs" />
@@ -111,6 +112,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\slider.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dynam.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\table.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

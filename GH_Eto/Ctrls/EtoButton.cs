@@ -89,6 +89,12 @@ namespace Synapse
                         if (xp && yp)
                             Util.SetProp(btn, "Size", new Size(x, y));
                     }
+                    else if (val is GH_Rectangle grec)
+                    {
+                        int x = (int)grec.Value.X.Length;
+                        int y = (int)grec.Value.Y.Length;
+                        btn.Size = new Size(x, y);
+                    }
                     else
                         try { Util.SetProp(btn, "Size", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }

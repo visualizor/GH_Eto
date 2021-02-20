@@ -198,6 +198,11 @@ namespace Synapse
             DA.SetDataTree(0, outputs);
         }
 
+        public override GH_Exposure Exposure
+        {
+            get { return GH_Exposure.secondary; }
+        }
+
         /// <summary>
         /// Provides an Icon for the component.
         /// </summary>

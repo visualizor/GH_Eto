@@ -71,7 +71,7 @@ namespace Synapse
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "P, V should correspond each other");
                     return;
                 }
-                // TODO: more properties, like orientation
+                
                 if (n.ToLower() == "spacing")
                 {
                     if (val is GH_Integer ghi)
@@ -178,6 +178,12 @@ namespace Synapse
                         bool yp = int.TryParse(xy[1], out int y);
                         if (xp && yp)
                             stack.Size = new Size(x, y);
+                    }
+                    else if (val is GH_Rectangle grec)
+                    {
+                        int x = (int)grec.Value.X.Length;
+                        int y = (int)grec.Value.Y.Length;
+                        stack.Size = new Size(x, y);
                     }
                     else
                         try { Util.SetProp(stack, "Size", Util.GetGooVal(val)); }

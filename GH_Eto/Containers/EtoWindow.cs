@@ -117,12 +117,12 @@ namespace Synapse
                     if (val is GH_Point pt)
                     {
                         Size winsize = new Size((int)pt.Value.X, (int)pt.Value.Y);
-                        Util.SetProp(EWindow, "Size", winsize);
+                        EWindow.Size = winsize;
                     }
                     else if (val is GH_Vector vec)
                     {
                         Size winsize = new Size((int)vec.Value.X, (int)vec.Value.Y);
-                        Util.SetProp(EWindow, "Size", winsize);
+                        EWindow.Size = winsize;
                     }
                     else if (val is GH_String sstr)
                     {
@@ -130,7 +130,13 @@ namespace Synapse
                         bool xp = int.TryParse(xy[0], out int x);
                         bool yp = int.TryParse(xy[1], out int y);
                         if (xp && yp)
-                            Util.SetProp(EWindow, "Size", new Size(x,y));
+                            EWindow.Size = new Size(x,y);
+                    }
+                    else if (val is GH_Rectangle grec)
+                    {
+                        int x = (int)grec.Value.X.Length;
+                        int y = (int)grec.Value.Y.Length;
+                        EWindow.Size = new Size(x, y);
                     }
                     else
                         try { Util.SetProp(EWindow, "Size", Util.GetGooVal(val)); }
