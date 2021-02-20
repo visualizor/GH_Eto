@@ -10,14 +10,14 @@ using Grasshopper.Kernel.Data;
 
 namespace Synapse
 {
-    public class Listener : GH_Component
+    public class ValQuery : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the Listener class.
         /// </summary>
-        public Listener()
-          : base("Listener", "Value",
-              "listen to a Synapse component",
+        public ValQuery()
+          : base("ValueQuery", "Value",
+              "queries a Synapse component for its value",
               "Synapse", "Parameters")
         {
         }

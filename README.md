@@ -34,10 +34,20 @@ Below are `Eto.Forms.Control` objects to add into Synapse. See [complete doc](ht
 
 Eto itself does not have many of the graphic features found in other GUI libraries likely due to its cross-platform conformity. Synapse further simplifies the pieces one has to assemble to get a working GUI. Minimalist functionality will take precedent over ornate design. 
 ## Installation
-This is your typical Grasshopper plugin. There should be a "Synapse.gha" file in the "bin" folder on this repo. Drop that into your Grasshopper library folder. On a PC it's `%AppData%/Roaming/Grasshopper/Libraries/`. On a Mac it's </insert path>. The "Synapse.gha" will also be published on [food4rhino.com](https://www.food4rhino.com/) as well as Rhino 7's package manager. 
+This is your typical Grasshopper plugin. There should be a "Synapse.gha" file in the "bin" folder on this repo. Drop that into your Grasshopper library folder. On a PC it's `%AppData%/Roaming/Grasshopper/Libraries/`. On a Mac it's <--insert path>. The "Synapse.gha" will also be published on [food4rhino.com](https://www.food4rhino.com/) as well as Rhino 7's package manager. 
 ## Starter's Guide
 #### Controls
-These are components that make the interactive elements themselves such as a button or an input text box. The component typically has two inputs, `Property` and `Property Value`. As long as the input lists match in number, the component will try to set the corresponding property of the `Eto.Forms` object. For example, try puting "Text" and "BackgroundColor" as text strings into the "P" of a `SynapseButton` component, "ThisButton" and "255,0,0" text strings into the "V". You should get a red button labeled "ThisButton". Controls like this button will need to go onto a window, which is a container.
+These are components that make the interactive elements themselves such as a button or an input text box. The component typically has two inputs, `Property` and `Property Value`. As long as the input lists match in number, the component will try to set the corresponding property of the `Eto.Forms` object.
+
+For example, try puting "Text" and "BackgroundColor" as text strings into the "P" of a `SynapseButton` component, "ThisButton" and "255,0,0" text strings into the "V". You should get a red button labeled "ThisButton". Controls like this button will need to go onto a window, which is a container.
 #### Containers
-These components collect interactive elements and render them to the user. Some of these themselves are interactive such as an expander. The "
+These components collect interactive elements and render them to the user. Some of these themselves are interactive such as an expander. The `SynapseWindow` component provides the overall window in which everything is placed. To get organized, it is recommended to first arrange individual interactive elements in an intermediate container before placing them on the main window.
+
+For example, you can create 5 buttons (must be five separate `SynapseButton` components as one component creates a unique object and it will only be rendered once in a container) and place them in a `SynapseStack`. The `SynapseStack` component has a "C" input in addition to the "P", "V" for controls. Afterwards, wire up this stack to the "C" of a `SynapseWindow` component. Put a toggle in the "S" input on `SynapseWindow` and it is ready to launch!
 #### Parameters
+These are mostly helper components working in tandem. Some `Eto.Forms` objects require special property types. A moderate level of intelligence will be built in for common inputs such as automatically converting the text string "255,0,0" to an Eto-recognized `Color` type. However, sometimes the user must provide the right kind of data type, which will be this category of components. For advanced users, see example file on how to script explicit property objects in GhPython. 
+
+A special component in parameters is the `ValueQuery` component. It listens to the any control element and reports its value. This is the critical link between the GUI a user create and the Grasshopper canvas. For example, when wired to a `SynapseTextBox`, this component will refresh and report the text content whenever a user types in the text box.
+#### Examples
+<--insert screencast>
+<--insert link to example .gh>
