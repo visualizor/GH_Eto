@@ -51,3 +51,5 @@ A special component in parameters is the `ValueQuery` component. It listens to t
 #### Examples
 <--insert screencast>
 <--insert link to example .gh>
+#### Editing
+For simplicity in working with Grasshopper's data flow model, Synapse components cannot be edited while they are shown. Each time the "S" is toggled to `true` on the `SynapseWindow`, a new `Eto.Forms.Form` is painted. If certain controls must be edited, the window must be closed first.
