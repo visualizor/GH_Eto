@@ -60,6 +60,7 @@
     <Compile Include="Containers\EtoTableLO.cs" />
     <Compile Include="Ctrls\EtoButton.cs" />
     <Compile Include="Ctrls\EtoCheckBox.cs" />
+    <Compile Include="Ctrls\EtoLabel.cs" />
     <Compile Include="Params\EtoColor.cs" />
     <Compile Include="Params\EtoFont.cs" />
     <Compile Include="Ctrls\EtoNumUD.cs" />
@@ -122,6 +123,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\tablexy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\label.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -24,7 +24,7 @@ Below are `Eto.Forms.Control` objects to add into Synapse. See [complete doc](ht
 #### Containers
 - [x] StackLayout
 - [ ] DynamicLayout
-- [ ] TableLayout
+- [x] TableLayout
 - [ ] Expander
 - [x] Form
 - [ ] GridView
@@ -44,6 +44,8 @@ For example, try puting "Text" and "BackgroundColor" as text strings into the "P
 These components collect interactive elements and render them to the user. Some of these themselves are interactive such as an expander. The `SynapseWindow` component provides the overall window in which everything is placed. To get organized, it is recommended to first arrange individual interactive elements in an intermediate container before placing them on the main window.
 
 For example, you can create 5 buttons (must be five separate `SynapseButton` components as one component creates a unique object and it will only be rendered once in a container) and place them in a `SynapseStack`. The `SynapseStack` component has a "C" input in addition to the "P", "V" for controls. Afterwards, wire up this stack to the "C" of a `SynapseWindow` component. Put a toggle in the "S" input on `SynapseWindow` and it is ready to launch!
+
+Containers can nest in other containers. One can use a single `SynapseTable` to house every interactive elements, or a combination of a collection of vertical `SynapseStacks` nested in a horizontal stack. Both would produce similar GUIs.
 #### Parameters
 These are mostly helper components working in tandem. Some `Eto.Forms` objects require special property types. A moderate level of intelligence will be built in for common inputs such as automatically converting the text string "255,0,0" to an Eto-recognized `Color` type. However, sometimes the user must provide the right kind of data type, which will be this category of components. For advanced users, see example file on how to script explicit property objects in GhPython. 
 
@@ -51,5 +53,5 @@ A special component in parameters is the `ValueQuery` component. It listens to t
 #### Examples
 <--insert screencast>
 <--insert link to example .gh>
-#### Editing
-For simplicity in working with Grasshopper's data flow model, Synapse components cannot be edited while they are shown. Each time the "S" is toggled to `true` on the `SynapseWindow`, a new `Eto.Forms.Form` is painted. If certain controls must be edited, the window must be closed first.
+#### Fixed Interface
+For simplicity in working with Grasshopper's data flow model, Synapse components cannot be edited while they are shown. Each time the "S" is toggled to `true` on the `SynapseWindow`, a new `Eto.Forms.Form` is painted. If certain controls must be edited, the window should be closed first. Therefore controls cannot be modified dynamically while the GUI is in use. 

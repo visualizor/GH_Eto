@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using Eto;
 using Eto.Forms;
 using Eto.Drawing;
 using System.Collections.Generic;
@@ -162,11 +161,11 @@ namespace Synapse
                 else if (n.ToLower()=="backgroundcolor" || n.ToLower()=="color" || n.ToLower()=="background color")
                 {
                     if (val is GH_Colour gclr)
-                        Util.SetProp(EWindow, "BackgroundColor", Color.FromArgb(gclr.Value.ToArgb()));
+                        EWindow.BackgroundColor = Color.FromArgb(gclr.Value.ToArgb());
                     else if (val is GH_String cstr)
                     {
                         if (Color.TryParse(cstr.Value, out Color clr))
-                            Util.SetProp(EWindow, "BackgroundColor", clr);
+                            EWindow.BackgroundColor = clr;
                     }
                     else if (val is GH_Point pt)
                     {
@@ -198,7 +197,7 @@ namespace Synapse
                         try { Util.SetProp(EWindow, "BackgroundColor", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
-                else if (n=="Loaction" || n=="location" || n=="position" || n == "Position")
+                else if (n.ToLower()=="location" || n.ToLower()=="position")
                 {
                     if (val is GH_Point pt)
                         Util.SetProp(EWindow, "Location", new Eto.Drawing.Point((int)pt.Value.X, (int)pt.Value.Y));
