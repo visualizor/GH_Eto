@@ -57,17 +57,17 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EtoButton.cs" />
-    <Compile Include="EtoCheckBox.cs" />
-    <Compile Include="EtoColor.cs" />
-    <Compile Include="EtoFont.cs" />
-    <Compile Include="EtoNumUD.cs" />
-    <Compile Include="EtoSlider.cs" />
-    <Compile Include="EtoStackLO.cs" />
-    <Compile Include="EtoTextBox.cs" />
-    <Compile Include="EtoWindow.cs" />
+    <Compile Include="Ctrls\EtoButton.cs" />
+    <Compile Include="Ctrls\EtoCheckBox.cs" />
+    <Compile Include="Params\EtoColor.cs" />
+    <Compile Include="Params\EtoFont.cs" />
+    <Compile Include="Ctrls\EtoNumUD.cs" />
+    <Compile Include="Ctrls\EtoSlider.cs" />
+    <Compile Include="Containers\EtoStackLO.cs" />
+    <Compile Include="Ctrls\EtoTextBox.cs" />
+    <Compile Include="Containers\EtoWindow.cs" />
     <Compile Include="SynapseInfo.cs" />
-    <Compile Include="ValQuery.cs" />
+    <Compile Include="Params\ValQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
