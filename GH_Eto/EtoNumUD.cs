@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Eto.Forms;
 using Eto.Drawing;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
+using System.Windows.Forms;
 
 namespace Synapse
 {
@@ -37,6 +39,7 @@ namespace Synapse
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
+            pManager.AddTextParameter("All Properties", "A", "list of all accessible properties", GH_ParamAccess.list);
             pManager.AddGenericParameter("Control", "C", "control to go into a container or the listener", GH_ParamAccess.item);
         }
 
@@ -104,7 +107,36 @@ namespace Synapse
                         try { Util.SetProp(numsteps, "MaxValue", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
+                else if (n.ToLower() == "increment" || n.ToLower() == "step")
+                {
+                    if (val is GH_Number gnum)
+                        numsteps.Increment = gnum.Value;
+                    else if (val is GH_Integer gint)
+                        numsteps.Increment = gint.Value;
+                    else if (val is GH_String gstr)
+                    {
+                        if (double.TryParse(gstr.Value, out double num))
+                            numsteps.Increment = num;
+                        else if (int.TryParse(gstr.Value, out int ii))
+                            numsteps.Increment = ii;
+                    }
+                    else
+                        try { Util.SetProp(numsteps, "Increment", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                }
+                else
+                    try { Util.SetProp(numsteps, n, Util.GetGooVal(val)); }
+                    catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
             }
+
+            DA.SetData(1, new GH_ObjectWrapper(numsteps));
+
+            PropertyInfo[] allprops = numsteps.GetType().GetProperties();
+            List<string> printouts = new List<string>();
+            foreach (PropertyInfo prop in allprops)
+                if (prop.CanWrite)
+                    printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
+            DA.SetDataList(0, printouts);
         }
 
         /// <summary>

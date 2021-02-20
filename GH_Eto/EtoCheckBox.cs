@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Linq;
 using Eto.Forms;
 using Eto.Drawing;
@@ -39,6 +40,7 @@ namespace Synapse
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
+            pManager.AddTextParameter("All Properties", "A", "list of all accessible properties", GH_ParamAccess.list);
             pManager.AddGenericParameter("Control", "C", "control to go into a container or the listener", GH_ParamAccess.item);
         }
 
@@ -135,7 +137,14 @@ namespace Synapse
                     catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
             }
 
-            DA.SetData(0, new GH_ObjectWrapper(cb));
+            DA.SetData(1, new GH_ObjectWrapper(cb));
+
+            PropertyInfo[] allprops = cb.GetType().GetProperties();
+            List<string> printouts = new List<string>();
+            foreach (PropertyInfo prop in allprops)
+                if (prop.CanWrite)
+                    printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
+            DA.SetDataList(0, printouts);
         }
 
         /// <summary>

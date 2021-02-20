@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Linq;
 using Eto.Forms;
 using Grasshopper.Kernel;
@@ -39,6 +40,7 @@ namespace Synapse
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
+            pManager.AddTextParameter("All Properties", "A", "list of all accessible properties", GH_ParamAccess.list);
             pManager.AddGenericParameter("Control", "C", "control to go into a container or the listener", GH_ParamAccess.item);
         }
 
@@ -74,7 +76,14 @@ namespace Synapse
                     try { Util.SetProp(tb, n, Util.GetGooVal(val)); }
                     catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
             }
-                DA.SetData(0, new GH_ObjectWrapper(tb));
+                DA.SetData(1, new GH_ObjectWrapper(tb));
+
+            PropertyInfo[] allprops = tb.GetType().GetProperties();
+            List<string> printouts = new List<string>();
+            foreach (PropertyInfo prop in allprops)
+                if (prop.CanWrite)
+                    printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
+            DA.SetDataList(0, printouts);
         }
 
         /// <summary>

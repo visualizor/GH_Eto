@@ -1,18 +1,14 @@
 ﻿using System;
+using System.Reflection;
 using Eto;
 using Eto.Forms;
 using Eto.Drawing;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Linq;
 using System.ComponentModel;
 
 using Grasshopper.Kernel;
-using Grasshopper;
-using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
-using Grasshopper.Kernel.Special;
-using Grasshopper.Kernel.Parameters;
 using Rhino.Geometry;
 
 // In order to load the result of this wizard, you will also need to
@@ -72,6 +68,7 @@ namespace Synapse
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
+            pManager.AddTextParameter("All Properties", "A", "list of all accessible properties", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -309,6 +306,13 @@ namespace Synapse
                 EWindow.Show();
             else
                 EWindow.Close();
+
+            PropertyInfo[] allprops = EWindow.GetType().GetProperties();
+            List<string> printouts = new List<string>();
+            foreach (PropertyInfo prop in allprops)
+                if (prop.CanWrite)
+                    printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
+            DA.SetDataList(0, printouts);
         }
 
         /// <summary>
