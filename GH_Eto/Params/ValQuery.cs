@@ -113,7 +113,7 @@ namespace Synapse
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Synapse Object", "S", "what to listen to", GH_ParamAccess.tree);
+            pManager.AddGenericParameter("Synapse Object", "C", "control object to query", GH_ParamAccess.tree);
             pManager[0].Optional = true;
         }
 
@@ -122,7 +122,7 @@ namespace Synapse
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Value", "V", "the value heard", GH_ParamAccess.tree);
+            pManager.AddGenericParameter("Value", "V", "the value passed from the control(s)", GH_ParamAccess.tree);
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace Synapse
                 listenees.Clear();
                 btnpress.Clear();
                 listening = false;
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " No Eto components listened");
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " No Synapse connected");
                 return;
             }
 

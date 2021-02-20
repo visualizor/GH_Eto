@@ -25,8 +25,8 @@ namespace Synapse
         {
             pManager.AddTextParameter("FontFamily", "F", "font family name", GH_ParamAccess.item, "Arial");
             pManager.AddNumberParameter("FontSize", "S", "font size", GH_ParamAccess.item, 8.25);
-            pManager.AddIntegerParameter("FontStyle", "L", "font style", GH_ParamAccess.item, 0);
-            pManager.AddIntegerParameter("Decoration", "D", "font decoration", GH_ParamAccess.item, 0);
+            pManager.AddIntegerParameter("FontStyle", "L", "font style\n0 - none\n1 - bold\n2 - italic", GH_ParamAccess.item, 0);
+            pManager.AddIntegerParameter("Decoration", "D", "font decoration\n0 - none\n1 - underline\n2 - strike through", GH_ParamAccess.item, 0);
             Param_Integer pint = pManager[2] as Param_Integer;
             pint.AddNamedValue("None", 0);
             pint.AddNamedValue("Bold", 1);
