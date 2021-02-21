@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Eto.Forms;
 using Eto.Drawing;
 using Grasshopper.Kernel;
@@ -144,18 +145,46 @@ namespace Synapse.Ctrls
                         try { Util.SetProp(label, "Size", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
-                else if (n.ToLower() == "location")
-                {
-
-                }
                 else if (n.ToLower() == "wrap" || n.ToLower() == "textwrap" || n.ToLower() == "wrapmode")
                 {
-
+                    if (val is GH_String gstr)
+                        switch (gstr.Value.ToLower())
+                        {
+                            case "none":
+                                label.Wrap = WrapMode.None;
+                                break;
+                            case "word":
+                                label.Wrap = WrapMode.Word;
+                                break;
+                            case "character":
+                                label.Wrap = WrapMode.Character;
+                                break;
+                            case "char":
+                                label.Wrap = WrapMode.Character;
+                                break;
+                            default:
+                                label.Wrap = WrapMode.None;
+                                break;
+                        }
+                    else if (val is GH_Integer gint)
+                        label.Wrap = (WrapMode)gint.Value;
+                    else
+                        try { Util.SetProp(label, "Wrap", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
                 else
                     try { Util.SetProp(label, n, Util.GetGooVal(val)); }
                     catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
             }
+
+            DA.SetData(1, new GH_ObjectWrapper(label));
+
+            PropertyInfo[] allprops = label.GetType().GetProperties();
+            List<string> printouts = new List<string>();
+            foreach (PropertyInfo prop in allprops)
+                if (prop.CanWrite)
+                    printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
+            DA.SetDataList(0, printouts);
         }
 
         /// <summary>
