@@ -75,11 +75,11 @@ namespace Synapse
                 if (n.ToLower() == "spacing")
                 {
                     if (val is GH_Integer ghi)
-                        Util.SetProp(stack, "Spacing", ghi.Value);
+                        stack.Spacing = ghi.Value;
                     else if (val is GH_String ghstr)
                     {
                         if (int.TryParse(ghstr.Value, out int v))
-                            Util.SetProp(stack, "Spacing", v);
+                            stack.Spacing = v;
                     }
                     else
                         try { Util.SetProp(stack, "Spacing", Util.GetGooVal(val)); }

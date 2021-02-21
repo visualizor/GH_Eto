@@ -67,6 +67,7 @@ namespace Synapse.Containers
             DA.GetDataList(2, ctrls);
             DA.GetDataList(3, locs);
 
+            // initialize with dimensions
             TableLayout table;
             if (sizeobj.Value is GH_Point gpt)
                 table = new TableLayout(new Size((int)gpt.Value.X, (int)gpt.Value.Y));
@@ -111,15 +112,97 @@ namespace Synapse.Containers
 
                 if (n.ToLower() == "size")
                 {
-
+                    if (val is GH_Point pt)
+                    {
+                        Size winsize = new Size((int)pt.Value.X, (int)pt.Value.Y);
+                        table.Size = winsize;
+                    }
+                    else if (val is GH_Vector vec)
+                    {
+                        Size winsize = new Size((int)vec.Value.X, (int)vec.Value.Y);
+                        table.Size = winsize;
+                    }
+                    else if (val is GH_String sstr)
+                    {
+                        string[] xy = sstr.Value.Split(',');
+                        bool xp = int.TryParse(xy[0], out int x);
+                        bool yp = int.TryParse(xy[1], out int y);
+                        if (xp && yp)
+                            table.Size = new Size(x, y);
+                        else
+                            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " text cannot be parsed as Size object");
+                    }
+                    else if (val is GH_Rectangle grec)
+                    {
+                        int x = (int)grec.Value.X.Length;
+                        int y = (int)grec.Value.Y.Length;
+                        table.Size = new Size(x, y);
+                    }
+                    else
+                        try { Util.SetProp(table, "Size", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
                 else if (n.ToLower() == "padding")
                 {
-
+                    if (val is GH_Integer ghi)
+                        table.Padding = ghi.Value;
+                    else if (val is GH_String gstr)
+                    {
+                        if (int.TryParse(gstr.Value, out int v))
+                            table.Padding = v;
+                        else if (gstr.Value.Split(',') is string[] xy)
+                        {
+                            if (xy.Length == 2)
+                            {
+                                bool i0 = int.TryParse(xy[0], out int n0);
+                                bool i1 = int.TryParse(xy[1], out int n1);
+                                if (i0 && i1)
+                                    table.Padding = new Padding(n0, n1);
+                                else
+                                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " text cannot be parsed as Padding object");
+                            }
+                            else if (xy.Length == 4)
+                            {
+                                bool i0 = int.TryParse(xy[0], out int n0);
+                                bool i1 = int.TryParse(xy[1], out int n1);
+                                bool i2 = int.TryParse(xy[2], out int n2);
+                                bool i3 = int.TryParse(xy[3], out int n3);
+                                if (i0 && i1 && i2 && i3)
+                                    table.Padding = new Padding(n0, n1, n2, n3);
+                                else
+                                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " text cannot be parsed as Padding object");
+                            }
+                        }
+                    }
+                    if (val is GH_Point pt)
+                        table.Padding = new Padding((int)pt.Value.X, (int)pt.Value.Y);
+                    else if (val is GH_Vector vec)
+                        table.Padding = new Padding((int)vec.Value.X, (int)vec.Value.Y);
+                    else
+                        try { Util.SetProp(table, "Padding", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
                 else if (n.ToLower() == "spacing")
                 {
-
+                    if (val is GH_Integer ghi)
+                        table.Spacing = new Size(ghi.Value, ghi.Value);
+                    else if (val is GH_String ghstr)
+                    {
+                        if (int.TryParse(ghstr.Value, out int v))
+                            table.Spacing = new Size(v, v);
+                        else if (ghstr.Value.Split(',') is string[] xy)
+                            if (int.TryParse(xy[0], out int x) && int.TryParse(xy[1], out int y))
+                                table.Spacing = new Size(x, y);
+                            else
+                                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " cannot parse text string into Size object");
+                        else
+                            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " cannot parse text string into Size object");
+                    }
+                    else if (val is GH_Number gnum)
+                        table.Spacing = new Size((int)gnum.Value, (int)gnum.Value);
+                    else
+                        try { Util.SetProp(table, "Spacing", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
                 else
                     try { Util.SetProp(table, n, Util.GetGooVal(val)); }

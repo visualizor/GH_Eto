@@ -111,7 +111,7 @@ namespace Synapse
                     return;
                 }
 
-                if (n=="Size" || n == "size")
+                if (n.ToLower() == "size")
                 {
                     if (val is GH_Point pt)
                     {
@@ -141,11 +141,11 @@ namespace Synapse
                         try { Util.SetProp(EWindow, "Size", Util.GetGooVal(val)); }
                         catch (Exception ex){ AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
-                else if (n=="Title" || n == "title")
+                else if (n.ToLower() == "title")
                 {
                     Util.SetProp(EWindow, "Title", Util.GetGooVal(val).ToString());
                 }
-                else if (n=="Opacity" || n == "opacity" || n=="Transparency" || n=="transparency")
+                else if (n.ToLower() == "opacity" || n.ToLower()=="transparency")
                 {
                     if (val is GH_Number perct)
                         Util.SetProp(EWindow, "Opacity", perct.Value);
@@ -212,7 +212,7 @@ namespace Synapse
                         try { Util.SetProp(EWindow, "Location", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
-                else if (n == "Padding" || n == "padding")
+                else if (n.ToLower() == "padding")
                 {
                     if (val is GH_Point pt)
                         Util.SetProp(EWindow, "Padding", new Padding((int)pt.Value.X, (int)pt.Value.Y));
