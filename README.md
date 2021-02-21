@@ -8,7 +8,7 @@ This plugin is meant to help not only build more intuitive GUIs with Grasshopper
 
 Below are `Eto.Forms.Control` objects to add into Synapse. See [complete doc](http://pages.picoe.ca/docs/api/html/R_Project_EtoForms.htm) for more information on each. 
 #### User controls
-- [ ] Label
+- [x] Label
 - [x] TextBox
 - [ ] MaskedTextBox
 - [x] Button
@@ -34,7 +34,7 @@ Below are `Eto.Forms.Control` objects to add into Synapse. See [complete doc](ht
 
 Eto itself does not have many of the graphic features found in other GUI libraries likely due to its cross-platform conformity. Synapse further simplifies the pieces one has to assemble to get a working GUI. Minimalist functionality will take precedent over ornate design. 
 ## Installation
-This is your typical Grasshopper plugin. There should be a "Synapse.gha" file in the "bin" folder on this repo. Drop that into your Grasshopper library folder. On a PC it's `%AppData%/Roaming/Grasshopper/Libraries/`. On a Mac it's <--insert path>. The "Synapse.gha" will also be published on [food4rhino.com](https://www.food4rhino.com/) as well as Rhino 7's package manager. 
+This is your typical Grasshopper plugin. Drop the ".gha" file into your Grasshopper library folder. On a PC it's `%AppData%/Roaming/Grasshopper/Libraries/`. On a Mac it's <--insert path>. The "Synapse.gha" is published on [food4rhino.com](https://www.food4rhino.com/) as well as Rhino 7's package manager. 
 ## Starter's Guide
 #### Controls
 These are components that make the interactive elements themselves such as a button or an input text box. The component typically has two inputs, `Property` and `Property Value`. As long as the input lists match in number, the component will try to set the corresponding property of the `Eto.Forms` object.
@@ -51,7 +51,7 @@ These are mostly helper components working in tandem. Some `Eto.Forms` objects r
 
 A special component in parameters is the `ValueQuery` component. It listens to the any control element and reports its value. This is the critical link between the GUI a user create and the Grasshopper canvas. For example, when wired to a `SynapseTextBox`, this component will refresh and report the text content whenever a user types in the text box.
 #### Examples
-<--insert screencast>
+A walkthrough of Synapse component and how they are set up can be found [here](https://www.youtube.com/embed/tbC_d84EmuU). Skip to about 3:30 mark for the actual Synapse set-up.
 <--insert link to example .gh>
 #### Fixed Interface
 For simplicity in working with Grasshopper's data flow model, Synapse components cannot be edited while they are shown. Each time the "S" is toggled to `true` on the `SynapseWindow`, a new `Eto.Forms.Form` is painted. If certain controls must be edited, the window should be closed first. Therefore controls cannot be modified dynamically while the GUI is in use. 
