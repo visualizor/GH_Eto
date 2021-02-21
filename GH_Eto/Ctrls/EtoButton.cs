@@ -146,6 +146,42 @@ namespace Synapse
                         try { Util.SetProp(btn, "Font", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
+                else if (n.ToLower()=="textcolor" || n.ToLower() == "fontcolor")
+                {
+                    if (val is GH_Colour gclr)
+                        btn.TextColor = Color.FromArgb(gclr.Value.ToArgb());
+                    else if (val is GH_String gstr)
+                    {
+                        if (Color.TryParse(gstr.Value, out Color clr))
+                            btn.TextColor = clr;
+                    }
+                    else if (val is GH_Point pt)
+                    {
+                        Color clr = Color.FromArgb((int)pt.Value.X, (int)pt.Value.Y, (int)pt.Value.Z);
+                        btn.TextColor = clr;
+                    }
+                    else if (val is GH_Vector vec)
+                    {
+                        Color clr = Color.FromArgb((int)vec.Value.X, (int)vec.Value.Y, (int)vec.Value.Z);
+                        btn.TextColor = clr;
+                    }
+                    else if (val is Color etoclr)
+                        btn.TextColor = etoclr;
+                    else
+                        try { Util.SetProp(btn, "TextColor", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                }
+                else if (n.ToLower() == "image")
+                {
+                    if (val is GH_String gstr)
+                    {
+                        Bitmap img = new Bitmap(gstr.Value);
+                        btn.Image = img;
+                    }
+                    else
+                        try { Util.SetProp(btn, "Image", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                }
                 else
                     try { Util.SetProp(btn, n, Util.GetGooVal(val)); }
                     catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }

@@ -84,17 +84,17 @@ namespace Synapse.Ctrls
                     else if (val is GH_Point pt)
                     {
                         Color clr = Color.FromArgb((int)pt.Value.X, (int)pt.Value.Y, (int)pt.Value.Z);
-                        label.BackgroundColor = clr;
+                        label.TextColor = clr;
                     }
                     else if (val is GH_Vector vec)
                     {
                         Color clr = Color.FromArgb((int)vec.Value.X, (int)vec.Value.Y, (int)vec.Value.Z);
-                        label.BackgroundColor = clr;
+                        label.TextColor = clr;
                     }
                     else if (val is Color etoclr)
-                        label.BackgroundColor = etoclr;
+                        label.TextColor = etoclr;
                     else
-                        try { Util.SetProp(label, "BackgroundColor", Util.GetGooVal(val)); }
+                        try { Util.SetProp(label, "TextColor", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
                 else if (n.ToLower() =="font" || n.ToLower() == "typeface")
