@@ -328,7 +328,7 @@ namespace Synapse
         {
             get
             {
-                return Properties.Resources.cat_icon;
+                return Properties.Resources.window;
             }
         }
 

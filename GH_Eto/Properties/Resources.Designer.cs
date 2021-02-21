@@ -73,16 +73,6 @@ namespace Synapse.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap cat_icon {
-            get {
-                object obj = ResourceManager.GetObject("cat_icon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap checkbox {
             get {
                 object obj = ResourceManager.GetObject("checkbox", resourceCulture);
@@ -153,6 +143,16 @@ namespace Synapse.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap plugin {
+            get {
+                object obj = ResourceManager.GetObject("plugin", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap slider {
             get {
                 object obj = ResourceManager.GetObject("slider", resourceCulture);
@@ -196,6 +196,16 @@ namespace Synapse.Properties {
         internal static System.Drawing.Bitmap tb {
             get {
                 object obj = ResourceManager.GetObject("tb", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap window {
+            get {
+                object obj = ResourceManager.GetObject("window", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -19,7 +19,7 @@ namespace Synapse
             get
             {
                 //Return a 24x24 pixel bitmap to represent this GHA library.
-                return Properties.Resources.cat_icon;
+                return Properties.Resources.plugin;
             }
         }
         public override string Description
@@ -60,7 +60,7 @@ namespace Synapse
     {
         public override GH_LoadingInstruction PriorityLoad()
         {
-            Instances.ComponentServer.AddCategoryIcon("Synapse", Properties.Resources.cat_icon);
+            Instances.ComponentServer.AddCategoryIcon("Synapse", Properties.Resources.plugin);
             Instances.ComponentServer.AddCategorySymbolName("Synapse", 'S');
             return GH_LoadingInstruction.Proceed;
         }
