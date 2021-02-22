@@ -32,7 +32,7 @@ namespace Synapse.Containers
             pManager.AddGenericParameter("Property Value", "V", "values for the property", GH_ParamAccess.list);
             pManager[1].DataMapping = GH_DataMapping.Flatten;
             pManager[1].Optional = true;
-            pManager.AddGenericParameter("Controls", "C", "controls to go into this container", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Controls", "C", "controls to go into this container\nprovide a position indices(L) for each item", GH_ParamAccess.list);
             pManager[2].DataMapping = GH_DataMapping.Flatten;
             pManager[2].Optional = true;
             pManager.AddTextParameter("ControlLocation", "L", "zero-index location coordinates such as \"0,2\" meaning putting control on the first column third row\nuse a text string", GH_ParamAccess.list);
@@ -174,7 +174,7 @@ namespace Synapse.Containers
                             }
                         }
                     }
-                    if (val is GH_Point pt)
+                    else if (val is GH_Point pt)
                         table.Padding = new Padding((int)pt.Value.X, (int)pt.Value.Y);
                     else if (val is GH_Vector vec)
                         table.Padding = new Padding((int)vec.Value.X, (int)vec.Value.Y);

@@ -5,8 +5,7 @@ using System.Linq;
 using Eto.Forms;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-using Grasshopper.Kernel.Data;
-using Grasshopper;
+using Eto.Drawing;
 
 namespace Synapse
 {
@@ -70,7 +69,83 @@ namespace Synapse
 
                 if (n.ToLower() == "size")
                 {
-                    // TODO: add intelligent props, see github issue #2
+                    if (val is GH_Point pt)
+                    {
+                        Size size = new Size((int)pt.Value.X, (int)pt.Value.Y);
+                        tb.Size = size;
+                    }
+                    else if (val is GH_Vector vec)
+                    {
+                        Size size = new Size((int)vec.Value.X, (int)vec.Value.Y);
+                        tb.Size = size;
+                    }
+                    else if (val is GH_String sstr)
+                    {
+                        string[] xy = sstr.Value.Split(',');
+                        bool xp = int.TryParse(xy[0], out int x);
+                        bool yp = int.TryParse(xy[1], out int y);
+                        if (xp && yp)
+                            tb.Size = new Size(x, y);
+                    }
+                    else if (val is GH_Rectangle grec)
+                    {
+                        int x = (int)grec.Value.X.Length;
+                        int y = (int)grec.Value.Y.Length;
+                        tb.Size = new Size(x, y);
+                    }
+                    else
+                        try { Util.SetProp(tb, "Size", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                }
+                else if (n.ToLower() == "placeholdertext" || n.ToLower() == "placeholder" || n.ToLower() == "hint")
+                {
+                    if (val is GH_String gstr)
+                        tb.PlaceholderText = gstr.Value;
+                    else
+                        tb.PlaceholderText = val.ToString();
+                }
+                else if (n.ToLower() == "textcolor" || n.ToLower() == "fontcolor")
+                {
+                    if (val is GH_Colour gclr)
+                        tb.TextColor = Color.FromArgb(gclr.Value.ToArgb());
+                    else if (val is GH_String gstr)
+                    {
+                        if (Color.TryParse(gstr.Value, out Color clr))
+                            tb.TextColor = clr;
+                    }
+                    else if (val is GH_Point pt)
+                    {
+                        Color clr = Color.FromArgb((int)pt.Value.X, (int)pt.Value.Y, (int)pt.Value.Z);
+                        tb.TextColor = clr;
+                    }
+                    else if (val is GH_Vector vec)
+                    {
+                        Color clr = Color.FromArgb((int)vec.Value.X, (int)vec.Value.Y, (int)vec.Value.Z);
+                        tb.TextColor = clr;
+                    }
+                    else if (val is Color etoclr)
+                        tb.TextColor = etoclr;
+                    else
+                        try { Util.SetProp(tb, "TextColor", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                }
+                else if (n.ToLower() == "font" || n.ToLower() == "typeface")
+                {
+                    if (val is GH_String txt)
+                    {
+                        string fam = txt.Value;
+                        try
+                        {
+                            Font efont = new Font(fam, (float)8.25);
+                            tb.Font = efont;
+                        }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                    }
+                    else if (val is Font f)
+                        tb.Font = f;
+                    else
+                        try { Util.SetProp(tb, "Font", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
                 else
                     try { Util.SetProp(tb, n, Util.GetGooVal(val)); }

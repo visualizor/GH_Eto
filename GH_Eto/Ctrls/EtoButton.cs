@@ -68,18 +68,17 @@ namespace Synapse
                     return;
                 }
 
-                // TODO: more intelligent properties. see github issue #7
                 if (n.ToLower() == "size")
                 {
                     if (val is GH_Point pt)
                     {
-                        Size winsize = new Size((int)pt.Value.X, (int)pt.Value.Y);
-                        Util.SetProp(btn, "Size", winsize);
+                        Size size = new Size((int)pt.Value.X, (int)pt.Value.Y);
+                        btn.Size = size;
                     }
                     else if (val is GH_Vector vec)
                     {
-                        Size winsize = new Size((int)vec.Value.X, (int)vec.Value.Y);
-                        Util.SetProp(btn, "Size", winsize);
+                        Size size = new Size((int)vec.Value.X, (int)vec.Value.Y);
+                        btn.Size = size;
                     }
                     else if (val is GH_String sstr)
                     {
@@ -87,7 +86,7 @@ namespace Synapse
                         bool xp = int.TryParse(xy[0], out int x);
                         bool yp = int.TryParse(xy[1], out int y);
                         if (xp && yp)
-                            Util.SetProp(btn, "Size", new Size(x, y));
+                            btn.Size = new Size(x, y);
                     }
                     else if (val is GH_Rectangle grec)
                     {
@@ -180,6 +179,40 @@ namespace Synapse
                     }
                     else
                         try { Util.SetProp(btn, "Image", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                }
+                else if (n.ToLower()=="imageposition" || n.ToLower() == "imageplacement")
+                {
+                    if (val is GH_String gstr)
+                        switch (gstr.Value.ToLower())
+                        {
+                            case "left":
+                                btn.ImagePosition = ButtonImagePosition.Left;
+                                break;
+                            case "right":
+                                btn.ImagePosition = ButtonImagePosition.Right;
+                                break;
+                            case "above":
+                                btn.ImagePosition = ButtonImagePosition.Above;
+                                break;
+                            case "below":
+                                btn.ImagePosition = ButtonImagePosition.Below;
+                                break;
+                            case "overlay":
+                                btn.ImagePosition = ButtonImagePosition.Overlay;
+                                break;
+                            case "overlap":
+                                btn.ImagePosition = ButtonImagePosition.Overlay;
+                                break;
+                            default:
+                                btn.ImagePosition = ButtonImagePosition.Left;
+                                break;
+                        }
+                    else if (val is GH_Integer gint)
+                        try { btn.ImagePosition = (ButtonImagePosition)gint.Value; }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Error, ex.Message); }
+                    else
+                        try { Util.SetProp(btn, "ImagePosition", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
                 else

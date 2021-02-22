@@ -5,10 +5,11 @@ using Eto.Drawing;
 using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel;
-
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
+using System.Windows.Forms;
+using GH_IO.Serialization;
 
 // In order to load the result of this wizard, you will also need to
 // add the output bin/ folder of this project to the list of loaded
@@ -33,17 +34,34 @@ namespace Synapse
         {
         }
 
-        internal Form EWindow = null;
+        internal Eto.Forms.Form EWindow = null;
         private void EWClosing(object s, CancelEventArgs e)
         {
-            EWindow = new Form()
+            EWindow = new Eto.Forms.Form()
             {
                 Height = 200,
                 Width = 400,
                 Title = "an Eto window",
             };
         }
+        internal bool ctrlfill = false;
 
+        private void OnFill(object s, EventArgs e)
+        {
+            ctrlfill = !ctrlfill;
+            ExpireSolution(false);
+        }
+        public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
+        {
+            base.AppendAdditionalMenuItems(menu);
+            try
+            {
+                ToolStripMenuItem i = menu.Items.Add("Fill Window", null, OnFill) as ToolStripMenuItem;
+                i.ToolTipText = "check to have all controls fill to the border of this window";
+                i.Checked = ctrlfill;
+            }
+            catch { }
+        }
 
         /// <summary>
         /// Registers all the input parameters for this component.
@@ -87,7 +105,7 @@ namespace Synapse
             DA.GetDataList(3, contents);
 
             if (EWindow == null)
-                EWindow = new Form()
+                EWindow = new Eto.Forms.Form()
                 {
                     Height = 200,
                     Width = 400,
@@ -215,9 +233,9 @@ namespace Synapse
                 else if (n.ToLower() == "padding")
                 {
                     if (val is GH_Point pt)
-                        Util.SetProp(EWindow, "Padding", new Padding((int)pt.Value.X, (int)pt.Value.Y));
+                        Util.SetProp(EWindow, "Padding", new Eto.Drawing.Padding((int)pt.Value.X, (int)pt.Value.Y));
                     else if (val is GH_Vector vec)
-                        Util.SetProp(EWindow, "Padding", new Padding((int)vec.Value.X, (int)vec.Value.Y));
+                        Util.SetProp(EWindow, "Padding", new Eto.Drawing.Padding((int)vec.Value.X, (int)vec.Value.Y));
                     else if (val is GH_String pstr)
                     {
                         string[] subs = pstr.Value.Split(',');
@@ -226,7 +244,7 @@ namespace Synapse
                             bool i0 = int.TryParse(subs[0], out int n0);
                             bool i1 = int.TryParse(subs[1], out int n1);
                             if (i0 && i1)
-                                Util.SetProp(EWindow, "Padding", new Padding(n0, n1));
+                                Util.SetProp(EWindow, "Padding", new Eto.Drawing.Padding(n0, n1));
                         }
                         else if (subs.Length ==4)
                         {
@@ -235,19 +253,11 @@ namespace Synapse
                             bool i2 = int.TryParse(subs[2], out int n2);
                             bool i3 = int.TryParse(subs[3], out int n3);
                             if (i0 && i1 && i2 && i3)
-                                Util.SetProp(EWindow, "Padding", new Padding(n0, n1, n2,n3));
+                                Util.SetProp(EWindow, "Padding", new Eto.Drawing.Padding(n0, n1, n2,n3));
                         }
                     }
-                    else if (val is IEnumerable<int> nums)
-                    {
-                        int[] pd = nums.ToArray();
-                        if (pd.Length==2)
-                            Util.SetProp(EWindow, "Padding", new Padding(pd[0], pd[1]));
-                        else if (pd.Length==4)
-                            Util.SetProp(EWindow, "Padding", new Padding(pd[0], pd[1], pd[2], pd[3]));
-                    }
                     else if (val is GH_Integer pad)
-                        Util.SetProp(EWindow, "Padding", new Padding(pad.Value));
+                        Util.SetProp(EWindow, "Padding", new Eto.Drawing.Padding(pad.Value));
                     else
                         try { Util.SetProp(EWindow, "Padding", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
@@ -296,8 +306,11 @@ namespace Synapse
             try
             {
                 foreach (GH_ObjectWrapper ghobj in contents)
-                    if (ghobj.Value is Control ctrl)
-                        bucket.Add(ctrl);
+                    if (ghobj.Value is Eto.Forms.Control ctrl)
+                        if (ctrlfill)
+                            bucket.Add(ctrl);
+                        else
+                            bucket.AddAutoSized(ctrl);
             }
             catch (Exception ex)
             {
@@ -318,6 +331,18 @@ namespace Synapse
                 if (prop.CanWrite)
                     printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
             DA.SetDataList(0, printouts);
+        }
+
+
+        public override bool Write(GH_IWriter writer)
+        {
+            writer.SetBoolean("ctrlfill", ctrlfill);
+            return base.Write(writer);
+        }
+        public override bool Read(GH_IReader reader)
+        {
+            reader.TryGetBoolean("ctrlfill", ref ctrlfill);
+            return base.Read(reader);
         }
 
         /// <summary>
