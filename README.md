@@ -23,7 +23,7 @@ Below are `Eto.Forms.Control` objects to add into Synapse. See [complete doc](ht
 - [ ] TextArea
 #### Containers
 - [x] StackLayout
-- [ ] DynamicLayout
+- [x] DynamicLayout
 - [x] TableLayout
 - [ ] Expander
 - [x] Form
