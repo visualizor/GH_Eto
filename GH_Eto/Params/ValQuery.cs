@@ -56,6 +56,13 @@ namespace Synapse
                 listenees.Add(numsteps.ID);
                 numsteps.ValueChanged += OnNumStepped;
             }
+            else if (ctrl is RadioButtonList rblist)
+            {
+                listenees.Add(rblist.ID);
+                rblist.SelectedIndexChanged += OnRBChange;
+            }
+            else
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " unrecognized control detected");
         }
         private GH_ObjectWrapper GetCtrlValue(Control ctrl)
         {
@@ -69,7 +76,8 @@ namespace Synapse
                 return new GH_ObjectWrapper(sl.Value);
             else if (ctrl is NumericStepper numsteps)
                 return new GH_ObjectWrapper(numsteps.Value);
-
+            else if (ctrl is RadioButtonList rblist)
+                return new GH_ObjectWrapper(rblist.SelectedIndex);
             return new GH_ObjectWrapper();
         }
 
@@ -104,6 +112,10 @@ namespace Synapse
             ExpireSolution(true);
         }
         public void OnNumStepped(object s, EventArgs e)
+        {
+            ExpireSolution(true);
+        }
+        public void OnRBChange(object s, EventArgs e)
         {
             ExpireSolution(true);
         }

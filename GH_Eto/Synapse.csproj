@@ -62,6 +62,7 @@
     <Compile Include="Ctrls\EtoButton.cs" />
     <Compile Include="Ctrls\EtoCheckBox.cs" />
     <Compile Include="Ctrls\EtoLabel.cs" />
+    <Compile Include="Ctrls\EtoRadioBtns.cs" />
     <Compile Include="Params\EtoColor.cs" />
     <Compile Include="Params\EtoFont.cs" />
     <Compile Include="Ctrls\EtoNumUD.cs" />
