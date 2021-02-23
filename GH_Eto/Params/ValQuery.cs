@@ -59,8 +59,9 @@ namespace Synapse
             else if (ctrl is RadioButtonList rblist)
             {
                 listenees.Add(rblist.ID);
-                rblist.SelectedIndexChanged += OnRBChange;
+                rblist.SelectedValueChanged += OnRBChange;
             }
+            else if (ctrl is Label lb) { }
             else
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " unrecognized control detected");
         }
@@ -179,12 +180,12 @@ namespace Synapse
                 for (int ii=0; ii < objs.Count; ii++)
                 {
                     GH_ObjectWrapper obj = objs[ii] as GH_ObjectWrapper;
-                    if (obj.Value is Container cont)
+                    /*if (obj.Value is Container cont)
                     {
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Synapse containers cannot be listened for values\n You can listen to controls inside them\n Try go upstream");
                         continue;
-                    }
-                    else if (obj.Value is Control ctrl)
+                    }*/
+                    if (obj.Value is Control ctrl)
                     {
                         if (!listenees.Contains(ctrl.ID))
                         {
