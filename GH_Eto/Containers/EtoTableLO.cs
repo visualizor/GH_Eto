@@ -174,6 +174,8 @@ namespace Synapse.Containers
                             }
                         }
                     }
+                    else if (val is GH_Number gnum)
+                        table.Padding = (int)gnum.Value;
                     else if (val is GH_Point pt)
                         table.Padding = new Padding((int)pt.Value.X, (int)pt.Value.Y);
                     else if (val is GH_Vector vec)

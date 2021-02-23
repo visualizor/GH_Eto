@@ -100,7 +100,7 @@ namespace Synapse
         public void OnSlide(object s, EventArgs e)
         {
             Slider sl = s as Slider;
-            sl.ToolTip = sl.Value.ToString();
+            //sl.ToolTip = sl.Value.ToString();
             ExpireSolution(true);
         }
         public void OnNumStepped(object s, EventArgs e)

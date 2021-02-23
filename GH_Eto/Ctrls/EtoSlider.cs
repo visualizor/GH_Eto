@@ -56,6 +56,7 @@ namespace Synapse
             DA.GetDataList(1, vals);
 
             Slider sl = new Slider() { ID = Guid.NewGuid().ToString(), };
+            sl.ValueChanged += (s,e)=> sl.ToolTip = sl.Value.ToString();
 
             for (int i = 0; i < props.Count; i++)
             {
