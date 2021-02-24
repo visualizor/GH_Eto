@@ -25,7 +25,7 @@ Below are `Eto.Forms.Control` objects to add into Synapse. See [complete doc](ht
 - [x] StackLayout
 - [x] DynamicLayout
 - [x] TableLayout
-- [ ] Expander
+- [x] Expander
 - [x] Form
 - [ ] GridView
 - [ ] GroupBox
@@ -68,3 +68,5 @@ There could be a few reasons. One is that the property can only be set with cert
 It will take a long time to translate all `Eto.Forms` controls to the Grasshopper ecosystem. Some of them may not be as useful so it's put on hold. If you want to see certain controls included, make a request.
 #### How do I customize the look of my window?
 Unfortunately this is not on my roadmap for Synapse. `Eto.Forms` doesn't seem to have an easy way of adding graphic skins. Synapse will be kept simple.
+#### Why does value query component not return values?
+It is likely that the query is listening to a container object that doesn't yield any value. Try linking "C" with controls only.
