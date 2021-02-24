@@ -8,7 +8,7 @@ using Eto.Drawing;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 
-namespace Synapse.Ctrls
+namespace Synapse
 {
     public class EtoRadioBtns : GH_Component
     {
@@ -184,6 +184,12 @@ namespace Synapse.Ctrls
                 if (prop.CanWrite)
                     printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
             DA.SetDataList(0, printouts);
+        }
+
+
+        public override GH_Exposure Exposure
+        {
+            get { return GH_Exposure.secondary; }
         }
 
         /// <summary>

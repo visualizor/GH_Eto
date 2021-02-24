@@ -7,7 +7,7 @@ using Eto.Drawing;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 
-namespace Synapse.Containers
+namespace Synapse
 {
     public class EtoDynamicLO : GH_Component
     {

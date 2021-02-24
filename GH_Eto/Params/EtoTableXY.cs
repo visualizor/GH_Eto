@@ -7,7 +7,7 @@ using Eto.Forms;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 
-namespace Synapse.Params
+namespace Synapse
 {
     public class EtoTableXY : GH_Component
     {

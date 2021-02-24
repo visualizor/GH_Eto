@@ -130,6 +130,9 @@
   <data name="dynam" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\dynam.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="expander" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\expander.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="fonts" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\fonts.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

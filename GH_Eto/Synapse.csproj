@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Containers\EtoDynamicLO.cs" />
+    <Compile Include="Containers\EtoExpander.cs" />
     <Compile Include="Containers\EtoTableLO.cs" />
     <Compile Include="Ctrls\EtoButton.cs" />
     <Compile Include="Ctrls\EtoCheckBox.cs" />
@@ -127,13 +128,16 @@
     <None Include="Resources\label.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\plugin.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\window.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\radiobtn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\expander.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\plugin.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

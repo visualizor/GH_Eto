@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Eto.Forms;
 using Eto.Drawing;
-using System.Reflection;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 
 namespace Synapse
 {
-    public class EtoTableLO : GH_Component
+    public class EtoExpander : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the EtoTableLO class.
+        /// Initializes a new instance of the EtoExpander class.
         /// </summary>
-        public EtoTableLO()
-          : base("SynapseTable", "Table",
-              "table layout of synapse controls",
+        public EtoExpander()
+          : base("SynapseExpander", "Xpdr",
+              "expand/collapse controls",
               "Synapse", "Containers")
         {
         }
@@ -32,13 +33,9 @@ namespace Synapse
             pManager.AddGenericParameter("Property Value", "V", "values for the property", GH_ParamAccess.list);
             pManager[1].DataMapping = GH_DataMapping.Flatten;
             pManager[1].Optional = true;
-            pManager.AddGenericParameter("Controls", "C", "controls to go into this container\nprovide a position indices(L) for each item", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Controls", "C", "controls to go into this container", GH_ParamAccess.list);
             pManager[2].DataMapping = GH_DataMapping.Flatten;
             pManager[2].Optional = true;
-            pManager.AddTextParameter("ControlLocation", "L", "zero-index location coordinates such as \"0,2\" meaning putting control on the first column third row\nuse a text string", GH_ParamAccess.list);
-            pManager[3].DataMapping = GH_DataMapping.Flatten;
-            pManager[3].Optional = true;
-            pManager.AddGenericParameter("TableDimension", "D", "number of columns and row as x,y\nsuch as a text string \"2,3\"\nor a point object whose x and y coordinates are read", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -47,7 +44,7 @@ namespace Synapse
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
             pManager.AddTextParameter("All Properties", "A", "list of all accessible properties", GH_ParamAccess.list);
-            pManager.AddGenericParameter("Control", "C", "container control that houses other controls", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Control", "C", "control to go into a container or the listener", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -58,47 +55,13 @@ namespace Synapse
         {
             List<string> props = new List<string>();
             List<GH_ObjectWrapper> vals = new List<GH_ObjectWrapper>();
-            GH_ObjectWrapper sizeobj = null;
             List<GH_ObjectWrapper> ctrls = new List<GH_ObjectWrapper>();
-            List<string> locs = new List<string>();
             DA.GetDataList(0, props);
             DA.GetDataList(1, vals);
-            DA.GetData(4, ref sizeobj);
             DA.GetDataList(2, ctrls);
-            DA.GetDataList(3, locs);
 
-            // initialize with dimensions
-            TableLayout table;
-            if (sizeobj.Value is GH_Point gpt)
-                table = new TableLayout(new Size((int)gpt.Value.X, (int)gpt.Value.Y));
-            else if (sizeobj.Value is GH_String gstr)
-            {
-                string[] xy = gstr.Value.Split(',');
-                try { table = new TableLayout(new Size(int.Parse(xy[0]), int.Parse(xy[1]))); }
-                catch (Exception ex)
-                {
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, ex.Message);
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, " likely a bad format string input, try something like \"2,3\"");
-                    return;
-                }
-            }
-            else if (sizeobj.Value is GH_Vector gvec)
-                table = new TableLayout(new Size((int)gvec.Value.X, (int)gvec.Value.Y));
-            else if (sizeobj.Value is GH_Rectangle grec)
-            {
-                int x = (int)grec.Value.X.Length;
-                int y = (int)grec.Value.Y.Length;
-                table = new TableLayout(new Size(x, y));
-            }
-            else if (sizeobj.Value is Size s)
-                table = new TableLayout(s);
-            else
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, " Dimesion cannot be understood\n Try something like\"2,3\" as a text string");
-                return;
-            }
+            Expander xpdr = new Expander();
 
-            //set props
             for (int i = 0; i < props.Count; i++)
             {
                 string n = props[i];
@@ -115,12 +78,12 @@ namespace Synapse
                     if (val is GH_Point pt)
                     {
                         Size winsize = new Size((int)pt.Value.X, (int)pt.Value.Y);
-                        table.Size = winsize;
+                        xpdr.Size = winsize;
                     }
                     else if (val is GH_Vector vec)
                     {
                         Size winsize = new Size((int)vec.Value.X, (int)vec.Value.Y);
-                        table.Size = winsize;
+                        xpdr.Size = winsize;
                     }
                     else if (val is GH_String sstr)
                     {
@@ -128,7 +91,7 @@ namespace Synapse
                         bool xp = int.TryParse(xy[0], out int x);
                         bool yp = int.TryParse(xy[1], out int y);
                         if (xp && yp)
-                            table.Size = new Size(x, y);
+                            xpdr.Size = new Size(x, y);
                         else
                             AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " text cannot be parsed as Size object");
                     }
@@ -136,20 +99,20 @@ namespace Synapse
                     {
                         int x = (int)grec.Value.X.Length;
                         int y = (int)grec.Value.Y.Length;
-                        table.Size = new Size(x, y);
+                        xpdr.Size = new Size(x, y);
                     }
                     else
-                        try { Util.SetProp(table, "Size", Util.GetGooVal(val)); }
+                        try { Util.SetProp(xpdr, "Size", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
                 else if (n.ToLower() == "padding")
                 {
                     if (val is GH_Integer ghi)
-                        table.Padding = ghi.Value;
+                        xpdr.Padding = ghi.Value;
                     else if (val is GH_String gstr)
                     {
                         if (int.TryParse(gstr.Value, out int v))
-                            table.Padding = v;
+                            xpdr.Padding = v;
                         else if (gstr.Value.Split(',') is string[] xy)
                         {
                             if (xy.Length == 2)
@@ -157,7 +120,7 @@ namespace Synapse
                                 bool i0 = int.TryParse(xy[0], out int n0);
                                 bool i1 = int.TryParse(xy[1], out int n1);
                                 if (i0 && i1)
-                                    table.Padding = new Padding(n0, n1);
+                                    xpdr.Padding = new Padding(n0, n1);
                                 else
                                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " text cannot be parsed as Padding object");
                             }
@@ -168,74 +131,36 @@ namespace Synapse
                                 bool i2 = int.TryParse(xy[2], out int n2);
                                 bool i3 = int.TryParse(xy[3], out int n3);
                                 if (i0 && i1 && i2 && i3)
-                                    table.Padding = new Padding(n0, n1, n2, n3);
+                                    xpdr.Padding = new Padding(n0, n1, n2, n3);
                                 else
                                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " text cannot be parsed as Padding object");
                             }
                         }
                     }
                     else if (val is GH_Number gnum)
-                        table.Padding = (int)gnum.Value;
+                        xpdr.Padding = (int)gnum.Value;
                     else if (val is GH_Point pt)
-                        table.Padding = new Padding((int)pt.Value.X, (int)pt.Value.Y);
+                        xpdr.Padding = new Padding((int)pt.Value.X, (int)pt.Value.Y);
                     else if (val is GH_Vector vec)
-                        table.Padding = new Padding((int)vec.Value.X, (int)vec.Value.Y);
+                        xpdr.Padding = new Padding((int)vec.Value.X, (int)vec.Value.Y);
                     else
-                        try { Util.SetProp(table, "Padding", Util.GetGooVal(val)); }
-                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
-                }
-                else if (n.ToLower() == "spacing")
-                {
-                    if (val is GH_Integer ghi)
-                        table.Spacing = new Size(ghi.Value, ghi.Value);
-                    else if (val is GH_String ghstr)
-                    {
-                        if (int.TryParse(ghstr.Value, out int v))
-                            table.Spacing = new Size(v, v);
-                        else if (ghstr.Value.Split(',') is string[] xy)
-                            if (int.TryParse(xy[0], out int x) && int.TryParse(xy[1], out int y))
-                                table.Spacing = new Size(x, y);
-                            else
-                                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " cannot parse text string into Size object");
-                        else
-                            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " cannot parse text string into Size object");
-                    }
-                    else if (val is GH_Number gnum)
-                        table.Spacing = new Size((int)gnum.Value, (int)gnum.Value);
-                    else
-                        try { Util.SetProp(table, "Spacing", Util.GetGooVal(val)); }
+                        try { Util.SetProp(xpdr, "Padding", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
                 else
-                    try { Util.SetProp(table, n, Util.GetGooVal(val)); }
+                    try { Util.SetProp(xpdr, n, Util.GetGooVal(val)); }
                     catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
             }
 
-            // fill table
-            for (int ci = 0; ci < ctrls.Count; ci++)
-            {
-                if (ctrls[ci].Value is Control c)
-                {
-                    string loc = locs[ci];
-                    string[] coor = loc.Split(',');
-                    try
-                    {
-                        int x = int.Parse(coor[0]);
-                        int y = int.Parse(coor[1]);
-                        table.Add(c, x, y);
-                    }
-                    catch (Exception ex)
-                    {
-                        AddRuntimeMessage(GH_RuntimeMessageLevel.Error, ex.Message);
-                        continue;
-                    }
-                }
-                else
-                    continue;
-            }
-            DA.SetData(1, new GH_ObjectWrapper(table));
+            DynamicLayout content = new DynamicLayout() { DefaultPadding = 1,};
+            foreach (GH_ObjectWrapper ghobj in ctrls)
+                if (ghobj.Value is Control ctrl)
+                    content.AddAutoSized(ctrl);
+            xpdr.Content = content;
 
-            PropertyInfo[] allprops = table.GetType().GetProperties();
+            DA.SetData(1, new GH_ObjectWrapper(xpdr));
+
+            PropertyInfo[] allprops = xpdr.GetType().GetProperties();
             List<string> printouts = new List<string>();
             foreach (PropertyInfo prop in allprops)
                 if (prop.CanWrite)
@@ -250,7 +175,7 @@ namespace Synapse
         {
             get
             {
-                return Properties.Resources.table;
+                return Properties.Resources.expander;
             }
         }
 
@@ -259,7 +184,7 @@ namespace Synapse
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("3539ebc6-f995-42ed-be41-f57f7136bb6d"); }
+            get { return new Guid("44814b0c-094b-4224-b1e0-a7b92b5c402c"); }
         }
     }
 }
