@@ -55,3 +55,16 @@ A walkthrough of Synapse component and how they are set up can be found [here](h
 <--insert link to example .gh>
 #### Fixed Interface
 For simplicity in working with Grasshopper's data flow model, Synapse components cannot be edited while they are shown. Each time the "S" is toggled to `true` on the `SynapseWindow`, a new `Eto.Forms.Form` is painted. If certain controls must be edited, the window should be closed first. Therefore controls cannot be modified dynamically while the GUI is in use. 
+## FAQs
+#### Why are controls disappearing in the GUI?
+This is likely due to changing parameters on the Grasshopper component. Once a Synapse window is shown, controls upstream cannot be updated without re-launching new windows.
+#### Why does a container tell me to disconnect controls?
+Usually by linking and re-linking Synapse components, some of them may remember the parent container. Disable control components and re-enable should solve this.
+#### What is the difference between Synapse and HumanUI?
+Two big differences. One is that HumanUI works on Windows only. Synapse works on Macs too. Two is that HumanUI has the architecture that allows dynamic updates to the controls once they are shown. Synapse repaints controls each time the window is launched. Anything within is only beaming data *back* to Grasshopper from then on. 
+#### Why can't I set a property on a control?
+There could be a few reasons. One is that the property can only be set with certain data types and the ones going into "V" aren't matching. Two is that the code for that Synapse element is missing something. Three is that the property is really meant to be set internally and the code does that and overrides your input. In any case, report errors. 
+#### I see a type of control on Eto.Forms doc. But where is it on Synapse?
+It will take a long time to translate all `Eto.Forms` controls to the Grasshopper ecosystem. Some of them may not be as useful so it's put on hold. If you want to see certain controls included, make a request.
+#### How do I customize the look of my window?
+Unfortunately this is not on my roadmap for Synapse. `Eto.Forms` doesn't seem to have an easy way of adding graphic skins. Synapse will be kept simple.
