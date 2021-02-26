@@ -62,6 +62,11 @@ namespace Synapse
                 rblist.SelectedValueChanged += OnRBChange;
             }
             else if (ctrl is Label lb) { }
+            else if (ctrl is DropDown dd)
+            {
+                listenees.Add(dd.ID);
+                dd.SelectedIndexChanged += OnDDChange;
+            }
             else
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " unrecognized control detected");
         }
@@ -79,6 +84,8 @@ namespace Synapse
                 return new GH_ObjectWrapper(numsteps.Value);
             else if (ctrl is RadioButtonList rblist)
                 return new GH_ObjectWrapper(rblist.SelectedIndex);
+            else if (ctrl is DropDown dd)
+                return new GH_ObjectWrapper(dd.SelectedIndex);
             return new GH_ObjectWrapper();
         }
 
@@ -117,6 +124,10 @@ namespace Synapse
             ExpireSolution(true);
         }
         public void OnRBChange(object s, EventArgs e)
+        {
+            ExpireSolution(true);
+        }
+        public void OnDDChange(object s, EventArgs e)
         {
             ExpireSolution(true);
         }

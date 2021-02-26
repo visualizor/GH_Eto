@@ -16,7 +16,7 @@ Below are `Eto.Forms.Control` objects to add into Synapse. See [complete doc](ht
 - [x] NumericStepper
 - [x] CheckBox
 - [ ] ComboBox
-- [ ] DropDown
+- [x] DropDown
 - [ ] ListBox
 - [ ] PasswordBox
 - [x] RadioButtonList
@@ -28,7 +28,7 @@ Below are `Eto.Forms.Control` objects to add into Synapse. See [complete doc](ht
 - [x] Expander
 - [x] Form
 - [ ] GridView
-- [ ] GroupBox
+- [x] GroupBox
 - [ ] Scrollable
 - [ ] TabControl
 

@@ -65,6 +65,8 @@ namespace Synapse
                 Spacing = new Size(5, 5),
                 Orientation = Orientation.Vertical,
             };
+            foreach (string opt in opts)
+                rblist.Items.Add(opt);
 
             for (int i = 0; i < props.Count; i++)
             {
@@ -173,8 +175,6 @@ namespace Synapse
                     try { Util.SetProp(rblist, n, Util.GetGooVal(val)); }
                     catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
             }
-            foreach (string opt in opts)
-                rblist.Items.Add(opt);
 
             DA.SetData(1, new GH_ObjectWrapper(rblist));
 

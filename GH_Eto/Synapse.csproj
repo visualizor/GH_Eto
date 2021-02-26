@@ -59,9 +59,11 @@
   <ItemGroup>
     <Compile Include="Containers\EtoDynamicLO.cs" />
     <Compile Include="Containers\EtoExpander.cs" />
+    <Compile Include="Containers\EtoGroupBox.cs" />
     <Compile Include="Containers\EtoTableLO.cs" />
     <Compile Include="Ctrls\EtoButton.cs" />
     <Compile Include="Ctrls\EtoCheckBox.cs" />
+    <Compile Include="Ctrls\EtoDropDn.cs" />
     <Compile Include="Ctrls\EtoLabel.cs" />
     <Compile Include="Ctrls\EtoRadioBtns.cs" />
     <Compile Include="Params\EtoColor.cs" />
@@ -138,6 +140,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\plugin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dd.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\group.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
