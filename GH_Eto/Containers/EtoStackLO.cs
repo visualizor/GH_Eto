@@ -197,6 +197,8 @@ namespace Synapse
             foreach (GH_ObjectWrapper wrapped in ctrls)
                 if (wrapped.Value is Control ctrl)
                     stack.Items.Add(ctrl);
+                else
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " one or more object cannot be added\n are they non-Synapse components?");
 
             DA.SetData(1, new GH_ObjectWrapper(stack));
 

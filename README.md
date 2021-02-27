@@ -18,7 +18,6 @@ Below are `Eto.Forms.Control` objects to add into Synapse. See [complete doc](ht
 - [ ] ComboBox
 - [x] DropDown
 - [ ] ListBox
-- [ ] PasswordBox
 - [x] RadioButtonList
 - [ ] TextArea
 #### Containers

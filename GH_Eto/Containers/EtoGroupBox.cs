@@ -162,6 +162,8 @@ namespace Synapse.Containers
             foreach (GH_ObjectWrapper ghobj in ctrls)
                 if (ghobj.Value is Control ctrl)
                     content.AddAutoSized(ctrl);
+                else
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " one or more object cannot be added\n are they non-Synapse components?");
             gb.Content = content;
 
             DA.SetData(1, new GH_ObjectWrapper(gb));

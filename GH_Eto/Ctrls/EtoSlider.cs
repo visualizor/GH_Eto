@@ -16,7 +16,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoSlider class.
         /// </summary>
         public EtoSlider()
-          : base("SynapseSlider", "SSlider",
+          : base("SynapseSliderOnly", "SSlider",
               "integer slider object",
               "Synapse", "Controls")
         {
@@ -172,6 +172,13 @@ namespace Synapse
             DA.SetDataList(0, printouts);
         }
 
+
+        public override GH_Exposure Exposure
+        {
+            get { return GH_Exposure.obscure | GH_Exposure.primary; }
+        }
+        
+
         /// <summary>
         /// Provides an Icon for the component.
         /// </summary>
@@ -179,7 +186,7 @@ namespace Synapse
         {
             get
             {
-                return Properties.Resources.slider;
+                return Properties.Resources.slideronly;
             }
         }
 

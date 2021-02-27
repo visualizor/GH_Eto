@@ -61,6 +61,7 @@
     <Compile Include="Containers\EtoExpander.cs" />
     <Compile Include="Containers\EtoGroupBox.cs" />
     <Compile Include="Containers\EtoTableLO.cs" />
+    <Compile Include="Containers\EtoTabView.cs" />
     <Compile Include="Ctrls\EtoButton.cs" />
     <Compile Include="Ctrls\EtoCheckBox.cs" />
     <Compile Include="Ctrls\EtoDropDn.cs" />
@@ -147,6 +148,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\group.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\slideronly.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tabbed.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

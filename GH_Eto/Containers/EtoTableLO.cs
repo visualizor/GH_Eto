@@ -231,7 +231,7 @@ namespace Synapse
                     }
                 }
                 else
-                    continue;
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " one or more object cannot be added\n are they non-Synapse components?");
             }
             DA.SetData(1, new GH_ObjectWrapper(table));
 
