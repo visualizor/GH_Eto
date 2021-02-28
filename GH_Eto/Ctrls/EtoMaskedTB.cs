@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Reflection;
+using Eto.Forms;
+using Eto.Drawing;
 using Grasshopper.Kernel;
-using Rhino.Geometry;
+using Grasshopper.Kernel.Types;
 
 namespace Synapse
 {
@@ -23,6 +25,12 @@ namespace Synapse
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
+            pManager.AddTextParameter("Property", "P", "property to set", GH_ParamAccess.list);
+            pManager[0].DataMapping = GH_DataMapping.Flatten;
+            pManager[0].Optional = true;
+            pManager.AddGenericParameter("Property Value", "V", "values for the property", GH_ParamAccess.list);
+            pManager[1].DataMapping = GH_DataMapping.Flatten;
+            pManager[1].Optional = true;
         }
 
         /// <summary>
@@ -30,6 +38,8 @@ namespace Synapse
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
+            pManager.AddTextParameter("All Properties", "A", "list of all accessible properties", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Control", "C", "control to go into a container or the listener", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -38,8 +48,36 @@ namespace Synapse
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "not implemented");
-            // TODO: finish masked textbox
+            List<string> props = new List<string>();
+            List<GH_ObjectWrapper> vals = new List<GH_ObjectWrapper>();
+            DA.GetDataList(0, props);
+            DA.GetDataList(1, vals);
+
+            MaskedTextBox mtb = new MaskedTextBox() { ID = Guid.NewGuid().ToString(), };
+
+            for (int i = 0; i < props.Count; i++)
+            {
+                string n = props[i];
+                object val;
+                try { val = vals[i].Value; }
+                catch (ArgumentOutOfRangeException)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "P, V should correspond each other");
+                    return;
+                }
+
+                try { Util.SetProp(mtb, n, Util.GetGooVal(val)); }
+                catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+            }
+
+            DA.SetData(1, new GH_ObjectWrapper(mtb));
+
+            PropertyInfo[] allprops = mtb.GetType().GetProperties();
+            List<string> printouts = new List<string>();
+            foreach (PropertyInfo prop in allprops)
+                if (prop.CanWrite)
+                    printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
+            DA.SetDataList(0, printouts);
         }
 
         public override GH_Exposure Exposure
