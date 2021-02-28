@@ -10,7 +10,7 @@ Below are `Eto.Forms.Control` objects to add into Synapse. See [complete doc](ht
 #### User controls
 - [x] Label
 - [x] TextBox
-- [ ] MaskedTextBox
+- [x] MaskedTextBox
 - [x] Button
 - [x] Slider
 - [x] NumericStepper

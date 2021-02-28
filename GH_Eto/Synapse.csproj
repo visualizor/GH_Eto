@@ -60,6 +60,7 @@
     <Compile Include="Containers\EtoDynamicLO.cs" />
     <Compile Include="Containers\EtoExpander.cs" />
     <Compile Include="Containers\EtoGroupBox.cs" />
+    <Compile Include="Containers\EtoScroll.cs" />
     <Compile Include="Containers\EtoTableLO.cs" />
     <Compile Include="Containers\EtoTabView.cs" />
     <Compile Include="Ctrls\EtoButton.cs" />
@@ -162,6 +163,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\size.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\scroll.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

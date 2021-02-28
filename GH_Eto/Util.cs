@@ -36,6 +36,12 @@ namespace Synapse
                 return b.Value;
             else if (goo is GH_Rectangle rec)
                 return new Size((int)rec.Value.X.Length, (int)rec.Value.Y.Length);
+            else if (goo is GH_ObjectWrapper gwrapper)
+                return gwrapper.Value;
+            else if (goo is GH_Line gl)
+                return gl.Value.Length;
+            else if (goo is GH_Interval gitvl)
+                return gitvl.Value.Length;
             else
                 return goo;
         }
