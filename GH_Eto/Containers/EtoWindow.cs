@@ -54,6 +54,7 @@ namespace Synapse
         public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
         {
             base.AppendAdditionalMenuItems(menu);
+            // TODO: this uses winforms, may not work on Mac OS
             try
             {
                 ToolStripMenuItem i = menu.Items.Add("Fill Window", null, OnFill) as ToolStripMenuItem;
@@ -318,7 +319,8 @@ namespace Synapse
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " invalid controls detected");
                 else throw ex;
             }
-            EWindow.Content = bucket;
+            Scrollable content = new Scrollable { Content = bucket, };
+            EWindow.Content = content;
 
             if (run)
                 EWindow.Show();
@@ -343,6 +345,11 @@ namespace Synapse
         {
             reader.TryGetBoolean("ctrlfill", ref ctrlfill);
             return base.Read(reader);
+        }
+
+        public override GH_Exposure Exposure
+        {
+            get { return GH_Exposure.secondary; }
         }
 
         /// <summary>

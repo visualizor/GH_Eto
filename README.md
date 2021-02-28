@@ -28,7 +28,7 @@ Below are `Eto.Forms.Control` objects to add into Synapse. See [complete doc](ht
 - [x] Form
 - [ ] GridView
 - [x] GroupBox
-- [ ] Scrollable
+- [x] Scrollable
 - [x] TabControl
 
 Eto itself does not have many of the graphic features found in other GUI libraries likely due to its cross-platform conformity. Synapse further simplifies the pieces one has to assemble to get a working GUI. Minimalist functionality will take precedent over ornate design. 

@@ -17,7 +17,7 @@ namespace Synapse
         public EtoScroll()
           : base("SynapseScroll", "Scroll",
               "scrollable container",
-              "Synapse", "Container")
+              "Synapse", "Containers")
         {
         }
 
@@ -115,6 +115,38 @@ namespace Synapse
                         try { Util.SetProp(scroll, "Border", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
+                else if (n.ToLower() == "padding")
+                {
+                    if (val is GH_Point pt)
+                        scroll.Padding = new Padding((int)pt.Value.X, (int)pt.Value.Y);
+                    else if (val is GH_Vector vec)
+                        scroll.Padding = new Padding((int)vec.Value.X, (int)vec.Value.Y);
+                    else if (val is GH_String pstr)
+                    {
+                        string[] subs = pstr.Value.Split(',');
+                        if (subs.Length == 2)
+                        {
+                            bool i0 = int.TryParse(subs[0], out int n0);
+                            bool i1 = int.TryParse(subs[1], out int n1);
+                            if (i0 && i1)
+                                scroll.Padding = new Padding(n0, n1);
+                        }
+                        else if (subs.Length == 4)
+                        {
+                            bool i0 = int.TryParse(subs[0], out int n0);
+                            bool i1 = int.TryParse(subs[1], out int n1);
+                            bool i2 = int.TryParse(subs[2], out int n2);
+                            bool i3 = int.TryParse(subs[3], out int n3);
+                            if (i0 && i1 && i2 && i3)
+                                scroll.Padding = new Padding(n0, n1, n2, n3);
+                        }
+                    }
+                    else if (val is GH_Integer pad)
+                        scroll.Padding =  new Padding(pad.Value);
+                    else
+                        try { Util.SetProp(scroll, "Padding", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                }
                 else   
                     try { Util.SetProp(scroll, n, Util.GetGooVal(val)); }
                     catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
@@ -128,6 +160,11 @@ namespace Synapse
                 if (prop.CanWrite)
                     printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
             DA.SetDataList(0, printouts);
+        }
+
+        public override GH_Exposure Exposure
+        {
+            get { return GH_Exposure.obscure | GH_Exposure.primary; }
         }
 
         /// <summary>
