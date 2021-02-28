@@ -67,6 +67,11 @@ namespace Synapse
                 listenees.Add(dd.ID);
                 dd.SelectedIndexChanged += OnDDChange;
             }
+            else if (ctrl is ComboSlider csl)
+            {
+                listenees.Add(csl.ID);
+                csl.slider.ValueChanged += OnSlide;
+            }
             else
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " unrecognized control detected");
         }
@@ -86,7 +91,10 @@ namespace Synapse
                 return new GH_ObjectWrapper(rblist.SelectedIndex);
             else if (ctrl is DropDown dd)
                 return new GH_ObjectWrapper(dd.SelectedIndex);
-            return new GH_ObjectWrapper();
+            else if (ctrl is ComboSlider csl)
+                return new GH_ObjectWrapper(csl.slider.Value);
+            else
+                return new GH_ObjectWrapper();
         }
 
         public void OnBtnDn(object s, EventArgs e)
@@ -115,8 +123,6 @@ namespace Synapse
         }
         public void OnSlide(object s, EventArgs e)
         {
-            Slider sl = s as Slider;
-            //sl.ToolTip = sl.Value.ToString();
             ExpireSolution(true);
         }
         public void OnNumStepped(object s, EventArgs e)
@@ -191,11 +197,6 @@ namespace Synapse
                 for (int ii=0; ii < objs.Count; ii++)
                 {
                     GH_ObjectWrapper obj = objs[ii] as GH_ObjectWrapper;
-                    /*if (obj.Value is Container cont)
-                    {
-                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Synapse containers cannot be listened for values\n You can listen to controls inside them\n Try go upstream");
-                        continue;
-                    }*/
                     if (obj.Value is Control ctrl)
                     {
                         if (!listenees.Contains(ctrl.ID))
@@ -205,7 +206,7 @@ namespace Synapse
                         }
                         else if (!listening)
                         {
-                            listening = true;
+                            listening = true; // this isn't used anywhere
                         }
                         else
                         {
@@ -214,7 +215,7 @@ namespace Synapse
                     }
                     else
                     {
-                        listening = false; // not a eto control
+                        listening = false; // not an Eto control
                     }
                 }
                 

@@ -66,6 +66,7 @@
     <Compile Include="Ctrls\EtoCheckBox.cs" />
     <Compile Include="Ctrls\EtoDropDn.cs" />
     <Compile Include="Ctrls\EtoLabel.cs" />
+    <Compile Include="Ctrls\EtoMaskedTB.cs" />
     <Compile Include="Ctrls\EtoRadioBtns.cs" />
     <Compile Include="Ctrls\ExplicitSlider.cs" />
     <Compile Include="Params\EtoColor.cs" />
@@ -154,6 +155,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\tabbed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tbplus.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

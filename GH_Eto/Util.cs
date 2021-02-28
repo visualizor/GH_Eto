@@ -69,6 +69,9 @@ namespace Synapse
             slider.ValueChanged += OnValChange;
         }
 
+        /// <summary>
+        /// must be called to initialize comboslider
+        /// </summary>
         public void Init()
         {
             Orientation = Orientation.Horizontal;
