@@ -72,6 +72,21 @@ namespace Synapse
                 listenees.Add(csl.ID);
                 csl.slider.ValueChanged += OnSlide;
             }
+            else if (ctrl is MaskedTextBox mtb)
+            {
+                listenees.Add(mtb.ID);
+                mtb.TextChanged += OnTBText;
+            }
+            else if (ctrl is TextArea multi)
+            {
+                listenees.Add(multi.ID);
+                multi.TextChanged += OnTBText;
+            }
+            else if (ctrl is ListBox lbx)
+            {
+                listenees.Add(lbx.ID);
+                lbx.SelectedIndexChanged += OnListBoxSelect;
+            }
             else
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " unrecognized control detected");
         }
@@ -93,6 +108,12 @@ namespace Synapse
                 return new GH_ObjectWrapper(dd.SelectedIndex);
             else if (ctrl is ComboSlider csl)
                 return new GH_ObjectWrapper(csl.slider.Value);
+            else if (ctrl is MaskedTextBox mtb)
+                return new GH_ObjectWrapper(mtb.Text);
+            else if (ctrl is TextArea multi)
+                return new GH_ObjectWrapper(multi.Text);
+            else if (ctrl is ListBox lbx)
+                return new GH_ObjectWrapper(lbx.SelectedIndex);
             else
                 return new GH_ObjectWrapper();
         }
@@ -134,6 +155,10 @@ namespace Synapse
             ExpireSolution(true);
         }
         public void OnDDChange(object s, EventArgs e)
+        {
+            ExpireSolution(true);
+        }
+        public void OnListBoxSelect(object s, EventArgs e)
         {
             ExpireSolution(true);
         }

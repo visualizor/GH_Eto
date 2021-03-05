@@ -59,15 +59,19 @@
   <ItemGroup>
     <Compile Include="Containers\EtoDynamicLO.cs" />
     <Compile Include="Containers\EtoExpander.cs" />
+    <Compile Include="Ctrls\EtoGridView.cs" />
     <Compile Include="Containers\EtoGroupBox.cs" />
     <Compile Include="Containers\EtoScroll.cs" />
     <Compile Include="Containers\EtoTableLO.cs" />
     <Compile Include="Containers\EtoTabView.cs" />
     <Compile Include="Ctrls\EtoButton.cs" />
     <Compile Include="Ctrls\EtoCheckBox.cs" />
+    <Compile Include="Ctrls\EtoComboBox.cs" />
     <Compile Include="Ctrls\EtoDropDn.cs" />
     <Compile Include="Ctrls\EtoLabel.cs" />
+    <Compile Include="Ctrls\EtoListBox.cs" />
     <Compile Include="Ctrls\EtoMaskedTB.cs" />
+    <Compile Include="Ctrls\EtoMultiTxtBox.cs" />
     <Compile Include="Ctrls\EtoRadioBtns.cs" />
     <Compile Include="Ctrls\ExplicitSlider.cs" />
     <Compile Include="Params\EtoColor.cs" />
@@ -166,6 +170,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\scroll.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\combo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gridview.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\listbox.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\multitxt.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

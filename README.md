@@ -1,6 +1,6 @@
 # Synapse (GH_Eto)
 ## Overview
-Grasshopper plugin that makes graphic user interfaces with the help of `Eto.Forms`
+Grasshopper plugin that makes graphic user interfaces with the help of `Eto.Forms`. Mac users please test `.gha` file and let me know if this indeed works. Currently compiled on a Windows machine.
 
 First, check out this introductory [article](https://willwang6.wixsite.com/precision/post/2019/01/01/how-to-use-etoforms-in-rhinograsshopper-part-1) on `Eto.Forms` and its use within the Grasshopper context, as well as the [guide](https://developer.rhino3d.com/guides/rhinopython/eto-forms-python/) that McNeel has put together.
 
