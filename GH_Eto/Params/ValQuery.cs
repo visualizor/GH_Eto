@@ -64,8 +64,17 @@ namespace Synapse
             else if (ctrl is Label lb) { }
             else if (ctrl is DropDown dd)
             {
-                listenees.Add(dd.ID);
-                dd.SelectedIndexChanged += OnDDChange;
+                if (dd is ComboBox combo)
+                {
+                    listenees.Add(combo.ID);
+                    combo.SelectedIndexChanged += OnSelection;
+                    combo.TextChanged += OnTBText;
+                }
+                else
+                {
+                    listenees.Add(dd.ID);
+                    dd.SelectedIndexChanged += OnSelection;
+                }
             }
             else if (ctrl is ComboSlider csl)
             {
@@ -85,7 +94,7 @@ namespace Synapse
             else if (ctrl is ListBox lbx)
             {
                 listenees.Add(lbx.ID);
-                lbx.SelectedIndexChanged += OnListBoxSelect;
+                lbx.SelectedIndexChanged += OnSelection;
             }
             else
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " unrecognized control detected");
@@ -105,7 +114,10 @@ namespace Synapse
             else if (ctrl is RadioButtonList rblist)
                 return new GH_ObjectWrapper(rblist.SelectedIndex);
             else if (ctrl is DropDown dd)
-                return new GH_ObjectWrapper(dd.SelectedIndex);
+                if (dd is ComboBox combo)
+                    return new GH_ObjectWrapper(combo.Text);
+                else
+                    return new GH_ObjectWrapper(dd.SelectedIndex);
             else if (ctrl is ComboSlider csl)
                 return new GH_ObjectWrapper(csl.slider.Value);
             else if (ctrl is MaskedTextBox mtb)
@@ -154,11 +166,7 @@ namespace Synapse
         {
             ExpireSolution(true);
         }
-        public void OnDDChange(object s, EventArgs e)
-        {
-            ExpireSolution(true);
-        }
-        public void OnListBoxSelect(object s, EventArgs e)
+        public void OnSelection(object s, EventArgs e)
         {
             ExpireSolution(true);
         }

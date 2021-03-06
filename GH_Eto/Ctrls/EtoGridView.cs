@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Eto.Forms;
+using Eto.Drawing;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 
@@ -23,6 +25,7 @@ namespace Synapse
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
+
         }
 
         /// <summary>
@@ -43,7 +46,8 @@ namespace Synapse
 
         public override GH_Exposure Exposure
         {
-            get { return GH_Exposure.obscure | GH_Exposure.secondary; }
+            get { return GH_Exposure.hidden | GH_Exposure.secondary; }
+            // TODO: unhide once done
         }
 
         /// <summary>

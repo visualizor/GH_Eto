@@ -15,18 +15,18 @@ Below are `Eto.Forms.Control` objects to add into Synapse. See [complete doc](ht
 - [x] Slider
 - [x] NumericStepper
 - [x] CheckBox
-- [ ] ComboBox
+- [x] ComboBox
 - [x] DropDown
-- [ ] ListBox
+- [x] ListBox
 - [x] RadioButtonList
-- [ ] TextArea
+- [x] TextArea
+- [ ] GridView
 #### Containers
 - [x] StackLayout
 - [x] DynamicLayout
 - [x] TableLayout
 - [x] Expander
 - [x] Form
-- [ ] GridView
 - [x] GroupBox
 - [x] Scrollable
 - [x] TabControl
