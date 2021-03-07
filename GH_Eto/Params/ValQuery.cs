@@ -119,7 +119,7 @@ namespace Synapse
                 else
                     return new GH_ObjectWrapper(dd.SelectedIndex);
             else if (ctrl is ComboSlider csl)
-                return new GH_ObjectWrapper(csl.slider.Value);
+                return new GH_ObjectWrapper(csl.val);
             else if (ctrl is MaskedTextBox mtb)
                 return new GH_ObjectWrapper(mtb.Text);
             else if (ctrl is TextArea multi)

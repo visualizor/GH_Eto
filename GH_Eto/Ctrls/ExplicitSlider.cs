@@ -14,7 +14,7 @@ namespace Synapse.Ctrls
         /// Initializes a new instance of the ExplicitSlider class.
         /// </summary>
         public ExplicitSlider()
-          : base("SynapseSlider", "SSlider",
+          : base("SynapseSlider+", "SSlider",
               "slider with text label",
               "Synapse", "Controls")
         {
@@ -31,6 +31,7 @@ namespace Synapse.Ctrls
             pManager.AddGenericParameter("Property Value", "V", "values for the property", GH_ParamAccess.list);
             pManager[1].DataMapping = GH_DataMapping.Flatten;
             pManager[1].Optional = true;
+            pManager.AddNumberParameter("Coefficient", "F", "optional coefficient\ndefault sliders only has integer values", GH_ParamAccess.item, 1.0);
         }
 
         /// <summary>
@@ -48,13 +49,18 @@ namespace Synapse.Ctrls
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            double f = 1.0;
             List<string> props = new List<string>();
             List<GH_ObjectWrapper> vals = new List<GH_ObjectWrapper>();
             DA.GetDataList(0, props);
             DA.GetDataList(1, vals);
+            DA.GetData(2, ref f);
 
-            ComboSlider csl = new ComboSlider() { ID = Guid.NewGuid().ToString(),};
-            csl.Init();
+            ComboSlider csl = new ComboSlider()
+            {
+                ID = Guid.NewGuid().ToString(),
+                coef = f,
+            };
 
             for (int i = 0; i < props.Count; i++)
             {
@@ -70,51 +76,48 @@ namespace Synapse.Ctrls
                 if (n.ToLower() == "minvalue" || n.ToLower() == "minimum")
                 {
                     if (val is GH_Integer gint)
-                        csl.slider.MinValue = gint.Value;
+                        csl.SetMin(gint.Value);
                     else if (val is GH_Number gnum)
-                        csl.slider.MinValue = (int)gnum.Value;
+                        csl.SetMin(gnum.Value);
                     else if (val is GH_String gstr)
-                        if (int.TryParse(gstr.Value, out int minint))
-                            csl.slider.MinValue = minint;
+                        if (double.TryParse(gstr.Value, out double min))
+                            csl.SetMin(min);
                         else
                             AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " couldn't parse minimum value string");
                     else if (val is GH_Interval gitvl)
-                        csl.slider.MinValue = (int)gitvl.Value.Length;
+                        csl.SetMin(gitvl.Value.Length);
                     else
-                        try { Util.SetProp(csl.slider, "MinValue", Util.GetGooVal(val)); }
-                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " cannot understand input\ntry an actual number");
                 }
                 else if (n.ToLower() == "maxvalue" || n.ToLower() == "maximum")
                 {
                     if (val is GH_Integer gint)
-                        csl.slider.MaxValue = gint.Value;
+                        csl.SetMax(gint.Value);
                     else if (val is GH_Number gnum)
-                        csl.slider.MaxValue = (int)gnum.Value;
+                        csl.SetMax(gnum.Value);
                     else if (val is GH_String gstr)
-                        if (int.TryParse(gstr.Value, out int minint))
-                            csl.slider.MaxValue = minint;
+                        if (double.TryParse(gstr.Value, out double max))
+                            csl.SetMax(max);
                         else
-                            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " couldn't parse minimum value string");
+                            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " couldn't parse maximum value string");
                     else if (val is GH_Interval gitvl)
-                        csl.slider.MaxValue = (int)gitvl.Value.Length;
+                        csl.SetMax(gitvl.Value.Length);
                     else
-                        try { Util.SetProp(csl.slider, "MaxValue", Util.GetGooVal(val)); }
-                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " cannot understand input\ntry an actual number");
                 }
-                else if (n.ToLower() == "tickfrequency" || n.ToLower() == "step" || n.ToLower() =="increment")
+                else if (n.ToLower() == "tickcount" || n.ToLower() == "steps" || n.ToLower() =="markers")
                 {
                     if (val is GH_Integer gint)
-                        csl.slider.TickFrequency = gint.Value > 0 ? gint.Value : 1;
-                    else if (val is GH_Number gnum)
-                        csl.slider.TickFrequency = gnum.Value > 0 ? (int)gnum.Value : 1;
+                        csl.slider.TickFrequency = (csl.slider.MaxValue - csl.slider.MinValue) / gint.Value;
                     else if (val is GH_String gstr)
-                    {
-                        if (int.TryParse(gstr.Value, out int tickint))
-                            csl.slider.TickFrequency = tickint;
-                    }
+                        if (int.TryParse(gstr.Value, out int ct))
+                            csl.slider.TickFrequency = (csl.slider.MaxValue - csl.slider.MinValue) / ct;
+                        else
+                            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " couldn't parse integer");
+                    else if (val is GH_Number gnum)
+                        csl.slider.TickFrequency = (csl.slider.MaxValue - csl.slider.MinValue) / (int)gnum.Value;
                     else
-                        try { Util.SetProp(csl.slider, "TickFrequency", Util.GetGooVal(val)); }
-                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " tick count input not a valid number");
                 }
                 else if (n.ToLower()=="snaptotick" || n.ToLower()=="ticksnap" || n.ToLower() == "snap")
                 {
@@ -193,8 +196,8 @@ namespace Synapse.Ctrls
                         }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                     }
-                    else if (val is Font f)
-                        csl.label.Font = f;
+                    else if (val is Font txtf)
+                        csl.label.Font = txtf;
                     else
                         try { Util.SetProp(csl.label, "Font", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
@@ -281,17 +284,17 @@ namespace Synapse.Ctrls
 
             DA.SetData(1, new GH_ObjectWrapper(csl));
             DA.SetDataList(0, new string[]{
-                "MinValue",
-                "MaxValue",
-                "TickFrequency",
-                "SnapToTick",
-                "SliderWidth",
-                "LabelWidth",
-                "SliderHeight",
-                "Font",
-                "TextColor",
-                "Width",
-                "Orientation",
+                "MinValue: number",
+                "MaxValue: number",
+                "Steps: integer",
+                "SnapToTick: boolean",
+                "SliderWidth: integer",
+                "LabelWidth: integer",
+                "SliderHeight: integer",
+                "Font: Eto.Drawing.Font",
+                "TextColor: Eto.Drawing.Color",
+                "Width: integer",
+                "Orientation: Eto.Forms.Orientation",
             });
         }
 

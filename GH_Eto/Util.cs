@@ -51,6 +51,8 @@ namespace Synapse
     {
         public Slider slider;
         public Label label;
+        public double coef=1.0;
+        public double val;
 
         public ComboSlider()
         {
@@ -60,34 +62,33 @@ namespace Synapse
                 MaxValue = 10,
                 Value = 5,
             };
-            label = new Label() { Text = slider.Value.ToString(), };
-            slider.ValueChanged += OnValChange;
-        }
-        public ComboSlider(int min, int max)
-        {
-            slider = new Slider()
-            {
-                MinValue = min,
-                MaxValue = max,
-                Value = (min + max) / 2,
-            };
-            label = new Label() { Text = slider.Value.ToString(), };
-            slider.ValueChanged += OnValChange;
-        }
+            label = new Label();
+            val = slider.Value * coef;
+            label.Text = val.ToString();
+            slider.ValueChanged += OnSlide;
 
-        /// <summary>
-        /// must be called to initialize comboslider
-        /// </summary>
-        public void Init()
-        {
             Orientation = Orientation.Horizontal;
             Items.Add(slider);
             Items.Add(label);
+            Spacing = 2;
         }
 
-        protected void OnValChange(object s, EventArgs e)
+        protected void OnSlide(object s, EventArgs e)
         {
-            label.Text = slider.Value.ToString();
+            val = slider.Value * coef;
+            label.Text = val.ToString();
+        }
+
+        public void SetMin(double n)
+        {
+            double m = n / coef;
+            slider.MinValue = (int)m;
+        }
+
+        public void SetMax(double n)
+        {
+            double M = n / coef;
+            slider.MaxValue = (int)M;
         }
     }
 }
