@@ -6,7 +6,7 @@ using Eto.Drawing;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 
-namespace Synapse.Ctrls
+namespace Synapse
 {
     public class ExplicitSlider : GH_Component
     {
