@@ -15,7 +15,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoScroll class.
         /// </summary>
         public EtoScroll()
-          : base("SynapseScroll", "Scroll",
+          : base("SynapseScroll", "SScr",
               "scrollable container",
               "Synapse", "Containers")
         {

@@ -83,12 +83,14 @@ namespace Synapse
         {
             double m = n / coef;
             slider.MinValue = (int)m;
+            slider.Value = (slider.MinValue + slider.MaxValue) / 2;
         }
 
         public void SetMax(double n)
         {
             double M = n / coef;
             slider.MaxValue = (int)M;
+            slider.Value = (slider.MinValue + slider.MaxValue) / 2;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoLabel class.
         /// </summary>
         public EtoLabel()
-          : base("SynapseLabel", "SLabel",
+          : base("SynapseLabel", "SLbl",
               "label object, just a plain text tag",
               "Synapse", "Controls")
         {

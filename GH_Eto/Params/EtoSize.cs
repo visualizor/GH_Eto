@@ -12,7 +12,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoSize class.
         /// </summary>
         public EtoSize()
-          : base("SynapseSize", "Size",
+          : base("SynapseSize", "SSize",
               "size object (width and height)",
               "Synapse", "Parameters")
         {

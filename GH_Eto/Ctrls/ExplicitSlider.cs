@@ -14,8 +14,8 @@ namespace Synapse.Ctrls
         /// Initializes a new instance of the ExplicitSlider class.
         /// </summary>
         public ExplicitSlider()
-          : base("SynapseSlider+", "SSlider",
-              "slider with text label",
+          : base("SynapseSlider+", "SS",
+              "slider with label",
               "Synapse", "Controls")
         {
         }

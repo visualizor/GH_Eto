@@ -16,7 +16,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoCheckBox class.
         /// </summary>
         public EtoCheckBox()
-          : base("SynapseCheckBox", "SCheckBox",
+          : base("SynapseCheckBox", "SCB",
               "checkbox object",
               "Synapse", "Controls")
         {

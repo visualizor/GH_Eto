@@ -16,7 +16,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoRadioBtns class.
         /// </summary>
         public EtoRadioBtns()
-          : base("SynapseSingleSelect", "PickOne",
+          : base("SynapseSingleSelect", "SOne",
               "radio buttons",
               "Synapse", "Controls")
         {

@@ -14,7 +14,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoGridView class.
         /// </summary>
         public EtoGridView()
-          : base("SynapseGridView", "GridView",
+          : base("SynapseGridView", "SGV",
               "column and rows of items",
               "Synapse", "Controls")
         {

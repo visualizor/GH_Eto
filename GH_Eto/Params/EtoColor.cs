@@ -13,7 +13,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoColor class.
         /// </summary>
         public EtoColor()
-          : base("SynapseColor", "SColor",
+          : base("SynapseColor", "SClr",
               "color object for synapse controls",
               "Synapse", "Parameters")
         {

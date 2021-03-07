@@ -319,7 +319,7 @@ namespace Synapse
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " invalid controls detected");
                 else throw ex;
             }
-            Scrollable content = new Scrollable { Content = bucket, };
+            Scrollable content = new Scrollable { Content = bucket, Border = BorderType.None };
             EWindow.Content = content;
 
             if (run)

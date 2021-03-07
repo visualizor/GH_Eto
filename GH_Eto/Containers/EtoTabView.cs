@@ -14,7 +14,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoTabView class.
         /// </summary>
         public EtoTabView()
-          : base("SynapseTabs", "Tab",
+          : base("SynapseTabs", "STab",
               "tabbed view",
               "Synapse", "Containers")
         {

@@ -16,7 +16,7 @@ namespace Synapse
         /// Initializes a new instance of the Listener class.
         /// </summary>
         public ValQuery()
-          : base("ValueQuery", "Value",
+          : base("SynapseValueQuery", "SVal",
               "queries a Synapse component for its value",
               "Synapse", "Parameters")
         {

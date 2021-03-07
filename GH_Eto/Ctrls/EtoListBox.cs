@@ -14,7 +14,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoListBox class.
         /// </summary>
         public EtoListBox()
-          : base("SynapseListBox", "ListBox",
+          : base("SynapseListBox", "SLB",
               "list of items to choose from",
               "Synapse", "Controls")
         {

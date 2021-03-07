@@ -16,7 +16,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoExpander class.
         /// </summary>
         public EtoExpander()
-          : base("SynapseExpander", "Xpdr",
+          : base("SynapseExpander", "SXpdr",
               "expand/collapse controls",
               "Synapse", "Containers")
         {
