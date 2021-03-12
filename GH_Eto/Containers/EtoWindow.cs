@@ -8,8 +8,9 @@ using System.ComponentModel;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
-using System.Windows.Forms;
+using wf = System.Windows.Forms;
 using GH_IO.Serialization;
+using Grasshopper;
 
 // In order to load the result of this wizard, you will also need to
 // add the output bin/ folder of this project to the list of loaded
@@ -29,20 +30,33 @@ namespace Synapse
         /// </summary>
         public EtoWindow()
           : base("SynapseWindow", "SWindow",
-              "mian window",
+              "main window",
               "Synapse", "Containers")
         {
         }
 
-        internal Eto.Forms.Form EWindow = null;
+        internal Form EWindow = null;
         private void EWClosing(object s, CancelEventArgs e)
         {
-            EWindow = new Eto.Forms.Form()
+            if (OnPingDocument() is null)
+                return; // no need to re-instantiate when ghdoc is closed
+
+            EWindow = new Form()
             {
                 Height = 200,
                 Width = 400,
                 Title = "an Eto window",
             };
+        }
+        private void GhDocCheck(object s, EventArgs e)
+        {
+            if (s is Form ew)
+                if (OnPingDocument() is null)
+                {
+                    MessageBox.Show(ew, "Grasshopper document owning this window has gone missing\nClosing soon...", "Forced Shutdown", MessageBoxType.Information);
+                    ew.Close();
+                }
+            
         }
         internal bool ctrlfill = false;
 
@@ -51,13 +65,13 @@ namespace Synapse
             ctrlfill = !ctrlfill;
             ExpireSolution(false);
         }
-        public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
+        public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
         {
             base.AppendAdditionalMenuItems(menu);
             // TODO: this uses winforms, may not work on Mac OS
             try
             {
-                ToolStripMenuItem i = menu.Items.Add("Fill Window", null, OnFill) as ToolStripMenuItem;
+                wf.ToolStripMenuItem i = menu.Items.Add("Fill Window", null, OnFill) as wf.ToolStripMenuItem;
                 i.ToolTipText = "check to have all controls fill to the border of this window";
                 i.Checked = ctrlfill;
             }
@@ -104,9 +118,9 @@ namespace Synapse
             bool param2 = DA.GetDataList(2, vals);
             List<GH_ObjectWrapper> contents = new List<GH_ObjectWrapper>();
             DA.GetDataList(3, contents);
-
+            
             if (EWindow == null)
-                EWindow = new Eto.Forms.Form()
+                EWindow = new Form()
                 {
                     Height = 200,
                     Width = 400,
@@ -118,6 +132,8 @@ namespace Synapse
                 return;
             }
             EWindow.Closing += EWClosing;
+            EWindow.GotFocus += GhDocCheck;
+            //EWindow.Owner = Instances.EtoDocumentEditor;
 
             for (int i = 0; i < props.Count; i++)
             {
@@ -307,7 +323,7 @@ namespace Synapse
             try
             {
                 foreach (GH_ObjectWrapper ghobj in contents)
-                    if (ghobj.Value is Eto.Forms.Control ctrl)
+                    if (ghobj.Value is Control ctrl)
                         if (ctrlfill)
                             bucket.Add(ctrl);
                         else
