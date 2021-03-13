@@ -59,7 +59,7 @@ This is likely due to changing parameters on the Grasshopper component. Once a S
 #### Why does a container tell me to disconnect controls?
 Usually by linking and re-linking Synapse components, some of them may remember the parent container. Disable control components and re-enable should solve this.
 #### What is the difference between Synapse and HumanUI?
-Two big differences. One is that HumanUI works on Windows only. Synapse works on Macs too. Two is that HumanUI seems to have a beautified skin. Synapse does not have any custom looks for controls other than the basic properties.
+Two big differences. One is that HumanUI works on Windows only. Synapse works on Macs too. Two is that HumanUI seems to have a beautified skin and cool graphs. Synapse does not have any custom looks for controls other than the basic properties.
 #### Why can't I set a property on a control?
 There could be a few reasons. One is that the property can only be set with certain data types and the ones going into "V" aren't matching. Two is that the code for that Synapse element is missing something. Three is that the property is really meant to be set internally and the code does that and overrides your input. In any case, report errors. 
 #### I see a type of control on Eto.Forms doc. But where is it on Synapse?
@@ -69,4 +69,4 @@ Unfortunately this is not on my roadmap for Synapse. `Eto.Forms` doesn't seem to
 #### Why does value query component not return values?
 It is likely that the query is listening to a container object that doesn't yield any value. Try linking "C" with controls only.
 #### How can I add charts and illustrative graphics?
-No GUI level drawings will be implemented. I recommend plugins such as ProvingGround's [Conduit](https://provingground.io/tools/conduit-for-grasshopper/) that makes heads-up displays.
+GUI level drawings with `Eto.Drawing` library will NOT be implemented anytime soon. I recommend plugins such as ProvingGround's [Conduit](https://provingground.io/tools/conduit-for-grasshopper/) that makes heads-up displays.
