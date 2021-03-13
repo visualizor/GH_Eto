@@ -47,6 +47,8 @@ namespace Synapse
                 Width = 400,
                 Title = "an Eto window",
             };
+            EWindow.Closing += EWClosing;
+            EWindow.GotFocus += GhDocCheck;
         }
         private void GhDocCheck(object s, EventArgs e)
         {
@@ -59,10 +61,16 @@ namespace Synapse
             
         }
         internal bool ctrlfill = false;
+        internal bool ctrlredo = false;
 
         private void OnFill(object s, EventArgs e)
         {
             ctrlfill = !ctrlfill;
+            ExpireSolution(false);
+        }
+        private void OnRepaint(object s, EventArgs e)
+        {
+            ctrlredo = !ctrlredo;
             ExpireSolution(false);
         }
         public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
@@ -74,6 +82,9 @@ namespace Synapse
                 wf.ToolStripMenuItem i = menu.Items.Add("Fill Window", null, OnFill) as wf.ToolStripMenuItem;
                 i.ToolTipText = "check to have all controls fill to the border of this window";
                 i.Checked = ctrlfill;
+                wf.ToolStripMenuItem m = menu.Items.Add("Repaint", null, OnRepaint) as wf.ToolStripMenuItem;
+                m.ToolTipText = "check to allow instant control updates\ncontrol values not guaranteed to stay";
+                m.Checked = ctrlredo;
             }
             catch { }
         }
@@ -118,21 +129,36 @@ namespace Synapse
             bool param2 = DA.GetDataList(2, vals);
             List<GH_ObjectWrapper> contents = new List<GH_ObjectWrapper>();
             DA.GetDataList(3, contents);
-            
+
             if (EWindow == null)
+            {
                 EWindow = new Form()
                 {
                     Height = 200,
                     Width = 400,
                     Title = "an Eto window",
                 };
-            else if (EWindow.Visible && run)
+                EWindow.Closing += EWClosing;
+                EWindow.GotFocus += GhDocCheck;
+            }
+            else if (EWindow.Visible && !run)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "open window cannot be modified");
+                EWindow.Close();
                 return;
             }
-            EWindow.Closing += EWClosing;
-            EWindow.GotFocus += GhDocCheck;
+            else if (EWindow.Visible && run)
+            {
+                if (!ctrlredo)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " open window will not be modified unless \"Repaint\" is unchecked");
+                    return;
+                }
+                else
+                {
+                    EWindow.Content = null;
+                }
+            }
+            
             //EWindow.Owner = Instances.EtoDocumentEditor;
 
             for (int i = 0; i < props.Count; i++)
@@ -340,8 +366,6 @@ namespace Synapse
 
             if (run)
                 EWindow.Show();
-            else
-                EWindow.Close();
 
             PropertyInfo[] allprops = EWindow.GetType().GetProperties();
             List<string> printouts = new List<string>();
@@ -355,11 +379,13 @@ namespace Synapse
         public override bool Write(GH_IWriter writer)
         {
             writer.SetBoolean("ctrlfill", ctrlfill);
+            writer.SetBoolean("ctrlredo", ctrlredo);
             return base.Write(writer);
         }
         public override bool Read(GH_IReader reader)
         {
             reader.TryGetBoolean("ctrlfill", ref ctrlfill);
+            reader.TryGetBoolean("ctrlredo", ref ctrlredo);
             return base.Read(reader);
         }
 
