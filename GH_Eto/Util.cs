@@ -93,4 +93,49 @@ namespace Synapse
             slider.Value = (slider.MinValue + slider.MaxValue) / 2;
         }
     }
+
+    internal class PieData
+    {
+        protected double[] pcts;
+        protected Color[] clrs;
+
+        public string[] Keys { get; set; }
+        public double[] Percentages
+        {
+            get { return pcts; }
+            set
+            {
+                if (value.Length == Keys.Length)
+                {
+                    foreach (double p in value)
+                        if (p <= 0 || p >= 1)
+                            throw new ArrayTypeMismatchException(" items in pie data must be percentage numbers (0 < n < 1)");
+                    pcts = value;
+                } 
+            }
+        }
+        public Color[] Colors
+        {
+            get { return clrs; }
+            set
+            {
+                if (value.Length == Keys.Length)
+                    clrs = value;
+            }
+        }
+
+        /// <summary>
+        /// constructor, don't forget to set properties of values of colors
+        /// </summary>
+        /// <param name="k">keys</param>
+        public PieData(IEnumerable<string> k)
+        {
+            Keys = k.ToArray();
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Pie legend data ({0} items)", Keys.Length);
+        }
+    }
 }
