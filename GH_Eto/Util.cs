@@ -5,19 +5,33 @@ using System.Reflection;
 using Eto.Forms;
 using Eto.Drawing;
 using Grasshopper.Kernel.Types;
-using Grasshopper.Kernel.Data;
 
 namespace Synapse
 {
     internal class Util
     {
+        /// <summary>
+        /// the random seeder object all everything should call for arbitrary numbers within this namespace
+        /// </summary>
+        public static Random Rand = new Random();
 
+        /// <summary>
+        /// set eto control properties
+        /// </summary>
+        /// <param name="subject">eto control object</param>
+        /// <param name="pname">property name</param>
+        /// <param name="pval">property value</param>
         public static void SetProp(object subject, string pname, object pval)
         {
             PropertyInfo prop = subject.GetType().GetProperty(pname);
             prop.SetValue(subject, pval);
         }
 
+        /// <summary>
+        /// get the object value attached to grasshopper goo
+        /// </summary>
+        /// <param name="goo">the goo object</param>
+        /// <returns>object value</returns>
         public static object GetGooVal(object goo)
         {
             if (goo is GH_Point p)
@@ -94,7 +108,7 @@ namespace Synapse
         }
     }
 
-    internal class PieData
+    internal class ChartData
     {
         protected double[] pcts;
         protected Color[] clrs;
@@ -128,7 +142,7 @@ namespace Synapse
         /// constructor, don't forget to set properties of values of colors
         /// </summary>
         /// <param name="k">keys</param>
-        public PieData(IEnumerable<string> k)
+        public ChartData(IEnumerable<string> k)
         {
             Keys = k.ToArray();
         }
