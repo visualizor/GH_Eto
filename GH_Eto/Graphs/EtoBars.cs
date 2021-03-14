@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Linq;
-using sd = System.Drawing;
-using Eto.Drawing;
 using Eto.Forms;
+using Eto.Drawing;
+using System.Linq;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 
 namespace Synapse
 {
-    public class EtoPie : GH_Component
+    public class EtoBars : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the EtoPie class.
+        /// Initializes a new instance of the EtoBars class.
         /// </summary>
-        public EtoPie()
-          : base("SynapsePieChart", "SPie",
-              "pie chart",
+        public EtoBars()
+          : base("SynapseHistogram", "SHisto",
+              "histograms/bar chart",
               "Synapse", "Graphs")
         {
         }
@@ -91,22 +89,13 @@ namespace Synapse
             for (int i = 0; i < pct.Length; i++)
                 pct.SetValue(nums[i] / nums.Sum(), i);
 
-            double start = 0;
-            double sweep = pct[0] * 360;
-            for (int i =0; i<pct.Length; i++)
-            {
-                RectangleF r = new RectangleF(new Size(s - 2, s - 2));
-                graphics.FillPie(clrs[i], r, (float)start, (float)sweep);
-                if (i == pct.Length - 1) break;
-                start += sweep;
-                sweep = pct[i + 1] * 360;
-            }
-            graphics.Flush();
+            // TODO: actually draw here
+
 
             ImageView graph = new ImageView() { Image = bitmap, };
-            ChartData pd = new ChartData(keys) { Percentages = pct, Colors = clrs.ToArray(), };
+            ChartData bardata = new ChartData(keys) { Percentages = pct, Colors = clrs.ToArray(), };
             DA.SetData(0, new GH_ObjectWrapper(graph));
-            DA.SetData(1, new GH_ObjectWrapper(pd));
+            DA.SetData(1, new GH_ObjectWrapper(bardata));
         }
 
 
@@ -124,7 +113,7 @@ namespace Synapse
         {
             get
             {
-                return Properties.Resources.pie;
+                return Properties.Resources.bars;
             }
         }
 
@@ -133,7 +122,7 @@ namespace Synapse
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("440baedc-df81-4665-9f86-ba33216a052a"); }
+            get { return new Guid("0644169d-4da6-41c7-88c0-ff0eaa9663e4"); }
         }
     }
 }
