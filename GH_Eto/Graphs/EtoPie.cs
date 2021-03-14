@@ -22,6 +22,8 @@ namespace Synapse
         {
         }
 
+        protected Random rnd = new Random();
+
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
@@ -70,9 +72,9 @@ namespace Synapse
             if (gclrs.Count == 0)
                 for (int i = 0; i < nums.Count; i++)
                 {
-                    double r = Util.Rand.NextDouble() * 255;
-                    double g = Util.Rand.NextDouble() * 255;
-                    double b = Util.Rand.NextDouble() * 255;
+                    double r = rnd.NextDouble() * 255;
+                    double g = rnd.NextDouble() * 255;
+                    double b = rnd.NextDouble() * 255;
                     clrs.Add(Color.FromArgb((int)r, (int)g, (int)b));
                 }
             else if (gclrs.Count != nums.Count)
@@ -104,7 +106,7 @@ namespace Synapse
             graphics.Flush();
 
             ImageView graph = new ImageView() { Image = bitmap, };
-            ChartData pd = new ChartData(keys) { Percentages = pct, Colors = clrs.ToArray(), };
+            PieData pd = new PieData(keys) { Percentages = pct, Colors = clrs.ToArray(), };
             DA.SetData(0, new GH_ObjectWrapper(graph));
             DA.SetData(1, new GH_ObjectWrapper(pd));
         }

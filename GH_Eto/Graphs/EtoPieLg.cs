@@ -8,14 +8,14 @@ using Grasshopper.Kernel.Types;
 
 namespace Synapse
 {
-    public class EtoLegend : GH_Component
+    public class EtoPieLg : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the EtoPieLg class.
         /// </summary>
-        public EtoLegend()
-          : base("SynapseLegend", "Legend",
-              "chart legend",
+        public EtoPieLg()
+          : base("SynapsePieLegend", "Legend",
+              "pie chart legend",
               "Synapse", "Graphs")
         {
         }
@@ -31,7 +31,7 @@ namespace Synapse
             pManager.AddGenericParameter("Property Value", "V", "values for the property", GH_ParamAccess.list);
             pManager[1].DataMapping = GH_DataMapping.Flatten;
             pManager[1].Optional = true;
-            pManager.AddGenericParameter("Data", "D", "chart data object from a graph", GH_ParamAccess.item);
+            pManager.AddGenericParameter("PieData", "D", "pie data object from pie chart graph", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Synapse
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
             pManager.AddTextParameter("All Properties", "A", "list of all accessible properties", GH_ParamAccess.list);
-            pManager.AddGenericParameter("Legend", "L", "legend for chart", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Legend", "L", "legend for pie chart", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Synapse
             DA.GetDataList(1, vals);
 
             ChartLegend legend;
-            if (gho.Value is ChartData pd)
+            if (gho.Value is PieData pd)
             {
                 string[] pcts = new string[pd.Percentages.Length];
                 for (int i = 0; i < pcts.Length; i++)
