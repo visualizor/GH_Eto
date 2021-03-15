@@ -26,7 +26,7 @@ namespace Synapse
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddIntegerParameter("Size", "S", "size", GH_ParamAccess.item, 50);
-            pManager.AddNumberParameter("Numbers", "N", "numbers to represent in a pie chart", GH_ParamAccess.list, new double[] { 0.25, 0.33, 0.15, 1 - 0.15 - 0.33 - 0.25, });
+            pManager.AddNumberParameter("Numbers", "N", "numbers to represent in a bar chart", GH_ParamAccess.list, new double[] { 0.25, 0.33, 0.15, 1 - 0.15 - 0.33 - 0.25, });
             pManager.AddTextParameter("Keys", "K", "keys", GH_ParamAccess.list);
             pManager[2].Optional = true;
             pManager.AddColourParameter("Colors", "C", "regular Grasshopper colors will do\nno need to use Synapse colors", GH_ParamAccess.list);
@@ -89,8 +89,23 @@ namespace Synapse
             for (int i = 0; i < pct.Length; i++)
                 pct.SetValue(nums[i] / nums.Sum(), i);
 
-            // TODO: actually draw here
-
+            if (s <= 10)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " size too small to draw");
+                return;
+            }
+            double barwidth = (s - 10) / (double)pct.Length;
+            double h_incr = (s - 10) / pct.Max(); // 10 is space for axes
+            for (int i=0; i<pct.Length; i++)
+            {
+                // Graphics draw from screen top left so +y means going down the screen
+                // drawing rectangle always goes from rectangle top left corner
+                double h = pct[i] * h_incr;
+                double x = i * barwidth + 10;
+                double y = s - 10 - h; // s-10 is y bottom, minus height to get rectangle *top* left corner
+                graphics.FillRectangle(clrs[i], (float)x, (float)y, (float)barwidth, (float)h);
+            }
+            graphics.Flush();
 
             ImageView graph = new ImageView() { Image = bitmap, };
             ChartData bardata = new ChartData(keys) { Percentages = pct, Colors = clrs.ToArray(), };

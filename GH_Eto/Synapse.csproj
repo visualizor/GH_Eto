@@ -76,6 +76,7 @@
     <Compile Include="Ctrls\ExplicitSlider.cs" />
     <Compile Include="Graphs\EtoBars.cs" />
     <Compile Include="Graphs\EtoPie.cs" />
+    <Compile Include="Graphs\EtoTrends.cs" />
     <Compile Include="Graphs\Legend.cs" />
     <Compile Include="Params\EtoColor.cs" />
     <Compile Include="Params\EtoFont.cs" />
@@ -145,9 +146,6 @@
     <None Include="Resources\window.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\radiobtn.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\expander.png" />
   </ItemGroup>
   <ItemGroup>
@@ -194,6 +192,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\bars.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\radiobtn.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
