@@ -57,16 +57,37 @@ namespace Synapse
             DA.GetDataList(1, vals);
 
             ChartLegend legend;
-            if (gho.Value is ChartData pd)
+            if (gho.Value is ChartData cd)
             {
-                string[] pcts = new string[pd.Percentages.Length];
+                string[] pcts = new string[cd.AppdVals.Length];
                 for (int i = 0; i < pcts.Length; i++)
                 {
-                    double p = pd.Percentages[i];
-                    string pstr = Math.Round(p * 100, 2).ToString();
-                    pcts.SetValue(pstr+"%", i);
+                    double p = cd.AppdVals[i];
+                    string pstr;
+                    if (cd.Type == ChartType.Trend)
+                        pstr = p.ToString();
+                    else
+                        pstr = Math.Round(p * 100, 2).ToString();
+                    pcts.SetValue(pstr, i);
                 }
-                legend = new ChartLegend(pd.Keys, pd.Colors, pcts);
+                legend = new ChartLegend(cd.Keys, cd.Colors, pcts);
+                switch (cd.Type)
+                {
+                    case ChartType.Pie:
+                        legend.AppdPrefix = "";
+                        legend.AppdSuffix = "%";
+                        break;
+                    case ChartType.Bar:
+                        legend.AppdPrefix = "";
+                        legend.AppdSuffix = "%";
+                        break;
+                    case ChartType.Trend:
+                        legend.AppdPrefix = "Avg. ";
+                        legend.AppdSuffix = "";
+                        break;
+                    default:
+                        break;
+                }
             }
             else
             {
@@ -119,11 +140,11 @@ namespace Synapse
                             else
                                 legend.Horizontal = false;
                         break;
-                    case "percentage":
+                    case "showmore":
                         if (val is GH_Boolean gbool)
                             legend.ShowAppd = gbool.Value;
                         else if (val is GH_String pstr)
-                            legend.ShowAppd = pstr.Value.ToLower() == "show";
+                            legend.ShowAppd = pstr.Value.ToLower() == "show" || pstr.Value.ToLower() == "true";
                         break;
                     default:
                         break;
@@ -135,7 +156,7 @@ namespace Synapse
                 "Font: Eto.Drawing.Font",
                 "Marker: string",
                 "Orientation: int",
-                "Percentage: bool",
+                "ShowMore: bool",
             });
         }
 

@@ -108,7 +108,7 @@ namespace Synapse
             graphics.Flush();
 
             ImageView graph = new ImageView() { Image = bitmap, };
-            ChartData bardata = new ChartData(keys) { Percentages = pct, Colors = clrs.ToArray(), };
+            ChartData bardata = new ChartData(keys, ChartType.Bar) { AppdVals = pct, Colors = clrs.ToArray(), };
             DA.SetData(0, new GH_ObjectWrapper(graph));
             DA.SetData(1, new GH_ObjectWrapper(bardata));
         }

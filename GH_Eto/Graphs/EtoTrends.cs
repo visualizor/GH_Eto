@@ -5,6 +5,8 @@ using Eto.Forms;
 using Eto.Drawing;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
+using Grasshopper;
+using Grasshopper.Kernel.Data;
 
 namespace Synapse
 {
@@ -27,9 +29,9 @@ namespace Synapse
         {
             pManager.AddIntegerParameter("Size", "S", "size", GH_ParamAccess.item, 50);
             pManager.AddNumberParameter("Numbers", "N", "numbers to represent in a line chart\neach branch will generate a polyline", GH_ParamAccess.tree);
-            pManager.AddTextParameter("Name", "K", "trend name", GH_ParamAccess.tree);
+            pManager.AddTextParameter("Name", "K", "trend name\neach on an individual branch corresponding to numbers", GH_ParamAccess.tree);
             pManager[2].Optional = true;
-            pManager.AddColourParameter("Color", "C", "regular Grasshopper color will do\nno need to use Synapse colors", GH_ParamAccess.tree);
+            pManager.AddColourParameter("Color", "C", "regular Grasshopper color will do\nno need to use Synapse colors\neach on an individual branch corresponding to numbers", GH_ParamAccess.tree);
             pManager[3].Optional = true;
         }
 
@@ -48,6 +50,61 @@ namespace Synapse
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            int s = 50;
+            DA.GetData(0, ref s);
+            DA.GetDataTree(1, out GH_Structure<GH_Number> data);
+            DA.GetDataTree(2, out GH_Structure<GH_String> keys);
+            DA.GetDataTree(3, out GH_Structure<GH_Colour> clrs);
+
+            Bitmap bitmap = new Bitmap(new Size(s, s), PixelFormat.Format32bppRgba);
+            Graphics graphics = new Graphics(bitmap);
+            if (s <= 10)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " size too small to draw");
+                return;
+            }
+
+            IEnumerable<double> flatdata = data.FlattenData().Select(i => i.Value);
+            double h_incr = (s - 10) / flatdata.Max(); // -10 is leaving space for axes
+            double[] avg = new double[data.Branches.Count];
+            Color[] etoclrs = new Color[data.Branches.Count];
+            string[] txtkeys = new string[data.Branches.Count];
+            for (int bi = 0; bi<data.Branches.Count; bi++)
+            {
+                try
+                {
+                    etoclrs.SetValue(clrs.Branches[bi][0].Value.ToEto(), bi);
+                    txtkeys.SetValue(keys.Branches[bi][0].Value, bi);
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, " mismatch of data length\n if N has 3 branches each with 5 numbers, K and C must be 3 branches each has one item\n did you forget to graft or duplicate data as necessary?");
+                    return;
+                }
+
+                double[] nums = data.Branches[bi].Select(i => i.Value).ToArray();
+                avg.SetValue(nums.Average(), bi);
+                double barwidth = (s - 10) / (double)nums.Length; // -10 leaving left for axis
+
+                PointF[] nodes = new PointF[nums.Length];
+                Pen pen = new Pen(etoclrs[bi], 2f);
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    double x = (i + 0.5) * barwidth + 10; // +10 moving right, leaving left for axis
+                    double h = nums[i] * h_incr;
+                    double y = s - 10 + 4 - h; // -10 moving up leaving space for x axis, additional +4 moving down to avoid top chop off
+                    nodes.SetValue(new PointF((float)x, (float)y), i);
+                }
+                graphics.DrawLines(pen, nodes);
+                foreach(PointF p in nodes)
+                    graphics.DrawArc(pen, p.X - 4, p.Y - 4, 8f, 8f, 0f, 360f);
+            }
+            graphics.Flush();
+
+            ImageView graph = new ImageView() { Image = bitmap, };
+            ChartData bardata = new ChartData(txtkeys, ChartType.Trend) { AppdVals = avg, Colors = etoclrs, };
+            DA.SetData(0, new GH_ObjectWrapper(graph));
+            DA.SetData(1, new GH_ObjectWrapper(bardata));
         }
 
 
@@ -65,7 +122,7 @@ namespace Synapse
         {
             get
             {
-                return null;
+                return Properties.Resources.trends;
             }
         }
 

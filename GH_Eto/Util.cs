@@ -108,26 +108,50 @@ namespace Synapse
         }
     }
 
+    internal enum ChartType
+    {
+        Pie,
+        Bar,
+        Trend,
+    }
+
     internal class ChartData
     {
-        protected double[] pcts;
+        protected double[] mappedvals;
         protected Color[] clrs;
+        protected double[] vals;
 
+        /// <summary>
+        /// name tags/keys
+        /// </summary>
         public string[] Keys { get; set; }
-        public double[] Percentages
+        /// <summary>
+        /// appended extra values in parenthese
+        /// </summary>
+        public double[] AppdVals
         {
-            get { return pcts; }
+            get { return mappedvals; }
             set
             {
                 if (value.Length == Keys.Length)
-                {
-                    foreach (double p in value)
-                        if (p <= 0 || p >= 1)
-                            throw new ArrayTypeMismatchException(" items in pie data must be percentage numbers (0 < n < 1)");
-                    pcts = value;
-                } 
+                    mappedvals = value;
             }
         }
+        /// <summary>
+        /// original data values
+        /// </summary>
+        public double[] OGVals
+        {
+            get { return vals; }
+            set
+            {
+                if (value.Length == Keys.Length)
+                    vals = value;
+            }
+        }
+        /// <summary>
+        /// graph colors
+        /// </summary>
         public Color[] Colors
         {
             get { return clrs; }
@@ -137,19 +161,24 @@ namespace Synapse
                     clrs = value;
             }
         }
+        /// <summary>
+        /// type of chart
+        /// </summary>
+        public ChartType Type { get; set; }
 
         /// <summary>
         /// constructor, don't forget to set properties of values of colors
         /// </summary>
         /// <param name="k">keys</param>
-        public ChartData(IEnumerable<string> k)
+        public ChartData(IEnumerable<string> k, ChartType t)
         {
             Keys = k.ToArray();
+            Type = t;
         }
 
         public override string ToString()
         {
-            return string.Format("Pie legend data ({0} items)", Keys.Length);
+            return string.Format("chart data ({0} items)", Keys.Length);
         }
     }
 
@@ -197,6 +226,14 @@ namespace Synapse
                     marker = value;
             }
         }
+        /// <summary>
+        /// prefix to appended texts
+        /// </summary>
+        public string AppdPrefix { get; set; } = "";
+        /// <summary>
+        /// suffix to appended texts
+        /// </summary>
+        public string AppdSuffix { get; set; } = "";
 
         /// <summary>
         /// constructor
@@ -263,7 +300,7 @@ namespace Synapse
                 };
                 Label txt = new Label()
                 {
-                    Text = Keys[ki] + (ShowAppd ? string.Format(" ({0})",Appd[ki]) : ""),
+                    Text = Keys[ki] + (ShowAppd ? string.Format(" ({2}{0}{1})",Appd[ki],AppdSuffix,AppdPrefix) : ""),
                 };
                 if (TxtFont != null)
                 {
