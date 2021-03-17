@@ -30,9 +30,7 @@ namespace Synapse
             pManager.AddIntegerParameter("Size", "S", "size", GH_ParamAccess.item, 50);
             pManager.AddNumberParameter("Numbers", "N", "numbers to represent in a line chart\neach branch will generate a polyline", GH_ParamAccess.tree);
             pManager.AddTextParameter("Name", "K", "trend name\neach on an individual branch corresponding to numbers", GH_ParamAccess.tree);
-            pManager[2].Optional = true;
             pManager.AddColourParameter("Color", "C", "regular Grasshopper color will do\nno need to use Synapse colors\neach on an individual branch corresponding to numbers", GH_ParamAccess.tree);
-            pManager[3].Optional = true;
         }
 
         /// <summary>
