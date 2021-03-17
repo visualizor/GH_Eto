@@ -138,6 +138,12 @@ namespace Synapse
                         int y = (int)grec.Value.Y.Length;
                         table.Size = new Size(x, y);
                     }
+                    else if (val is GH_ComplexNumber gcomp)
+                    {
+                        int x = (int)gcomp.Value.Real;
+                        int y = (int)gcomp.Value.Imaginary;
+                        table.Size = new Size(x, y);
+                    }
                     else
                         try { Util.SetProp(table, "Size", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
@@ -180,6 +186,18 @@ namespace Synapse
                         table.Padding = new Padding((int)pt.Value.X, (int)pt.Value.Y);
                     else if (val is GH_Vector vec)
                         table.Padding = new Padding((int)vec.Value.X, (int)vec.Value.Y);
+                    else if (val is GH_Rectangle grec)
+                    {
+                        int x = (int)grec.Value.X.Length;
+                        int y = (int)grec.Value.Y.Length;
+                        table.Padding = new Padding(x, y);
+                    }
+                    else if (val is GH_ComplexNumber gcomp)
+                    {
+                        int x = (int)gcomp.Value.Real;
+                        int y = (int)gcomp.Value.Imaginary;
+                        table.Padding = new Padding(x, y);
+                    }
                     else
                         try { Util.SetProp(table, "Padding", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
@@ -202,6 +220,18 @@ namespace Synapse
                     }
                     else if (val is GH_Number gnum)
                         table.Spacing = new Size((int)gnum.Value, (int)gnum.Value);
+                    else if (val is GH_Rectangle grec)
+                    {
+                        int x = (int)grec.Value.X.Length;
+                        int y = (int)grec.Value.Y.Length;
+                        table.Spacing = new Size(x, y);
+                    }
+                    else if (val is GH_ComplexNumber gcomp)
+                    {
+                        int x = (int)gcomp.Value.Real;
+                        int y = (int)gcomp.Value.Imaginary;
+                        table.Spacing = new Size(x, y);
+                    }
                     else
                         try { Util.SetProp(table, "Spacing", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }

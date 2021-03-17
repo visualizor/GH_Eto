@@ -100,6 +100,12 @@ namespace Synapse.Containers
                         int y = (int)grec.Value.Y.Length;
                         gb.Size = new Size(x, y);
                     }
+                    else if (val is GH_ComplexNumber gcomp)
+                    {
+                        int x = (int)gcomp.Value.Real;
+                        int y = (int)gcomp.Value.Imaginary;
+                        gb.Size = new Size(x, y);
+                    }
                     else
                         try { Util.SetProp(gb, "Size", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
@@ -142,6 +148,18 @@ namespace Synapse.Containers
                         gb.Padding = new Padding((int)pt.Value.X, (int)pt.Value.Y);
                     else if (val is GH_Vector vec)
                         gb.Padding = new Padding((int)vec.Value.X, (int)vec.Value.Y);
+                    else if (val is GH_Rectangle grec)
+                    {
+                        int x = (int)grec.Value.X.Length;
+                        int y = (int)grec.Value.Y.Length;
+                        gb.Padding = new Padding(x, y);
+                    }
+                    else if (val is GH_ComplexNumber gcomp)
+                    {
+                        int x = (int)gcomp.Value.Real;
+                        int y = (int)gcomp.Value.Imaginary;
+                        gb.Padding = new Padding(x, y);
+                    }
                     else
                         try { Util.SetProp(gb, "Padding", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }

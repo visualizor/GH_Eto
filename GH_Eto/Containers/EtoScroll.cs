@@ -143,6 +143,18 @@ namespace Synapse
                     }
                     else if (val is GH_Integer pad)
                         scroll.Padding =  new Padding(pad.Value);
+                    else if (val is GH_Rectangle grec)
+                    {
+                        int x = (int)grec.Value.X.Length;
+                        int y = (int)grec.Value.Y.Length;
+                        scroll.Padding = new Padding(x, y);
+                    }
+                    else if (val is GH_ComplexNumber gcomp)
+                    {
+                        int x = (int)gcomp.Value.Real;
+                        int y = (int)gcomp.Value.Imaginary;
+                        scroll.Padding = new Padding(x, y);
+                    }
                     else
                         try { Util.SetProp(scroll, "Padding", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }

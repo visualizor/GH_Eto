@@ -94,23 +94,14 @@ namespace Synapse
                         int y = (int)grec.Value.Y.Length;
                         btn.Size = new Size(x, y);
                     }
-                    else
-                        try { Util.SetProp(btn, "Size", Util.GetGooVal(val)); }
-                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
-                }
-                else if (n.ToLower() == "location" || n.ToLower() == "position")
-                {
-                    if (val is GH_Point pt)
-                        Util.SetProp(btn, "Location", new Eto.Drawing.Point((int)pt.Value.X, (int)pt.Value.Y));
-                    else if (val is GH_Vector vec)
-                        Util.SetProp(btn, "Location", new Eto.Drawing.Point((int)vec.Value.X, (int)vec.Value.Y));
-                    else if (val is GH_String locstr)
+                    else if (val is GH_ComplexNumber gcomp)
                     {
-                        if (Point3d.TryParse(locstr.Value, out Point3d rhpt))
-                            Util.SetProp(btn, "Location", new Eto.Drawing.Point((int)rhpt.X, (int)rhpt.Y));
+                        int x = (int)gcomp.Value.Real;
+                        int y = (int)gcomp.Value.Imaginary;
+                        btn.Size = new Size(x, y);
                     }
                     else
-                        try { Util.SetProp(btn, "Location", Util.GetGooVal(val)); }
+                        try { Util.SetProp(btn, "Size", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
                 else if (n.ToLower() == "text" || n.ToLower() == "label")

@@ -93,6 +93,12 @@ namespace Synapse
                         int y = (int)grec.Value.Y.Length;
                         tb.Size = new Size(x, y);
                     }
+                    else if (val is GH_ComplexNumber gcomp)
+                    {
+                        int x = (int)gcomp.Value.Real;
+                        int y = (int)gcomp.Value.Imaginary;
+                        tb.Size = new Size(x, y);
+                    }
                     else
                         try { Util.SetProp(tb, "Size", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }

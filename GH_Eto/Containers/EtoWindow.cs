@@ -198,6 +198,12 @@ namespace Synapse
                         int y = (int)grec.Value.Y.Length;
                         EWindow.Size = new Size(x, y);
                     }
+                    else if (val is GH_ComplexNumber gcomp)
+                    {
+                        int x = (int)gcomp.Value.Real;
+                        int y = (int)gcomp.Value.Imaginary;
+                        EWindow.Size = new Size(x, y);
+                    }
                     else
                         try { Util.SetProp(EWindow, "Size", Util.GetGooVal(val)); }
                         catch (Exception ex){ AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
@@ -269,6 +275,18 @@ namespace Synapse
                         if (Point3d.TryParse(locstr.Value, out Point3d rhpt))
                             Util.SetProp(EWindow, "Location", new Eto.Drawing.Point((int)rhpt.X, (int)rhpt.Y));
                     }
+                    else if (val is GH_Rectangle grec)
+                    {
+                        int x = (int)grec.Value.X.Length;
+                        int y = (int)grec.Value.Y.Length;
+                        EWindow.Location = new Eto.Drawing.Point(x, y);
+                    }
+                    else if (val is GH_ComplexNumber gcomp)
+                    {
+                        int x = (int)gcomp.Value.Real;
+                        int y = (int)gcomp.Value.Imaginary;
+                        EWindow.Location = new Eto.Drawing.Point(x, y);
+                    }
                     else
                         try { Util.SetProp(EWindow, "Location", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
@@ -301,6 +319,18 @@ namespace Synapse
                     }
                     else if (val is GH_Integer pad)
                         Util.SetProp(EWindow, "Padding", new Eto.Drawing.Padding(pad.Value));
+                    else if (val is GH_Rectangle grec)
+                    {
+                        int x = (int)grec.Value.X.Length;
+                        int y = (int)grec.Value.Y.Length;
+                        EWindow.Padding = new Padding(x, y);
+                    }
+                    else if (val is GH_ComplexNumber gcomp)
+                    {
+                        int x = (int)gcomp.Value.Real;
+                        int y = (int)gcomp.Value.Imaginary;
+                        EWindow.Padding = new Padding(x, y);
+                    }
                     else
                         try { Util.SetProp(EWindow, "Padding", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }

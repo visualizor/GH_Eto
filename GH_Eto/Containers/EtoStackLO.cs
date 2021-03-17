@@ -155,6 +155,18 @@ namespace Synapse
                     }
                     else if (val is Padding pad)
                         stack.Padding = pad;
+                    else if (val is GH_Rectangle grec)
+                    {
+                        int x = (int)grec.Value.X.Length;
+                        int y = (int)grec.Value.Y.Length;
+                        stack.Padding = new Padding(x, y);
+                    }
+                    else if (val is GH_ComplexNumber gcomp)
+                    {
+                        int x = (int)gcomp.Value.Real;
+                        int y = (int)gcomp.Value.Imaginary;
+                        stack.Padding = new Padding(x, y);
+                    }
                     else
                         try { Util.SetProp(stack, "Padding", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
@@ -183,6 +195,12 @@ namespace Synapse
                     {
                         int x = (int)grec.Value.X.Length;
                         int y = (int)grec.Value.Y.Length;
+                        stack.Size = new Size(x, y);
+                    }
+                    else if (val is GH_ComplexNumber gcomp)
+                    {
+                        int x = (int)gcomp.Value.Real;
+                        int y = (int)gcomp.Value.Imaginary;
                         stack.Size = new Size(x, y);
                     }
                     else

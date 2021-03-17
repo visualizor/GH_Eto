@@ -101,6 +101,12 @@ namespace Synapse
                         int y = (int)grec.Value.Y.Length;
                         xpdr.Size = new Size(x, y);
                     }
+                    else if (val is GH_ComplexNumber gcomp)
+                    {
+                        int x = (int)gcomp.Value.Real;
+                        int y = (int)gcomp.Value.Imaginary;
+                        xpdr.Size = new Size(x, y);
+                    }
                     else
                         try { Util.SetProp(xpdr, "Size", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
@@ -143,6 +149,18 @@ namespace Synapse
                         xpdr.Padding = new Padding((int)pt.Value.X, (int)pt.Value.Y);
                     else if (val is GH_Vector vec)
                         xpdr.Padding = new Padding((int)vec.Value.X, (int)vec.Value.Y);
+                    else if (val is GH_Rectangle grec)
+                    {
+                        int x = (int)grec.Value.X.Length;
+                        int y = (int)grec.Value.Y.Length;
+                        xpdr.Padding = new Padding(x, y);
+                    }
+                    else if (val is GH_ComplexNumber gcomp)
+                    {
+                        int x = (int)gcomp.Value.Real;
+                        int y = (int)gcomp.Value.Imaginary;
+                        xpdr.Padding = new Padding(x, y);
+                    }
                     else
                         try { Util.SetProp(xpdr, "Padding", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
