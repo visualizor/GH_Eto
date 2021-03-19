@@ -319,4 +319,73 @@ namespace Synapse
             return legends;
         }
     }
+
+    internal enum ChartAxisType
+    {
+        X,
+        Y,
+        Both,
+    }
+
+    internal class ChartAxis
+    {
+        private int tickX = 3;
+        private int tickY = 3;
+
+        public ChartAxisType AxisType { get; private set; }
+        public Graphics Author { get; private set; }
+        public RectangleF Canvas { get; private set; }
+        public float LineWt { get; set; } = 1f;
+        public Color LineClr { get; set; } = Color.FromArgb(0, 0, 0);
+        public int TickCountX
+        {
+            get { return tickX; }
+            set
+            {
+                if (value >= 2)
+                    tickX = value;
+            }
+        }
+        public int TickCountY
+        {
+            get { return tickY; }
+            set
+            {
+                if (value >= 2)
+                    tickY = value;
+            }
+        }
+        public int Margin { get; set; } = 10; // room to draw axes
+
+        public ChartAxis(RectangleF r, Graphics g, ChartAxisType t = ChartAxisType.Both)
+        {
+            AxisType = t;
+            Author = g;
+            Canvas = r;
+        }
+
+        public void Draw()
+        {
+            Pen pen = new Pen(LineClr, LineWt);
+            PointF ytip = new PointF((float)(Margin-LineWt/2.0), (float)(LineWt/2.0));
+            PointF origin = new PointF((float)(Margin - LineWt / 2.0), (float)(Canvas.Height-Margin+LineWt/2.0));
+            PointF xtip = new PointF((float)(Canvas.Width-LineWt/2.0), (float)(Canvas.Height - Margin + LineWt / 2.0));
+            //TODO: add tick marks
+            switch (AxisType)
+            {
+                case ChartAxisType.Both:
+                    Author.DrawLines(pen, ytip, origin, xtip);
+                    break;
+                case ChartAxisType.X:
+                    Author.DrawLine(pen, origin, xtip);
+                    break;
+                case ChartAxisType.Y:
+                    Author.DrawLine(pen, ytip, origin);
+                    break;
+                default:
+                    break;
+            }
+            
+        }
+    }
 }

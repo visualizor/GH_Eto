@@ -142,6 +142,7 @@ namespace Synapse
 
             Bitmap bitmap = new Bitmap(s, PixelFormat.Format32bppRgba);
             Graphics graphics = new Graphics(bitmap);
+            ChartAxis axis = new ChartAxis(new RectangleF(s), graphics);
 
             double[] pct = new double[nums.Count];
             for (int i = 0; i < pct.Length; i++)
@@ -163,6 +164,7 @@ namespace Synapse
                 double y = s.Height - 10 - h; // -10 is y bottom, minus height to get rectangle *top* left corner
                 graphics.FillRectangle(clrs[i], (float)x, (float)y, (float)barwidth, (float)h);
             }
+            axis.Draw();
             graphics.Flush();
 
             ImageView graph = new ImageView() { Image = bitmap, };
