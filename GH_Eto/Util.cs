@@ -113,6 +113,7 @@ namespace Synapse
         Pie,
         Bar,
         Trend,
+        Region,
     }
 
     internal class ChartData
@@ -329,11 +330,20 @@ namespace Synapse
 
     internal class ChartAxis
     {
-        private int tickX = 3;
-        private int tickY = 3;
+        private int tickX = 4;
+        private int tickY = 4;
 
+        /// <summary>
+        /// axis to draw
+        /// </summary>
         public ChartAxisType AxisType { get; private set; }
+        /// <summary>
+        /// graphics object that actually draws
+        /// </summary>
         public Graphics Author { get; private set; }
+        /// <summary>
+        /// draw area
+        /// </summary>
         public RectangleF Canvas { get; private set; }
         public float LineWt { get; set; } = 1f;
         public Color LineClr { get; set; } = Color.FromArgb(0, 0, 0);
@@ -355,8 +365,17 @@ namespace Synapse
                     tickY = value;
             }
         }
-        public int Margin { get; set; } = 10; // room to draw axes
+        /// <summary>
+        /// room for axes
+        /// </summary>
+        public int Margin { get; set; } = 10;
 
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="r">rectangular graphing area</param>
+        /// <param name="g">eto graphics object that authors drawings</param>
+        /// <param name="t">chart axis</param>
         public ChartAxis(RectangleF r, Graphics g, ChartAxisType t = ChartAxisType.Both)
         {
             AxisType = t;
@@ -364,13 +383,16 @@ namespace Synapse
             Canvas = r;
         }
 
+        /// <summary>
+        /// draws contents to the image area
+        /// </summary>
         public void Draw()
         {
             Pen pen = new Pen(LineClr, LineWt);
             PointF ytip = new PointF((float)(Margin-LineWt/2.0), (float)(LineWt/2.0));
             PointF origin = new PointF((float)(Margin - LineWt / 2.0), (float)(Canvas.Height-Margin+LineWt/2.0));
             PointF xtip = new PointF((float)(Canvas.Width-LineWt/2.0), (float)(Canvas.Height - Margin + LineWt / 2.0));
-            //TODO: add tick marks
+            
             switch (AxisType)
             {
                 case ChartAxisType.Both:
@@ -385,7 +407,41 @@ namespace Synapse
                 default:
                     break;
             }
-            
+            DrawTickMarks(pen, ytip, xtip, origin);
+        }
+        /// <summary>
+        /// draw tick marks
+        /// </summary>
+        /// <param name="p">pen object</param>
+        /// <param name="y">y tip point</param>
+        /// <param name="x">x tip point</param>
+        /// <param name="o">origin</param>
+        protected void DrawTickMarks(Pen p, PointF y, PointF x, PointF o)
+        {
+            if (AxisType != ChartAxisType.X) {
+                PointF[] yticks = new PointF[TickCountY];
+                for (int yi = 0; yi < yticks.Length; yi++)
+                {
+                    float ty = (o.Y-y.Y) / (TickCountY-1) * yi + y.Y;
+                    float tx = y.X;
+                    yticks.SetValue(new PointF(tx, ty), yi);
+                }
+                foreach (PointF yp in yticks)
+                    Author.DrawLine(LineClr, yp, yp + new PointF(-2, 0));
+            }
+
+            if (AxisType != ChartAxisType.Y)
+            {
+                PointF[] xticks = new PointF[TickCountY];
+                for (int xi = 0; xi < xticks.Length; xi++)
+                {
+                    float ty = x.Y;
+                    float tx = (x.X - o.X) / (TickCountX-1) * xi + o.X;
+                    xticks.SetValue(new PointF(tx, ty), xi);
+                }
+                foreach (PointF xp in xticks)
+                    Author.DrawLine(LineClr, xp, xp + new PointF(0, 2));
+            }
         }
     }
 }

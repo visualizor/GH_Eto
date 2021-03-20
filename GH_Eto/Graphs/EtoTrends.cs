@@ -111,6 +111,7 @@ namespace Synapse
 
             Bitmap bitmap = new Bitmap(s, PixelFormat.Format32bppRgba);
             Graphics graphics = new Graphics(bitmap);
+            ChartAxis axis = new ChartAxis(new RectangleF(s), graphics);
             if (s.Height <= 10 || s.Width <= 10)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " size too small to draw");
@@ -152,6 +153,7 @@ namespace Synapse
                 foreach(PointF p in nodes)
                     graphics.DrawArc(pen, p.X - 4, p.Y - 4, 8f, 8f, 0f, 360f);
             }
+            axis.Draw();
             graphics.Flush();
 
             ImageView graph = new ImageView() { Image = bitmap, };
