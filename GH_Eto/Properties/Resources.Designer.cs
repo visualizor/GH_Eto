@@ -273,6 +273,16 @@ namespace Synapse.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap regions {
+            get {
+                object obj = ResourceManager.GetObject("regions", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap scroll {
             get {
                 object obj = ResourceManager.GetObject("scroll", resourceCulture);
@@ -386,6 +396,16 @@ namespace Synapse.Properties {
         internal static System.Drawing.Bitmap window {
             get {
                 object obj = ResourceManager.GetObject("window", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap winstyle {
+            get {
+                object obj = ResourceManager.GetObject("winstyle", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

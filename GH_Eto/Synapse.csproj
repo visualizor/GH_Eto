@@ -86,6 +86,7 @@
     <Compile Include="Containers\EtoStackLO.cs" />
     <Compile Include="Ctrls\EtoTextBox.cs" />
     <Compile Include="Containers\EtoWindow.cs" />
+    <Compile Include="Params\EtoFormStyle.cs" />
     <Compile Include="Params\EtoSize.cs" />
     <Compile Include="Params\EtoTableXY.cs" />
     <Compile Include="SynapseInfo.cs" />
@@ -144,9 +145,6 @@
     <None Include="Resources\label.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\window.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\expander.png" />
   </ItemGroup>
   <ItemGroup>
@@ -202,6 +200,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\radiobtn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\regions.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\window.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\winstyle.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
