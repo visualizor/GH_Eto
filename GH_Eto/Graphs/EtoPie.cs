@@ -62,13 +62,25 @@ namespace Synapse
 
             #region get size
             if (gobj.Value is GH_Rectangle grec)
-                s = new Size((int)grec.Value.X.Length, (int)grec.Value.Y.Length);
+            {
+                double d = new double[] { grec.Value.X.Length, grec.Value.Y.Length }.Min();
+                s = new Size((int)d, (int)d);
+            }
             else if (gobj.Value is GH_Vector gvec)
-                s = new Size((int)gvec.Value.X, (int)gvec.Value.Y);
+            {
+                double d = new double[] { gvec.Value.X, gvec.Value.Y }.Min();
+                s = new Size((int)d, (int)d);
+            }
             else if (gobj.Value is GH_ComplexNumber gcomp)
-                s = new Size((int)gcomp.Value.Real, (int)gcomp.Value.Imaginary);
+            {
+                double d = new double[] { gcomp.Value.Real, gcomp.Value.Imaginary }.Min();
+                s = new Size((int)d, (int)d);
+            }
             else if (gobj.Value is GH_Point gpt)
-                s = new Size((int)gpt.Value.X, (int)gpt.Value.Y);
+            {
+                double d = new double[] { gpt.Value.X, gpt.Value.Y }.Min();
+                s = new Size((int)d, (int)d);
+            }
             else if (gobj.Value is GH_Integer gint)
                 s = new Size(gint.Value, gint.Value);
             else if (gobj.Value is GH_Number gn)
@@ -89,10 +101,13 @@ namespace Synapse
                         bool a = int.TryParse(split[0], out int xi);
                         bool b = int.TryParse(split[1], out int yi);
                         if (a && b)
-                            s = new Size(xi, yi);
+                        {
+                            int d = new int[] { xi, yi }.Min();
+                            s = new Size(d, d);
+                        }
                         else
                         {
-                            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " cannot parse size input string");
+                            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " cannot parse size input string into integers");
                             return;
                         }
                     }

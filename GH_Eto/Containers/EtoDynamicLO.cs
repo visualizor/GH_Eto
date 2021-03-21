@@ -205,7 +205,9 @@ namespace Synapse
                     catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
             }
 
-            dyna.AddRange(added);
+            //dyna.AddRange(added);
+            foreach (Control c in added)
+                dyna.AddAutoSized(c);
             DA.SetData(1, new GH_ObjectWrapper(dyna));
 
             PropertyInfo[] allprops = dyna.GetType().GetProperties();
