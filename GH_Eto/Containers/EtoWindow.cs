@@ -63,6 +63,21 @@ namespace Synapse
         internal bool ctrlfill = false;
         internal bool ctrlredo = false;
 
+        /// <summary>
+        /// set the "A" output
+        /// </summary>
+        /// <param name="DA">component paramerters access</param>
+        /// <param name="i">index of output where properties are shown</param>
+        private void OutputProps(IGH_DataAccess DA, int i = 0)
+        {
+            PropertyInfo[] allprops = EWindow.GetType().GetProperties();
+            List<string> printouts = new List<string>();
+            foreach (PropertyInfo prop in allprops)
+                if (prop.CanWrite)
+                    printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
+            DA.SetDataList(i, printouts);
+        }
+
         private void OnFill(object s, EventArgs e)
         {
             ctrlfill = !ctrlfill;
@@ -144,6 +159,7 @@ namespace Synapse
             else if (EWindow.Visible && !run)
             {
                 EWindow.Close();
+                OutputProps(DA);
                 return;
             }
             else if (EWindow.Visible && run)
@@ -396,13 +412,7 @@ namespace Synapse
 
             if (run)
                 EWindow.Show();
-
-            PropertyInfo[] allprops = EWindow.GetType().GetProperties();
-            List<string> printouts = new List<string>();
-            foreach (PropertyInfo prop in allprops)
-                if (prop.CanWrite)
-                    printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
-            DA.SetDataList(0, printouts);
+            OutputProps(DA);
         }
 
 
