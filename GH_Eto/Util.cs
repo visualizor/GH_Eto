@@ -128,6 +128,7 @@ namespace Synapse
         public string[] Keys { get; set; }
         /// <summary>
         /// appended extra values in parenthese
+        /// for trend graph it's average value; for pie/hierarchy it's percentage; for bar it's actual number
         /// </summary>
         public double[] AppdVals
         {

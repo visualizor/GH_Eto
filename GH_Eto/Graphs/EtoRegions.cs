@@ -127,6 +127,11 @@ namespace Synapse
             double[] pct = new double[nums.Count];
             for (int i = 0; i < pct.Length; i++)
                 pct.SetValue(nums[i] / nums.Sum(), i);
+            ChartData pd = new ChartData(keys, ChartType.Pie)
+            {
+                AppdVals = pct.ToArray(), // make a copy
+                Colors = clrs.ToArray(),
+            }; // doing this before shufflinig pct
 
             int[] idx = new int[nums.Count];
             for (int i = 0; i < idx.Length; i++)
@@ -168,7 +173,7 @@ namespace Synapse
             graphics.Flush();
 
             ImageView graph = new ImageView() { Image = bitmap, };
-            ChartData pd = new ChartData(keys, ChartType.Pie) { AppdVals = pct, Colors = clrs.ToArray(), };
+            
             DA.SetData(0, new GH_ObjectWrapper(graph));
             DA.SetData(1, new GH_ObjectWrapper(pd));
         }

@@ -64,10 +64,10 @@ namespace Synapse
                 {
                     double p = cd.AppdVals[i];
                     string pstr;
-                    if (cd.Type == ChartType.Trend)
-                        pstr = p.ToString();
-                    else
+                    if (cd.Type == ChartType.Region || cd.Type == ChartType.Pie)
                         pstr = Math.Round(p * 100, 2).ToString();
+                    else
+                        pstr = p.ToString();
                     pcts.SetValue(pstr, i);
                 }
                 legend = new ChartLegend(cd.Keys, cd.Colors, pcts);
@@ -78,12 +78,16 @@ namespace Synapse
                         legend.AppdSuffix = "%";
                         break;
                     case ChartType.Bar:
-                        legend.AppdPrefix = "";
-                        legend.AppdSuffix = "%";
+                        legend.AppdPrefix = "Value: ";
+                        legend.AppdSuffix = "";
                         break;
                     case ChartType.Trend:
                         legend.AppdPrefix = "Avg. ";
                         legend.AppdSuffix = "";
+                        break;
+                    case ChartType.Region:
+                        legend.AppdPrefix = "";
+                        legend.AppdSuffix = "%";
                         break;
                     default:
                         break;
