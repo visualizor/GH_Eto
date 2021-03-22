@@ -15,11 +15,13 @@ namespace Synapse
         /// Initializes a new instance of the EtoDynamicLO class.
         /// </summary>
         public EtoDynamicLO()
-          : base("SynapseDynamicLayout", "SDLO",
-              "dynamic layout",
+          : base("SynapseDynamicLayout", "SDyLO",
+              "dynamic layout, autosized to controls",
               "Synapse", "Containers")
         {
         }
+
+        protected bool hz = false;
 
         /// <summary>
         /// Registers all the input parameters for this component.
@@ -200,14 +202,45 @@ namespace Synapse
                         try { Util.SetProp(dyna, "Spacing", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
+                else if (n.ToLower() == "direction" || n.ToLower() == "flow")
+                {
+                    if (val is GH_Boolean gb)
+                        hz = gb.Value;
+                    else if (val is GH_Integer gint)
+                        if (gint.Value == 0)
+                            hz = false;
+                        else if (gint.Value == 1)
+                            hz = true;
+                        else
+                            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " flow direction cannot be set\n check input parameter");
+                    else if (val is GH_String gstr)
+                        if (gstr.Value.ToLower() == "horizontal" || gstr.Value.ToLower() == "true")
+                            hz = true;
+                        else if (gstr.Value.ToLower() == "vertical" || gstr.Value.ToLower() == "false")
+                            hz = false;
+                        else
+                            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " flow direction cannot be set\n check input parameter");
+                    else
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " flow direction cannot be set\n check input parameter");
+                }
                 else
                     try { Util.SetProp(dyna, n, Util.GetGooVal(val)); }
                     catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
             }
 
             //dyna.AddRange(added);
-            foreach (Control c in added)
-                dyna.AddAutoSized(c);
+            if (!hz)
+                foreach (Control c in added)
+                    dyna.AddAutoSized(c);
+            else
+                foreach (Control c in added)
+                {
+                    dyna.BeginVertical();
+                    dyna.AddAutoSized(c);
+                    dyna.EndVertical();
+                }
+            //TODO: currently not able to add separate columns i.e. flow horizontally
+
             DA.SetData(1, new GH_ObjectWrapper(dyna));
 
             PropertyInfo[] allprops = dyna.GetType().GetProperties();
