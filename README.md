@@ -6,34 +6,11 @@ First, check out this introductory [article](https://willwang6.wixsite.com/preci
 
 This plugin is meant to help not only build more intuitive GUIs with Grasshopper components, but also share scripts between Windows and Mac OS as Eto is a cross-platform tool. At the moment, this is a weekend project for fun so only core functionalities are added incrementally. However any questions and suggestions are welcome.
 
-Below are `Eto.Forms.Control` objects to add into Synapse. See [complete doc](http://pages.picoe.ca/docs/api/html/R_Project_EtoForms.htm) for more information on each. 
-#### User controls
-- [x] Label
-- [x] TextBox
-- [x] MaskedTextBox
-- [x] Button
-- [x] Slider
-- [x] NumericStepper
-- [x] CheckBox
-- [x] ComboBox
-- [x] DropDown
-- [x] ListBox
-- [x] RadioButtonList
-- [x] TextArea
-- [ ] ~~GridView~~
-#### Containers
-- [x] StackLayout
-- [x] DynamicLayout
-- [x] TableLayout
-- [x] Expander
-- [x] Form
-- [x] GroupBox
-- [x] Scrollable
-- [x] TabControl
+See [complete doc](http://pages.picoe.ca/docs/api/html/R_Project_EtoForms.htm) for more information on each Eto object. 
 
 Eto itself does not have many of the graphic features found in other GUI libraries likely due to its cross-platform conformity. Synapse further simplifies the pieces one has to assemble to get a working GUI. Minimalist functionality will take precedent over ornate design. 
 ## Installation
-This is your typical Grasshopper plugin. Drop the ".gha" file into your Grasshopper library folder. On a PC it's `%AppData%/Roaming/Grasshopper/Libraries/`. On a Mac it's <--insert path>. The "Synapse.gha" is published on [food4rhino.com](https://www.food4rhino.com/app/synapse) as well as Rhino 7's package manager. 
+This is your typical Grasshopper plugin. Drop the ".gha" file into your Grasshopper library folder. On a PC it's `%AppData%/Roaming/Grasshopper/Libraries/`. On a Mac it's <missing path>. The "Synapse.gha" is published on [food4rhino.com](https://www.food4rhino.com/app/synapse) as well as Rhino 7's package manager. 
 ## Starter's Guide
 #### Controls
 These are components that make the interactive elements themselves such as a button or an input text box. The component typically has two inputs, `Property` and `Property Value`. As long as the input lists match in number, the component will try to set the corresponding property of the `Eto.Forms` object.
@@ -68,5 +45,5 @@ It will take a long time to translate all `Eto.Forms` controls to the Grasshoppe
 Unfortunately this is not on my roadmap for Synapse. `Eto.Forms` doesn't seem to have an easy way of adding graphic skins. Synapse will be kept simple.
 #### Why does value query component not return values?
 It is likely that the query is listening to a container object that doesn't yield any value. Try linking "C" with controls only.
-#### How can I add charts and illustrative graphics?
-GUI level drawings with `Eto.Drawing` library will NOT be implemented anytime soon. I recommend plugins such as ProvingGround's [Conduit](https://provingground.io/tools/conduit-for-grasshopper/) that makes heads-up displays.
+#### How can I draw my own charts and illustrative graphics?
+Limited GUI level drawings with `Eto.Drawing` library is provided. I recommend plugins such as ProvingGround's [Conduit](https://provingground.io/tools/conduit-for-grasshopper/) for more tailored dashboard graphics.
