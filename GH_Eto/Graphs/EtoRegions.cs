@@ -179,12 +179,6 @@ namespace Synapse
         }
 
 
-#if !DEBUG
-        public override GH_Exposure Exposure
-        {
-            get { return GH_Exposure.hidden; }
-        }
-#endif
 
         /// <summary>
         /// Provides an Icon for the component.

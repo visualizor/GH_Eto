@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Synapse")]
 [assembly: AssemblyDescription("Grasshopper plugin to make GUis with Eto.Forms")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Will Wang")]
 [assembly: AssemblyProduct("Synapse")]
 [assembly: AssemblyCopyright(@"
 Synapse, Grasshopper plugin to make GUIs based on Eto.Forms
