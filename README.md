@@ -45,5 +45,5 @@ It will take a long time to translate all `Eto.Forms` controls to the Grasshoppe
 Unfortunately this is not on my roadmap for Synapse. `Eto.Forms` doesn't seem to have an easy way of adding graphic skins. Synapse will be kept simple.
 #### Why does value query component not return values?
 It is likely that the query is listening to a container object that doesn't yield any value. Try linking "C" with controls only.
-#### How can I add charts and illustrative graphics?
-GUI level drawings with `Eto.Drawing` library will NOT be implemented anytime soon. I recommend plugins such as ProvingGround's [Conduit](https://provingground.io/tools/conduit-for-grasshopper/) that makes heads-up displays.
+#### How can I draw my own charts and illustrative graphics?
+Limited GUI level drawings with `Eto.Drawing` library is provided. I recommend plugins such as ProvingGround's [Conduit](https://provingground.io/tools/conduit-for-grasshopper/) for more tailored dashboard graphics.
