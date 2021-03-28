@@ -6,8 +6,6 @@ using Eto.Drawing;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-using Grasshopper.Kernel.Data;
-using Rhino.Geometry;
 
 namespace Synapse
 {
