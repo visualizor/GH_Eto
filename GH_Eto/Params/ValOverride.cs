@@ -57,10 +57,12 @@ namespace Synapse
                 {
                     GH_ObjectWrapper v_wrapped;
                     try { v_wrapped = v[i]; }
-                    catch
+                    catch (Exception ex)
                     {
-                        r.SetValue(false, i);
-                        continue;
+                        if (ex is IndexOutOfRangeException || ex is ArgumentOutOfRangeException)
+                            v_wrapped = v.Last();
+                        else
+                            throw ex;
                     }
 
                     if (ctrl is TextBox tb)
@@ -109,12 +111,16 @@ namespace Synapse
                         else
                             r.SetValue(false, i);
                     else
+                    {
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "not a control that can be set");
                         r.SetValue(false, i);
+                    }
+                        
                 }
                 else
                 {
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "not a valid control");
-                    continue;
+                    r.SetValue(false, i);
                 }
             }
 
