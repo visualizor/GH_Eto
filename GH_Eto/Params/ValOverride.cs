@@ -26,7 +26,7 @@ namespace Synapse
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddGenericParameter("Control", "C", "controls to set value for", GH_ParamAccess.list);
-            pManager.AddGenericParameter("Value", "V", "value - depending on control type, this input is automatically parsed as best as it can", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Value", "V", "for the following elements this tries to set the primary value\nTextBox: text\nButton: label text\nLabel: text\nCheckBox: boolean (checked)\nGroupBox: label text\nExpander: boolean (expanded)", GH_ParamAccess.list);
             pManager[0].DataMapping = GH_DataMapping.Flatten;
             pManager[1].DataMapping = GH_DataMapping.Flatten;
         }
@@ -36,7 +36,7 @@ namespace Synapse
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddBooleanParameter("Success", "S", "whether the value was set successfully", GH_ParamAccess.list);
+            pManager.AddBooleanParameter("Success", "S", "whether the value was set successfully\nfailure typically caused by wrong data type i.e. feeding an integer type into a text type", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -97,7 +97,23 @@ namespace Synapse
                         }
                         else
                             r.SetValue(false, i);
-                    else if (ctrl is ComboSlider csl)
+                    else if (ctrl is GroupBox gb)
+                        if (v_wrapped.Value is GH_String gstr)
+                        {
+                            gb.Text = gstr.Value;
+                            r.SetValue(true, i);
+                        }
+                        else
+                            r.SetValue(false, i);
+                    else if (ctrl is Expander xpdr)
+                        if (v_wrapped.Value is GH_Boolean gbool)
+                        {
+                            xpdr.Expanded = gbool.Value;
+                            r.SetValue(true, i);
+                        }
+                        else
+                            r.SetValue(false, i);
+                    /*else if (ctrl is ComboSlider csl)
                         if (v_wrapped.Value is GH_Integer gint)
                         {
                             csl.slider.Value = (int)(gint.Value / csl.coef);
@@ -109,17 +125,17 @@ namespace Synapse
                             r.SetValue(true, i);
                         }
                         else
-                            r.SetValue(false, i);
+                            r.SetValue(false, i);*/
                     else
                     {
-                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "not a control that can be set");
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format(" control[{0}] cannot be set", i));
                         r.SetValue(false, i);
                     }
                         
                 }
                 else
                 {
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "not a valid control");
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format(" control[{0}] not a valid control",i));
                     r.SetValue(false, i);
                 }
             }
