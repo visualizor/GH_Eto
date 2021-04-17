@@ -23,7 +23,7 @@ namespace Synapse
         }
 
         private Guid[] srcs; // gh comp linked to this
-        private bool listening = false;
+        private bool listening = false;  // this isn't used anywhere!!
         private List<string> listenees = new List<string>(); // eto comp this listens to
         private Dictionary<string, bool> btnpress = new Dictionary<string, bool>(); // button press state
 
@@ -96,6 +96,11 @@ namespace Synapse
                 listenees.Add(lbx.ID);
                 lbx.SelectedIndexChanged += OnSelection;
             }
+            else if (ctrl is TrackPad tp)
+            {
+                listenees.Add(tp.ID);
+                tp.MouseUp += OnTrackPad;
+            }
             else
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " unrecognized control detected");
         }
@@ -126,6 +131,8 @@ namespace Synapse
                 return new GH_ObjectWrapper(multi.Text);
             else if (ctrl is ListBox lbx)
                 return new GH_ObjectWrapper(lbx.SelectedIndex);
+            else if (ctrl is TrackPad tp)
+                return new GH_ObjectWrapper(tp.Position.ToString());
             else
                 return new GH_ObjectWrapper();
         }
@@ -170,11 +177,15 @@ namespace Synapse
         {
             ExpireSolution(true);
         }
+        public void OnTrackPad(object s, EventArgs e)
+        {
+            ExpireSolution(true);
+        }
 
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
+        protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddGenericParameter("Synapse Object", "C", "control object to query", GH_ParamAccess.tree);
             pManager[0].Optional = true;
@@ -183,7 +194,7 @@ namespace Synapse
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
+        protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddGenericParameter("Value", "V", "the value passed from the control(s)", GH_ParamAccess.tree);
         }
@@ -232,14 +243,19 @@ namespace Synapse
                     GH_ObjectWrapper obj = objs[ii] as GH_ObjectWrapper;
                     if (obj.Value is Control ctrl)
                     {
-                        if (!listenees.Contains(ctrl.ID))
+                        if (ctrl.ID == Guid.Empty.ToString() || ctrl.ID == string.Empty)
+                        {
+                            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, string.Format(" a {0} isn't initialized properly with a valid ID\n this is a code error; contact dev", ctrl.GetType()));
+                            listening = true;
+                        }
+                        else if (!listenees.Contains(ctrl.ID))
                         {
                             Relisten(ctrl);
                             listening = true;
                         }
                         else if (!listening)
                         {
-                            listening = true; // this isn't used anywhere
+                            listening = true;
                         }
                         else
                         {

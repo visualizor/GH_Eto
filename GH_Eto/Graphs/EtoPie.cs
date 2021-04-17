@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
-using sd = System.Drawing;
 using Eto.Drawing;
 using Eto.Forms;
 using Grasshopper.Kernel;

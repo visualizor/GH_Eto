@@ -108,6 +108,120 @@ namespace Synapse
         }
     }
 
+    internal class TrackPad: ImageView
+    {
+        protected Bitmap img;
+        protected Graphics author;
+        protected Pen stroke = new Pen(Color.FromArgb(45, 45, 45, 255));
+        protected int x = 5; //number of grid divisions
+        protected int y = 5;
+
+        public bool Tracking { get; private set; } = false;
+        public PointF Position { get; private set; } = new PointF(0, 0);
+
+        /// <summary>
+        /// base constructor
+        /// </summary>
+        /// <param name="bmp">canvas bitmap</param>
+        public TrackPad(Bitmap bmp):base()
+        {
+            img = bmp;
+            author = new Graphics(img);
+            MouseUp += OnMouseUp;
+            MouseDown += OnMouseDn;
+        }
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="bmp">canvas bitmap</param>
+        /// <param name="pen">line stroke</param>
+        public TrackPad(Bitmap bmp, Pen pen) : this(bmp)
+        {
+            stroke = pen;
+        }
+
+        protected void OnMouseDn(object s, MouseEventArgs e)
+        {
+            Tracking = true;
+            MouseMove += OnMouseMv;
+        }
+        protected void OnMouseMv(object s, MouseEventArgs e)
+        {
+            if (!Tracking) return;
+            DrawCursor(e, true);
+        }
+        protected void OnMouseUp(object s, MouseEventArgs e)
+        {
+            Tracking = false;
+            MouseMove -= OnMouseMv;
+            DrawCursor(e);
+        }
+        /// <summary>
+        /// mouse event triggered drawing of the cursor circle and xy label
+        /// </summary>
+        /// <param name="e">mouse event passed from handler</param>
+        /// <param name="mark">set to true while mouse is moving</param>
+        protected void DrawCursor(MouseEventArgs e, bool mark = false)
+        {
+            DrawGrid();
+
+            PointF upperleft = new PointF(
+                e.Location.X - stroke.Thickness,
+                e.Location.Y - stroke.Thickness
+                );
+            Size dotsize = new Size((int)stroke.Thickness * 2, (int)stroke.Thickness * 2);
+            author.DrawEllipse(stroke, new RectangleF(upperleft, dotsize));
+            Position = e.Location;
+
+            if (mark)
+            {
+                float txtx = e.Location.X;
+                float txty = e.Location.Y - stroke.Thickness - 20;
+                Font arial = new Font("Arial", 8f);
+                author.DrawText(arial, Color.FromArgb(10, 10, 10, 255), txtx, txty, e.Location.ToString());
+            }
+
+            author.Flush();
+            Image = img;
+        }
+
+        /// <summary>
+        /// paint a grid on the trackpad
+        /// </summary>
+        /// <param name="flush">true to flush graphics, false if other drawings ensue</param>
+        public void DrawGrid(bool flush = false)
+        {
+            RectangleF frame = new RectangleF(
+                new PointF(stroke.Thickness / 2f, stroke.Thickness / 2f),
+                new Size((int)(img.Size.Width - stroke.Thickness), (int)(img.Size.Width - stroke.Thickness))
+                );
+            author.DrawRectangle(stroke, frame);
+
+            SolidBrush b = stroke.Brush as SolidBrush;
+            Pen reduced = new Pen(Color.FromArgb(b.Color.Rb, b.Color.Gb, b.Color.Bb, 100), stroke.Thickness/2f);
+            float xincr = img.Width / (float)x;
+            float yincr = img.Height / (float)y;
+            for (int i=1; i<x; i++)
+            {
+                PointF s = new PointF(i * xincr, 0);
+                PointF e = new PointF(i * xincr, img.Height);
+                author.DrawLine(reduced, s, e);
+            }
+            for (int j = 1; j < y; j++)
+            {
+                PointF s = new PointF(0, j * yincr);
+                PointF e = new PointF(img.Width, j * yincr);
+                author.DrawLine(reduced, s, e);
+            }
+
+            if (flush)
+            {
+                author.Flush();
+                Image = img;
+            }
+        }
+    }
+
     internal enum ChartType
     {
         Pie,
