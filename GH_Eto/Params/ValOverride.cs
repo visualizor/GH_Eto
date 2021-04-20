@@ -15,7 +15,7 @@ namespace Synapse
         /// </summary>
         public ValOverride()
           : base("SynapseOverride", "SetVal",
-              "override control values\nthis lets you set the primary value of a control without repainting the entire window",
+              "override control values\nthis lets you set the primary value of a control without re-instantiating the entire window",
               "Synapse", "Parameters")
         {
         }

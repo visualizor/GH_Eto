@@ -171,12 +171,6 @@
     <None Include="Resources\size.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\scroll.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\combo.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\gridview.png" />
   </ItemGroup>
   <ItemGroup>
@@ -198,9 +192,6 @@
     <None Include="Resources\freedraw.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\pietag.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\radiobtn.png" />
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +205,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\override.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\combo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pietag.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\scroll.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\slider2d.png" />
