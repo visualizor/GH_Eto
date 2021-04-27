@@ -34,7 +34,7 @@ namespace Synapse
             pManager.AddGenericParameter("Property Value", "V", "values for the property", GH_ParamAccess.list);
             pManager[1].DataMapping = GH_DataMapping.Flatten;
             pManager[1].Optional = true;
-            pManager.AddGenericParameter("Controls", "C", "controls to go into this container\nprovide a position indices(L) for each item", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Controls", "C", "controls to go into this container", GH_ParamAccess.list);
             pManager[2].DataMapping = GH_DataMapping.Flatten;
             pManager[2].Optional = true;
         }
