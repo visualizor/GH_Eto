@@ -6,6 +6,8 @@ using Eto.Forms;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Eto.Drawing;
+using wf = System.Windows.Forms;
+using GH_IO.Serialization;
 
 namespace Synapse
 {
@@ -19,6 +21,20 @@ namespace Synapse
               "text box",
               "Synapse", "Controls")
         {
+        }
+
+        protected bool live = false;
+        protected void OnLive(object s, EventArgs e)
+        {
+            live = !live;
+            ExpireSolution(true);
+        }
+        public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
+        {
+            base.AppendAdditionalMenuItems(menu);
+            wf.ToolStripMenuItem mi = menu.Items.Add("Live", null, OnLive) as wf.ToolStripMenuItem;
+            mi.Checked = live;
+            mi.ToolTipText = "check to update on every key stroke\nthis property may be overriden with P/V parameter inputs";
         }
 
         /// <summary>
@@ -54,7 +70,8 @@ namespace Synapse
             DA.GetDataList(0, props);
             DA.GetDataList(1, vals);
 
-            TextBox tb = new TextBox() { ID = Guid.NewGuid().ToString() };
+            Message = live ? "Live" : "OnReturn";
+            LatentTB tb = new LatentTB() { ID = Guid.NewGuid().ToString(), Live = live };
             
             for (int i = 0; i < props.Count; i++)
             {
@@ -157,7 +174,7 @@ namespace Synapse
                     try { Util.SetProp(tb, n, Util.GetGooVal(val)); }
                     catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
             }
-                DA.SetData(1, new GH_ObjectWrapper(tb));
+            DA.SetData(1, new GH_ObjectWrapper(tb));
 
             PropertyInfo[] allprops = tb.GetType().GetProperties();
             List<string> printouts = new List<string>();
@@ -165,6 +182,18 @@ namespace Synapse
                 if (prop.CanWrite)
                     printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
             DA.SetDataList(0, printouts);
+        }
+
+
+        public override bool Write(GH_IWriter writer)
+        {
+            writer.SetBoolean("live", live);
+            return base.Write(writer);
+        }
+        public override bool Read(GH_IReader reader)
+        {
+            reader.TryGetBoolean("live", ref live);
+            return base.Read(reader);
         }
 
         /// <summary>

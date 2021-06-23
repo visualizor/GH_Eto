@@ -36,10 +36,13 @@ namespace Synapse
                 btn.MouseDown += OnBtnDn;
                 btn.MouseUp += OnBtnUp;
             }
-            else if (ctrl is TextBox tb)
+            else if (ctrl is LatentTB tb)
             {
                 listenees.Add(tb.ID);
-                tb.TextChanged += OnTBText;
+                if (tb.Live)
+                    tb.TextChanged += OnTBText;
+                else
+                    tb.KeyUp += OnTBEnter;
             }
             else if (ctrl is CheckBox cb)
             {
@@ -156,6 +159,11 @@ namespace Synapse
         public void OnTBText(object s, EventArgs e)
         {
             ExpireSolution(true);
+        }
+        public void OnTBEnter(object s, KeyEventArgs e)
+        {
+            if (e.Key == Keys.Enter)
+                ExpireSolution(true);
         }
         public void OnCBCheck(object s, EventArgs e)
         {
