@@ -235,9 +235,11 @@ namespace Synapse
             else
                 foreach (Control c in added)
                 {
+                    dyna.BeginHorizontal();
                     dyna.BeginVertical();
                     dyna.AddAutoSized(c);
                     dyna.EndVertical();
+                    dyna.EndHorizontal();
                 }
             //TODO: currently not able to add separate columns i.e. flow horizontally
 
