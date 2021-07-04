@@ -16,7 +16,7 @@ namespace Synapse
         /// </summary>
         public EtoDynamicLO()
           : base("SynapseDynamicLayout", "SDyLO",
-              "dynamic layout, autosized to controls",
+              "dynamic layout, somewhat autosized to controls",
               "Synapse", "Containers")
         {
         }
@@ -34,7 +34,7 @@ namespace Synapse
             pManager.AddGenericParameter("Property Value", "V", "values for the property", GH_ParamAccess.list);
             pManager[1].DataMapping = GH_DataMapping.Flatten;
             pManager[1].Optional = true;
-            pManager.AddGenericParameter("Controls", "C", "controls to go into this container\nprovide a position indices(L) for each item", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Controls", "C", "controls to go into this container", GH_ParamAccess.list);
             pManager[2].DataMapping = GH_DataMapping.Flatten;
             pManager[2].Optional = true;
         }
@@ -233,6 +233,8 @@ namespace Synapse
                 foreach (Control c in added)
                     dyna.AddAutoSized(c);
             else
+            {
+                dyna.BeginHorizontal();
                 foreach (Control c in added)
                 {
                     dyna.BeginHorizontal();
@@ -241,6 +243,10 @@ namespace Synapse
                     dyna.EndVertical();
                     dyna.EndHorizontal();
                 }
+                dyna.EndHorizontal();
+            }
+                
+
             //TODO: currently not able to add separate columns i.e. flow horizontally
 
             DA.SetData(1, new GH_ObjectWrapper(dyna));
@@ -250,6 +256,7 @@ namespace Synapse
             foreach (PropertyInfo prop in allprops)
                 if (prop.CanWrite)
                     printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
+            printouts.Add("Flow: set boolean to true to flow horizontally, false vertically");
             DA.SetDataList(0, printouts);
         }
 

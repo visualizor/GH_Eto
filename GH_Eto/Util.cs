@@ -61,6 +61,15 @@ namespace Synapse
         }
     }
 
+    internal class LatentTB: TextBox
+    {
+        public bool Live { get; set; } = true;
+        public LatentTB() : base()
+        {
+
+        }
+    }
+
     internal class ComboSlider : StackLayout
     {
         public Slider slider;
