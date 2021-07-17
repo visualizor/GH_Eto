@@ -69,6 +69,7 @@
     <Compile Include="Ctrls\EtoCheckBox.cs" />
     <Compile Include="Ctrls\EtoComboBox.cs" />
     <Compile Include="Ctrls\EtoDropDn.cs" />
+    <Compile Include="Params\EtoIcon.cs" />
     <Compile Include="Ctrls\EtoLabel.cs" />
     <Compile Include="Ctrls\EtoListBox.cs" />
     <Compile Include="Ctrls\EtoMaskedTB.cs" />

@@ -73,6 +73,8 @@ namespace Synapse
                         Size size = new Size((int)pt.Value.X, (int)pt.Value.Y);
                         btn.Size = size;
                     }
+                    else if (val is Size es)
+                        btn.Size = es;
                     else if (val is GH_Vector vec)
                     {
                         Size size = new Size((int)vec.Value.X, (int)vec.Value.Y);
