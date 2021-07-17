@@ -74,7 +74,7 @@
     <Compile Include="Ctrls\EtoMaskedTB.cs" />
     <Compile Include="Ctrls\EtoMultiTxtBox.cs" />
     <Compile Include="Ctrls\EtoRadioBtns.cs" />
-    <Compile Include="Ctrls\ExplicitSlider.cs" />
+    <Compile Include="Ctrls\LabeledSlider.cs" />
     <Compile Include="Graphs\EtoBars.cs" />
     <Compile Include="Graphs\EtoPie.cs" />
     <Compile Include="Graphs\EtoRegions.cs" />
