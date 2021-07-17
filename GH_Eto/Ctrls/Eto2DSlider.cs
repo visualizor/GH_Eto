@@ -65,7 +65,7 @@ namespace Synapse.Ctrls
 
         public override GH_Exposure Exposure
         {
-            get { return GH_Exposure.obscure | GH_Exposure.secondary; }
+            get { return GH_Exposure.hidden; }
         }
 
         /// <summary>
