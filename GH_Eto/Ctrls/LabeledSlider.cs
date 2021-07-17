@@ -277,6 +277,45 @@ namespace Synapse
                         }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
+                else if (n.ToLower() == "value" || n.ToLower() == "number")
+                {
+                    if (val is GH_Number gnum)
+                        csl.SetVal(gnum.Value);
+                    else if (val is GH_Integer gint)
+                        csl.SetVal(gint.Value);
+                    else if (val is GH_String gstr)
+                        if (double.TryParse(gstr.Value, out double v))
+                            csl.SetVal(v);
+                        else
+                            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " cannot parse number from string");
+                    else
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " cannot set value\n check input");
+                }
+                else if (n.ToLower() == "enabled" || n.ToLower() == "active")
+                {
+                    if (val is GH_Boolean gb)
+                        csl.Enabled = gb.Value;
+                    else if (val is GH_String gs)
+                        if (bool.TryParse(gs.Value, out bool b))
+                            csl.Enabled = b;
+                        else
+                            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " cannot understand boolean input for \"Enabled\"");
+                    else if (val is GH_Integer gint)
+                        switch (gint.Value)
+                        {
+                            case 0:
+                                csl.Enabled = false;
+                                break;
+                            case 1:
+                                csl.Enabled = true;
+                                break;
+                            default:
+                                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " only 0 or 1 can be interpreted as booleans");
+                                break;
+                        }
+                    else
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " input cannot be interpreted as booleans");
+                }
                 else
                     try { Util.SetProp(csl, n, Util.GetGooVal(val)); }
                     catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
@@ -286,7 +325,9 @@ namespace Synapse
             DA.SetDataList(0, new string[]{
                 "MinValue: number",
                 "MaxValue: number",
-                "Steps: integer",
+                "Value: number",
+                "TickCount: integer",
+                "Enabled: boolean", 
                 "SnapToTick: boolean",
                 "SliderWidth: integer",
                 "LabelWidth: integer",

@@ -16,8 +16,8 @@ namespace Synapse
         /// Initializes a new instance of the EtoSlider class.
         /// </summary>
         public EtoSlider()
-          : base("SynapseSliderOnly", "SSint",
-              "integer slider object",
+          : base("SynapseIntegerSlider", "SSint",
+              "integer slider",
               "Synapse", "Controls")
         {
         }

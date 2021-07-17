@@ -102,17 +102,23 @@ namespace Synapse
             label.Text = val.ToString();
         }
 
+        public void SetVal(double v)
+        {
+            val = v;
+            slider.Value = (int)Math.Round(val / coef, 0);
+        }
+
         public void SetMin(double n)
         {
             double m = n / coef;
-            slider.MinValue = (int)m;
+            slider.MinValue = (int)Math.Round(m,0);
             slider.Value = (slider.MinValue + slider.MaxValue) / 2;
         }
 
         public void SetMax(double n)
         {
             double M = n / coef;
-            slider.MaxValue = (int)M;
+            slider.MaxValue = (int)Math.Round(M,0);
             slider.Value = (slider.MinValue + slider.MaxValue) / 2;
         }
     }
