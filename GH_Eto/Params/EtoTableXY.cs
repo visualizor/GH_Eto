@@ -27,7 +27,7 @@ namespace Synapse
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddGenericParameter("Controls", "C", "list of Snyapse controls to arrange", GH_ParamAccess.list);
-            pManager.AddIntegerParameter("Columns", "N", "number of columns in the SynapseTable\nuse a positive integer", GH_ParamAccess.item,2);
+            pManager.AddIntegerParameter("Rows", "N", "number of rows in the SynapseTable\nuse a positive integer", GH_ParamAccess.item,2);
         }
 
         /// <summary>
@@ -46,15 +46,15 @@ namespace Synapse
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             List<GH_ObjectWrapper> ctrls = new List<GH_ObjectWrapper>();
-            int cn = 2;
+            int rn = 2;
             DA.GetDataList(0, ctrls);
-            DA.GetData(1, ref cn);
-            int rn = (int)Math.Ceiling(ctrls.Count / (double)cn);
+            DA.GetData(1, ref rn);
+            int cn = (int)Math.Ceiling(ctrls.Count / (double)rn);
             List<string> coors = new List<string>();
-            for (int ci = 0; ci < ctrls.Count; ci++)
+            for (int ci = 0; ci < cn; ci++)
                 for (int y = 0; y < rn && coors.Count<ctrls.Count; y++)
                 {
-                    int x = ci % rn;
+                    int x = ci;
                     coors.Add(string.Format("{0},{1}", x, y));
                 }
             DA.SetDataList(0, coors);

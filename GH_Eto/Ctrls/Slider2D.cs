@@ -9,12 +9,12 @@ using Grasshopper.Kernel.Types;
 
 namespace Synapse.Ctrls
 {
-    public class Eto2DSlider : GH_Component
+    public class Slider2D : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the Eto2DSlider class.
         /// </summary>
-        public Eto2DSlider()
+        public Slider2D()
           : base("SynapseSampler", "Sampler",
               "similar to a UV slider",
               "Synapse", "Controls")
@@ -27,8 +27,8 @@ namespace Synapse.Ctrls
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddIntegerParameter("Size", "D", "dimension for the slider box", GH_ParamAccess.item, 200);
-            pManager.AddColourParameter("Color", "C", "colors, use regular Grasshopper color", GH_ParamAccess.item, sd.Color.FromArgb(255,45,45,45));
-            pManager.AddIntegerParameter("LineStroke", "W", "lineweight/stroke to render the grid and cursor point", GH_ParamAccess.item, 3);
+            pManager.AddColourParameter("Color", "C", "color, use regular Grasshopper color", GH_ParamAccess.item, sd.Color.FromArgb(255,45,45,45));
+            pManager.AddIntegerParameter("Stroke", "W", "lineweight to render the grid and cursor point", GH_ParamAccess.item, 3);
         }
 
         /// <summary>

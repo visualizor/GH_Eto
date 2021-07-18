@@ -59,7 +59,7 @@
   <ItemGroup>
     <Compile Include="Containers\EtoDynamicLO.cs" />
     <Compile Include="Containers\EtoExpander.cs" />
-    <Compile Include="Ctrls\Eto2DSlider.cs" />
+    <Compile Include="Ctrls\Slider2D.cs" />
     <Compile Include="Ctrls\EtoGridView.cs" />
     <Compile Include="Containers\EtoGroupBox.cs" />
     <Compile Include="Containers\EtoScroll.cs" />
@@ -69,6 +69,7 @@
     <Compile Include="Ctrls\EtoCheckBox.cs" />
     <Compile Include="Ctrls\EtoComboBox.cs" />
     <Compile Include="Ctrls\EtoDropDn.cs" />
+    <Compile Include="Ctrls\ImgBtn.cs" />
     <Compile Include="Params\EtoIcon.cs" />
     <Compile Include="Ctrls\EtoLabel.cs" />
     <Compile Include="Ctrls\EtoListBox.cs" />
