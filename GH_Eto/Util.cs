@@ -434,17 +434,71 @@ namespace Synapse
         protected Bitmap img;
         protected Graphics author;
         protected Pen stroke = new Pen(Color.FromArgb(200, 200, 200, 255));
+        protected int knobD = 8;
         protected double t0 = 0;
         protected double t1 = 10;
-        protected double val = 2.5;
+        protected double lo = 1.3;
+        protected double up = 7.2;
+        protected bool tracking = false;
 
+        public double Lower
+        {
+            get { return lo; }
+            set
+            {
+                if (value >= t0 && value < up)
+                    lo = value;
+                else
+                    throw new ArgumentOutOfRangeException("lower bound too low");
+            }
+        }
+        public double Upper
+        {
+            get { return up; }
+            set
+            {
+                if (value <= t1 && value > lo)
+                    up = value;
+                else
+                    throw new ArgumentOutOfRangeException("upper bound too high");
+            }
+        }
+
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="bmp">canvas</param>
         public DomainSlider(Bitmap bmp)
         {
             img = bmp;
             author = new Graphics(img);
+            MouseUp += OnMouseUp;
+            MouseDown += OnMouseDn;
+        }
+        public DomainSlider(int width)
+        {
+            img = new Bitmap(new Size(width, 10), PixelFormat.Format32bppRgba);
+            author = new Graphics(img);
+            MouseUp += OnMouseUp;
+            MouseDown += OnMouseDn;
         }
 
-        protected void PaintCtrl()
+        protected void OnMouseDn(object s, MouseEventArgs e)
+        {
+            tracking = true;
+            MouseMove += OnMouseMv;
+        }
+        protected void OnMouseMv(object s, MouseEventArgs e)
+        {
+            if (!tracking) return;
+        }
+        protected void OnMouseUp(object s, MouseEventArgs e)
+        {
+            tracking = false;
+            MouseMove -= OnMouseMv;
+        }
+
+        public void PaintCtrl()
         {
             DrawBar();
             DrawKnob();
@@ -453,16 +507,21 @@ namespace Synapse
         }
         protected void DrawBar()
         {
-            int barw = img.Width - 4;
+            int barw = img.Width - knobD;
             int barh = 2;
-            Point loc = new Point(2, 1);
+            Point loc = new Point(knobD/2, knobD/2-barh/2);
             Rectangle rec = new Rectangle(loc, new Size(barw, barh));
-            author.DrawRectangle(Color.FromArgb(0, 0, 0), rec);
+            author.DrawRectangle(stroke, rec);
         }
         protected void DrawKnob()
         {
-            int dim = 4;
-            author.DrawEllipse(Color.FromArgb(0, 0, 0), new Rectangle(new Point(0, 0), new Size(dim, dim));
+            int barw = img.Width - knobD;
+            double x = barw * (lo - t0) / (t1 - t0);
+            Point loc = new Point((int)Math.Round(x, 0), 0);
+            author.FillEllipse(stroke.Brush, new Rectangle(loc, new Size(knobD, knobD)));
+            x = barw * (up - t0) / (t1 - t0);
+            loc = new Point((int)Math.Round(x, 0), 0);
+            author.FillEllipse(stroke.Brush, new Rectangle(loc, new Size(knobD, knobD)));
         }
     }
 
