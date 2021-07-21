@@ -137,6 +137,7 @@ namespace Synapse
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
             pManager.AddTextParameter("All Properties", "A", "list of all accessible properties", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Window", "W", "the window object", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -170,6 +171,7 @@ namespace Synapse
             {
                 EWindow.Close();
                 OutputProps(DA);
+                DA.SetData(1, new GH_ObjectWrapper(EWindow));
                 return;
             }
             else if (EWindow.Visible && run)
@@ -425,6 +427,7 @@ namespace Synapse
             if (run)
                 EWindow.Show();
             OutputProps(DA);
+            DA.SetData(1, new GH_ObjectWrapper(EWindow));
         }
 
 
