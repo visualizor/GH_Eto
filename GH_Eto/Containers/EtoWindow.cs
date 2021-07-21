@@ -11,6 +11,7 @@ using Rhino.Geometry;
 using wf = System.Windows.Forms;
 using GH_IO.Serialization;
 using Grasshopper;
+using Rhino.UI;
 
 // In order to load the result of this wizard, you will also need to
 // add the output bin/ folder of this project to the list of loaded
@@ -62,6 +63,7 @@ namespace Synapse
         }
         internal bool ctrlfill = false;
         internal bool ctrlredo = false;
+        internal bool ghowned = false;
 
         /// <summary>
         /// set the "A" output
@@ -88,10 +90,15 @@ namespace Synapse
             ctrlredo = !ctrlredo;
             ExpireSolution(false);
         }
+        private void OnOwnerChange(object s, EventArgs e)
+        {
+            ghowned = !ghowned;
+            ExpireSolution(false);
+        }
         public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
         {
             base.AppendAdditionalMenuItems(menu);
-            // TODO: this uses winforms, may not work on Mac OS
+            // watch out for compatibility issues on Mac with winforms
             try
             {
                 wf.ToolStripMenuItem i = menu.Items.Add("Fill Window", null, OnFill) as wf.ToolStripMenuItem;
@@ -100,6 +107,9 @@ namespace Synapse
                 wf.ToolStripMenuItem m = menu.Items.Add("Repaint", null, OnRepaint) as wf.ToolStripMenuItem;
                 m.ToolTipText = "check to allow instant control updates\ncontrol values not guaranteed to stay";
                 m.Checked = ctrlredo;
+                wf.ToolStripMenuItem o = menu.Items.Add(
+                    ghowned ? "Follow Rhino" : "Follow GH",
+                    Properties.Resources.window, OnOwnerChange) as wf.ToolStripMenuItem;
             }
             catch { }
         }
@@ -166,7 +176,7 @@ namespace Synapse
             {
                 if (!ctrlredo)
                 {
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " open window will not be modified unless \"Repaint\" is unchecked");
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " open window will not be modified unless \"Repaint\" is checked");
                     return;
                 }
                 else
@@ -174,8 +184,8 @@ namespace Synapse
                     EWindow.Content = null;
                 }
             }
-            
-            //EWindow.Owner = Instances.EtoDocumentEditor;
+
+            EWindow.Owner = ghowned ? Instances.EtoDocumentEditor : RhinoEtoApp.MainWindow;
 
             for (int i = 0; i < props.Count; i++)
             {
@@ -206,7 +216,7 @@ namespace Synapse
                         bool xp = int.TryParse(xy[0], out int x);
                         bool yp = int.TryParse(xy[1], out int y);
                         if (xp && yp)
-                            EWindow.Size = new Size(x,y);
+                            EWindow.Size = new Size(x, y);
                     }
                     else if (val is GH_Rectangle grec)
                     {
@@ -222,13 +232,15 @@ namespace Synapse
                     }
                     else
                         try { Util.SetProp(EWindow, "Size", Util.GetGooVal(val)); }
-                        catch (Exception ex){ AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
+                else if (n.ToLower() == "content")
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " content property ignored; set via C input parameters");
                 else if (n.ToLower() == "title")
                 {
                     Util.SetProp(EWindow, "Title", Util.GetGooVal(val).ToString());
                 }
-                else if (n.ToLower() == "opacity" || n.ToLower()=="transparency")
+                else if (n.ToLower() == "opacity" || n.ToLower() == "transparency")
                 {
                     if (val is GH_Number perct)
                         Util.SetProp(EWindow, "Opacity", perct.Value);
@@ -241,7 +253,7 @@ namespace Synapse
                         try { Util.SetProp(EWindow, "Opacity", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
-                else if (n.ToLower()=="backgroundcolor" || n.ToLower()=="color" || n.ToLower()=="background color")
+                else if (n.ToLower() == "backgroundcolor" || n.ToLower() == "color" || n.ToLower() == "background color")
                 {
                     if (val is GH_Colour gclr)
                         EWindow.BackgroundColor = Color.FromArgb(gclr.Value.ToArgb());
@@ -280,7 +292,7 @@ namespace Synapse
                         try { Util.SetProp(EWindow, "BackgroundColor", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
-                else if (n.ToLower()=="location" || n.ToLower()=="position")
+                else if (n.ToLower() == "location" || n.ToLower() == "position")
                 {
                     if (val is GH_Point pt)
                         Util.SetProp(EWindow, "Location", new Eto.Drawing.Point((int)pt.Value.X, (int)pt.Value.Y));
@@ -323,14 +335,14 @@ namespace Synapse
                             if (i0 && i1)
                                 Util.SetProp(EWindow, "Padding", new Eto.Drawing.Padding(n0, n1));
                         }
-                        else if (subs.Length ==4)
+                        else if (subs.Length == 4)
                         {
                             bool i0 = int.TryParse(subs[0], out int n0);
                             bool i1 = int.TryParse(subs[1], out int n1);
                             bool i2 = int.TryParse(subs[2], out int n2);
                             bool i3 = int.TryParse(subs[3], out int n3);
                             if (i0 && i1 && i2 && i3)
-                                Util.SetProp(EWindow, "Padding", new Eto.Drawing.Padding(n0, n1, n2,n3));
+                                Util.SetProp(EWindow, "Padding", new Eto.Drawing.Padding(n0, n1, n2, n3));
                         }
                     }
                     else if (val is GH_Integer pad)
@@ -351,7 +363,7 @@ namespace Synapse
                         try { Util.SetProp(EWindow, "Padding", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
-                else if (n=="WindowStyle" || n=="window style")
+                else if (n == "WindowStyle" || n == "window style")
                 {
                     if (val is GH_Boolean b)
                     {
@@ -420,12 +432,14 @@ namespace Synapse
         {
             writer.SetBoolean("ctrlfill", ctrlfill);
             writer.SetBoolean("ctrlredo", ctrlredo);
+            writer.SetBoolean("ghowned", ghowned);
             return base.Write(writer);
         }
         public override bool Read(GH_IReader reader)
         {
             reader.TryGetBoolean("ctrlfill", ref ctrlfill);
             reader.TryGetBoolean("ctrlredo", ref ctrlredo);
+            reader.TryGetBoolean("ghowned", ref ghowned);
             return base.Read(reader);
         }
 
