@@ -31,7 +31,7 @@ A walkthrough of Synapse component and how they are set up can be found [here](h
 #### Fixed Interface
 For simplicity in working with Grasshopper's data flow model, Synapse components were created to never be edited while they are shown. Each time the "S" is toggled to `true` on the `SynapseWindow`, a new `Eto.Forms.Form` is painted. If certain controls must be edited, the window should be closed first. Therefore controls cannot be modified dynamically while the GUI is in use.
 
-*v0.3 onwards, there is an option to enable live property edit in the context menu of `SWindow` component. This is experimental.*
+*v0.3 onwards, there is an option to enable live property edit in the context menu of `SWindow` component. However edits through "P" and "V" parameters will trigger a window re-instatiation. Use `ValueOverride` if you wish to dynamically change control values.*
 ## FAQs
 #### Why are controls disappearing in the GUI?
 This is likely due to changing parameters on the Grasshopper component. Once a Synapse window is shown, controls upstream often cannot be updated without re-launching new windows.
