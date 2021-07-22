@@ -277,28 +277,34 @@ namespace Synapse
 
             OkBtn = new Button()
             {
-                BackgroundColor = Color.FromArgb(0, 255, 0),
-                Width = Width / 6,
+                Image = Bitmap.FromResource("Synapse.Properties.Resources.ok_s", Assembly.GetExecutingAssembly()),
+                //BackgroundColor = Color.FromArgb(0, 255, 0),
+                Width = (Width - 8) / 6,
             };
-            OkBtn.Click += OnEnter;
+            OkBtn.Click += OnEnterKey;
             AbortBtn = new Button()
             {
-                BackgroundColor = Color.FromArgb(255, 0, 0),
-                Width = Width / 6,
+                Image = Bitmap.FromResource("Synapse.Properties.Resources.abort_s", Assembly.GetExecutingAssembly()),
+                //BackgroundColor = Color.FromArgb(255, 0, 0),
+                Width = (Width - 8) / 6,
             };
             AbortBtn.Click += delegate { Close(); };
             InputBox = new TextBox()
             {
                 Text = Slider.val.ToString(),
-                Width = Width / 3 * 2,
+                Width = (Width-8) / 3 * 2,
             };
 
-            DynamicLayout dlo = new DynamicLayout();
+            DynamicLayout dlo = new DynamicLayout()
+            {
+                Padding = 2,
+                Spacing = new Size(2, 2),
+            };
             dlo.AddSeparateRow(InputBox, OkBtn, AbortBtn);
             Content = dlo;
         }
 
-        protected void OnEnter(object s, EventArgs e)
+        protected void OnEnterKey(object s, EventArgs e)
         {
             if (double.TryParse(InputBox.Text, out double userval))
             {

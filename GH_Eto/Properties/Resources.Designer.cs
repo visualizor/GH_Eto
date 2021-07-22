@@ -73,6 +73,16 @@ namespace Synapse.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap abort_s {
+            get {
+                object obj = ResourceManager.GetObject("abort_s", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap bars {
             get {
                 object obj = ResourceManager.GetObject("bars", resourceCulture);
@@ -246,6 +256,16 @@ namespace Synapse.Properties {
         internal static System.Drawing.Bitmap numupdn {
             get {
                 object obj = ResourceManager.GetObject("numupdn", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ok_s {
+            get {
+                object obj = ResourceManager.GetObject("ok_s", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
