@@ -277,15 +277,15 @@ namespace Synapse
 
             OkBtn = new Button()
             {
-                Image = Bitmap.FromResource("Synapse.Properties.Resources.ok_s", Assembly.GetExecutingAssembly()),
-                //BackgroundColor = Color.FromArgb(0, 255, 0),
+                //Image = Bitmap.FromResource("Properties.Resources.ok_s"),
+                BackgroundColor = Color.FromArgb(0, 255, 0),
                 Width = (Width - 8) / 6,
             };
             OkBtn.Click += OnEnterKey;
             AbortBtn = new Button()
             {
-                Image = Bitmap.FromResource("Synapse.Properties.Resources.abort_s", Assembly.GetExecutingAssembly()),
-                //BackgroundColor = Color.FromArgb(255, 0, 0),
+                //Image = Bitmap.FromResource("Properties.Resources.abort_s"),
+                BackgroundColor = Color.FromArgb(255, 0, 0),
                 Width = (Width - 8) / 6,
             };
             AbortBtn.Click += delegate { Close(); };
