@@ -262,6 +262,53 @@ namespace Synapse
         }
     }
 
+    internal class SliderTB: Dialog
+    {
+        public TextBox InputBox { get; private set; }
+        public ComboSlider Slider { get; private set; }
+        public Button OkBtn { get; private set; }
+        public Button AbortBtn { get; private set; }
+
+        public SliderTB(ComboSlider parent)
+        {
+            Slider = parent;
+            Width = Slider.slider.Width;
+            WindowStyle = WindowStyle.None;
+
+            OkBtn = new Button()
+            {
+                BackgroundColor = Color.FromArgb(0, 255, 0),
+                Width = Width / 6,
+            };
+            OkBtn.Click += OnEnter;
+            AbortBtn = new Button()
+            {
+                BackgroundColor = Color.FromArgb(255, 0, 0),
+                Width = Width / 6,
+            };
+            AbortBtn.Click += delegate { Close(); };
+            InputBox = new TextBox()
+            {
+                Text = Slider.val.ToString(),
+                Width = Width / 3 * 2,
+            };
+
+            DynamicLayout dlo = new DynamicLayout();
+            dlo.AddSeparateRow(InputBox, OkBtn, AbortBtn);
+            Content = dlo;
+        }
+
+        protected void OnEnter(object s, EventArgs e)
+        {
+            if (double.TryParse(InputBox.Text, out double userval))
+            {
+                Slider.SetVal(userval);
+                Close();
+            }
+        }
+
+    }
+
     internal class ComboSlider : StackLayout
     {
         public Slider slider;
@@ -277,6 +324,7 @@ namespace Synapse
                 MaxValue = 10,
                 Value = 5,
             };
+            slider.MouseDoubleClick += OnUserVal;
             label = new Label();
             val = slider.Value * coef;
             label.Text = val.ToString();
@@ -292,6 +340,14 @@ namespace Synapse
         {
             val = slider.Value * coef;
             label.Text = val.ToString();
+        }
+        protected void OnUserVal(object s, MouseEventArgs e)
+        {
+            SliderTB tb = new SliderTB(this)
+            {
+                Location = new Point((int)e.Location.X, (int)e.Location.Y),
+            };
+            tb.ShowModal();
         }
 
         public void SetVal(double v)
