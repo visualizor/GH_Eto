@@ -340,6 +340,8 @@ namespace Synapse
                 MaxValue = 10,
                 Value = 5,
             };
+            min = slider.MinValue * coef;
+            max = slider.MaxValue * coef;
             slider.MouseDoubleClick += OnUserVal;
             label = new Label();
             val = slider.Value * coef;
@@ -382,16 +384,16 @@ namespace Synapse
 
         public void SetMin(double n)
         {
-            min = n / coef;
-            slider.MinValue = (int)Math.Round(min,0);
+            slider.MinValue = (int)Math.Round(n / coef, 0);
             slider.Value = (slider.MinValue + slider.MaxValue) / 2;
+            min = slider.MinValue * coef;
         }
 
         public void SetMax(double n)
         {
-            max = n / coef;
-            slider.MaxValue = (int)Math.Round(max,0);
+            slider.MaxValue = (int)Math.Round(n / coef, 0);
             slider.Value = (slider.MinValue + slider.MaxValue) / 2;
+            max = slider.MaxValue * coef;
         }
     }
 
