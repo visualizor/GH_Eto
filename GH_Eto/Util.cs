@@ -277,40 +277,48 @@ namespace Synapse
 
             OkBtn = new Button()
             {
-                //Image = Bitmap.FromResource("Properties.Resources.ok_s"),
+                
                 BackgroundColor = Color.FromArgb(0, 255, 0),
-                Width = (Width - 8) / 6,
+                Width = 10,
             };
-            OkBtn.Click += OnEnterKey;
+            OkBtn.Click += OnCommit;
             AbortBtn = new Button()
             {
-                //Image = Bitmap.FromResource("Properties.Resources.abort_s"),
+                
                 BackgroundColor = Color.FromArgb(255, 0, 0),
-                Width = (Width - 8) / 6,
+                Width = 10,
             };
             AbortBtn.Click += delegate { Close(); };
             InputBox = new TextBox()
             {
                 Text = Slider.val.ToString(),
-                Width = (Width-8) / 3 * 2,
+                Width = Width - 28,
             };
+            InputBox.KeyUp += OnCommit;
 
             DynamicLayout dlo = new DynamicLayout()
             {
                 Padding = 2,
                 Spacing = new Size(2, 2),
             };
-            dlo.AddSeparateRow(InputBox, OkBtn, AbortBtn);
+            dlo.AddSeparateRow(InputBox, null, OkBtn, null, AbortBtn);
             Content = dlo;
         }
 
-        protected void OnEnterKey(object s, EventArgs e)
+        protected void OnCommit(object s, EventArgs e)
         {
+            if (e is KeyEventArgs ke)
+                if (ke.Key == Keys.Escape)
+                {
+                    Close();
+                    return;
+                }
+                else if (ke.Key != Keys.Enter)
+                    return;
+
             if (double.TryParse(InputBox.Text, out double userval))
-            {
-                Slider.SetVal(userval);
-                Close();
-            }
+                Slider.SetVal(userval); // out-of-bounds safeguard already built in :)
+            Close();
         }
 
     }
@@ -321,6 +329,8 @@ namespace Synapse
         public Label label;
         public double coef=1.0;
         public double val;
+        protected double min;
+        protected double max;
 
         public ComboSlider()
         {
@@ -351,28 +361,36 @@ namespace Synapse
         {
             SliderTB tb = new SliderTB(this)
             {
-                Location = new Point((int)e.Location.X, (int)e.Location.Y),
+                Location = new Point((int)Mouse.Position.X, (int)Mouse.Position.Y),
             };
-            tb.ShowModal();
+            try { tb.ShowModal(); }
+            catch {
+                // TODO: maybe handle this actually
+            }
         }
 
         public void SetVal(double v)
         {
-            val = v;
+            if (v > max)
+                val = max;
+            else if (v < min)
+                val = min;
+            else
+                val = v;
             slider.Value = (int)Math.Round(val / coef, 0);
         }
 
         public void SetMin(double n)
         {
-            double m = n / coef;
-            slider.MinValue = (int)Math.Round(m,0);
+            min = n / coef;
+            slider.MinValue = (int)Math.Round(min,0);
             slider.Value = (slider.MinValue + slider.MaxValue) / 2;
         }
 
         public void SetMax(double n)
         {
-            double M = n / coef;
-            slider.MaxValue = (int)Math.Round(M,0);
+            max = n / coef;
+            slider.MaxValue = (int)Math.Round(max,0);
             slider.Value = (slider.MinValue + slider.MaxValue) / 2;
         }
     }
