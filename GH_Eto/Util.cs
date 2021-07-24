@@ -274,20 +274,6 @@ namespace Synapse
             Width = Slider.slider.Width;
             Shown += OnShown;
             
-            OkBtn = new Button()
-            {
-                
-                BackgroundColor = Color.FromArgb(0, 255, 0),
-                Width = 10,
-            };
-            OkBtn.Click += OnCommit;
-            AbortBtn = new Button()
-            {
-                
-                BackgroundColor = Color.FromArgb(255, 0, 0),
-                Width = 10,
-            };
-            AbortBtn.Click += delegate { Close(); };
             InputBox = new TextBox()
             {
                 Text = Slider.val.ToString(),
@@ -304,20 +290,20 @@ namespace Synapse
             Content = dlo;
         }
 
-        protected void OnCommit(object s, EventArgs e)
+        protected void OnCommit(object s, KeyEventArgs e)
         {
-            if (e is KeyEventArgs ke)
-                if (ke.Key == Keys.Escape)
-                {
-                    Close();
-                    return;
-                }
-                else if (ke.Key != Keys.Enter)
-                    return;
-
-            if (double.TryParse(InputBox.Text, out double userval))
-                Slider.SetVal(userval); // out-of-bounds safeguard already built in :)
-            Close();
+            if (e.Key == Keys.Escape)
+            {
+                Close();
+                return;
+            }
+            else if (e.Key == Keys.Enter)
+            {
+                if (double.TryParse(InputBox.Text, out double userval))
+                    Slider.SetVal(userval); // out-of-bounds safeguard already built in :)
+                Close();
+                return;
+            }
         }
         protected void OnUnfocus(object s, EventArgs e)
         {
@@ -338,22 +324,25 @@ namespace Synapse
         public double val;
         protected double min;
         protected double max;
+        protected int tickers = 10;
 
         public ComboSlider()
         {
             slider = new Slider()
             {
-                MinValue = 1,
+                MinValue = 0,
                 MaxValue = 10,
                 Value = 5,
             };
             min = slider.MinValue * coef;
             max = slider.MaxValue * coef;
             slider.MouseDoubleClick += OnUserVal;
+            slider.ValueChanged += OnSlide;
+            UpdateTickers();
+
             label = new Label();
             val = slider.Value * coef;
             label.Text = val.ToString();
-            slider.ValueChanged += OnSlide;
 
             Orientation = Orientation.Horizontal;
             Items.Add(slider);
@@ -403,6 +392,7 @@ namespace Synapse
             slider.MinValue = (int)Math.Round(n / coef, 0);
             slider.Value = (slider.MinValue + slider.MaxValue) / 2;
             min = slider.MinValue * coef;
+            UpdateTickers();
         }
 
         public void SetMax(double n)
@@ -410,6 +400,17 @@ namespace Synapse
             slider.MaxValue = (int)Math.Round(n / coef, 0);
             slider.Value = (slider.MinValue + slider.MaxValue) / 2;
             max = slider.MaxValue * coef;
+            UpdateTickers();
+        }
+
+        public void UpdateTickers()
+        {
+            slider.TickFrequency = (slider.MaxValue - slider.MinValue) / tickers;
+        }
+        public void UpdateTickers(int count)
+        {
+            tickers = count > 0 ? count : tickers;
+            UpdateTickers();
         }
     }
 

@@ -31,7 +31,7 @@ namespace Synapse
             pManager.AddGenericParameter("Property Value", "V", "values for the property", GH_ParamAccess.list);
             pManager[1].DataMapping = GH_DataMapping.Flatten;
             pManager[1].Optional = true;
-            pManager.AddNumberParameter("Coefficient", "F", "optional coefficient\ndefault sliders only has integer values", GH_ParamAccess.item, 1.0);
+            pManager.AddNumberParameter("Coefficient", "F", "optional coefficient\ndefault sliders only has integer values\nthis can help set decimal places like 0.1 or 0.01", GH_ParamAccess.item, 1.0);
         }
 
         /// <summary>
@@ -108,14 +108,14 @@ namespace Synapse
                 else if (n.ToLower() == "tickcount" || n.ToLower() == "steps" || n.ToLower() =="markers")
                 {
                     if (val is GH_Integer gint)
-                        csl.slider.TickFrequency = (csl.slider.MaxValue - csl.slider.MinValue) / gint.Value;
+                        csl.UpdateTickers(gint.Value);
                     else if (val is GH_String gstr)
                         if (int.TryParse(gstr.Value, out int ct))
-                            csl.slider.TickFrequency = (csl.slider.MaxValue - csl.slider.MinValue) / ct;
+                            csl.UpdateTickers(ct);
                         else
                             AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " couldn't parse integer");
                     else if (val is GH_Number gnum)
-                        csl.slider.TickFrequency = (csl.slider.MaxValue - csl.slider.MinValue) / (int)gnum.Value;
+                        csl.UpdateTickers((int)Math.Round(gnum.Value,0));
                     else
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " tick count input not a valid number");
                 }
