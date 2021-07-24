@@ -70,7 +70,11 @@ namespace Synapse
                 try
                 {
                     if (ctrls[i].Value is Control ctrl)
-                        tp.Content = ctrl;
+                    {
+                        DynamicLayout layout = new DynamicLayout();
+                        layout.AddAutoSized(ctrl);
+                        tp.Content = layout;
+                    }
                 }
                 catch (Exception ex)
                 {

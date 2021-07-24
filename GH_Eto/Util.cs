@@ -711,6 +711,11 @@ namespace Synapse
             {"bullet", @"●" },
             {"box",  @"■"},
             {"pointer", @"◄" },
+            {"pyramid", @"▲" },
+            {"heart", @"♥" },
+            { "diamond", @"♦"},
+            {"circle", @"○"},
+            {"arrow", @"►" }
         };
         protected string marker = "bullet";
 

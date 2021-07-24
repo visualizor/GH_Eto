@@ -8,12 +8,12 @@ using Grasshopper.Kernel.Types;
 
 namespace Synapse
 {
-    public class ExplicitSlider : GH_Component
+    public class LabeledSlider : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the ExplicitSlider class.
         /// </summary>
-        public ExplicitSlider()
+        public LabeledSlider()
           : base("SynapseSlider+", "SS",
               "slider with label",
               "Synapse", "Controls")
