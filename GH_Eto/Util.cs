@@ -265,8 +265,6 @@ namespace Synapse
     {
         public TextBox InputBox { get; private set; }
         public ComboSlider Slider { get; private set; }
-        public Button OkBtn { get; private set; }
-        public Button AbortBtn { get; private set; }
 
         public SliderTB(ComboSlider parent)
         {
@@ -337,6 +335,7 @@ namespace Synapse
             min = slider.MinValue * coef;
             max = slider.MaxValue * coef;
             slider.MouseDoubleClick += OnUserVal;
+            slider.MouseUp += OnRightMouse;
             slider.ValueChanged += OnSlide;
             UpdateTickers();
 
@@ -374,6 +373,11 @@ namespace Synapse
             {
                 // TODO: maybe handle this actually
             }
+        }
+        protected void OnRightMouse(object s, MouseEventArgs e)
+        {
+            if (e.Buttons == MouseButtons.Alternate)
+                OnUserVal(s, e);
         }
 
         public void SetVal(double v)
