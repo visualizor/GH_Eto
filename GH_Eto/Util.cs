@@ -116,7 +116,6 @@ namespace Synapse
             pe.Graphics.DrawImage(image, xoffset, yoffset, size.Width, size.Height);
         }
     }
-
     internal class CustomButton : Drawable
     {
         bool pressed;
@@ -262,7 +261,7 @@ namespace Synapse
         }
     }
 
-    internal class SliderTB: Dialog
+    internal class SliderTB: Form
     {
         public TextBox InputBox { get; private set; }
         public ComboSlider Slider { get; private set; }
@@ -273,8 +272,8 @@ namespace Synapse
         {
             Slider = parent;
             Width = Slider.slider.Width;
-            WindowStyle = WindowStyle.None;
-
+            Shown += OnShown;
+            
             OkBtn = new Button()
             {
                 
@@ -292,7 +291,7 @@ namespace Synapse
             InputBox = new TextBox()
             {
                 Text = Slider.val.ToString(),
-                Width = Width - 28,
+                Width = Width - 4,
             };
             InputBox.KeyUp += OnCommit;
 
@@ -301,7 +300,7 @@ namespace Synapse
                 Padding = 2,
                 Spacing = new Size(2, 2),
             };
-            dlo.AddSeparateRow(InputBox, null, OkBtn, null, AbortBtn);
+            dlo.AddSeparateRow(InputBox);
             Content = dlo;
         }
 
@@ -320,7 +319,15 @@ namespace Synapse
                 Slider.SetVal(userval); // out-of-bounds safeguard already built in :)
             Close();
         }
-
+        protected void OnUnfocus(object s, EventArgs e)
+        {
+            Close();
+        }
+        protected void OnShown(object s, EventArgs e)
+        {
+            Focus();
+            LostFocus += OnUnfocus;
+        }
     }
 
     internal class ComboSlider : StackLayout
@@ -364,9 +371,18 @@ namespace Synapse
             SliderTB tb = new SliderTB(this)
             {
                 Location = new Point((int)Mouse.Position.X, (int)Mouse.Position.Y),
+                Topmost = true,
+                WindowStyle = WindowStyle.None,
+                Title = "awaiting input...",
+                Resizable = false,
             };
-            try { tb.ShowModal(); }
-            catch {
+            
+            try
+            {
+                tb.Show();
+            }
+            catch
+            {
                 // TODO: maybe handle this actually
             }
         }
