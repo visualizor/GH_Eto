@@ -24,8 +24,8 @@ namespace Synapse.Ctrls
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddNumberParameter("low", "l", "lower", GH_ParamAccess.item);
-            pManager.AddNumberParameter("up", "u", "upper", GH_ParamAccess.item);
+            pManager.AddNumberParameter("low", "l", "lower", GH_ParamAccess.item,1);
+            pManager.AddNumberParameter("up", "u", "upper", GH_ParamAccess.item,5);
         }
 
         /// <summary>
@@ -46,12 +46,11 @@ namespace Synapse.Ctrls
             double u = 0;
             DA.GetData(0, ref l);
             DA.GetData(1, ref u);
-            DomainSlider dsl = new DomainSlider(80)
-            {
-                Lower = l,
-                Upper = u
-            };
-            dsl.PaintCtrl();
+
+            ComboDomSl dsl = new ComboDomSl(140);
+            dsl.DomSl.Lower = l;
+            dsl.DomSl.Upper = u;
+
             DA.SetData(0, new GH_ObjectWrapper(dsl));
         }
 

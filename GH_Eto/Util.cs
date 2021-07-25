@@ -5,6 +5,7 @@ using System.Reflection;
 using Eto.Forms;
 using Eto.Drawing;
 using Grasshopper.Kernel.Types;
+using System.ComponentModel;
 
 namespace Synapse
 {
@@ -532,27 +533,67 @@ namespace Synapse
         }
     }
 
-    internal class DomainSlider: ImageView
+    internal class ComboDomSl: StackLayout
+    {
+        public DomainSlider DomSl;
+        protected Label min;
+        protected Label max;
+
+        public ComboDomSl(int width)
+        {
+            DomSl = new DomainSlider(width);
+            DomSl.PaintCtrl();
+            min = new Label() { Text = DomSl.Lower.ToString("F"),};
+            max = new Label() { Text = DomSl.Upper.ToString("F"), };
+
+            Spacing = 2;
+            Orientation = Orientation.Horizontal;
+            Items.Add(min);
+            Items.Add(DomSl);
+            Items.Add(max);
+
+            DomSl.PropertyChanged += OnDomChanged;
+        }
+
+        protected void OnDomChanged(object s, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Upper" || e.PropertyName == "Lower")
+            {
+                min.Text = DomSl.Lower.ToString("F");
+                max.Text = DomSl.Upper.ToString("F");
+            }
+        }
+    }
+    internal class DomainSlider: ImageView, INotifyPropertyChanged
     {
         protected Bitmap img;
         protected Graphics author;
-        protected Pen stroke = new Pen(Color.FromArgb(200, 200, 200, 255));
+        protected Pen stroke = new Pen(Color.FromArgb(125, 125, 125, 255));
         protected int knobD = 8;
         protected double t0 = 0;
         protected double t1 = 10;
         protected double lo = 1.3;
         protected double up = 7.2;
+        protected double x0;
+        protected double x1;
         protected bool tracking = false;
+        protected bool mvup;
+        protected float mousenow;
 
+        public event PropertyChangedEventHandler PropertyChanged;
         public double Lower
         {
             get { return lo; }
             set
             {
                 if (value >= t0 && value < up)
+                {
                     lo = value;
-                else
-                    throw new ArgumentOutOfRangeException("lower bound too low");
+                    int barw = img.Width - knobD;
+                    x0 = barw * (lo - t0) / (t1 - t0);
+                    PaintCtrl();
+                    OnPropertyChanged("Lower");
+                }
             }
         }
         public double Upper
@@ -561,27 +602,23 @@ namespace Synapse
             set
             {
                 if (value <= t1 && value > lo)
+                {
                     up = value;
-                else
-                    throw new ArgumentOutOfRangeException("upper bound too high");
+                    int barw = img.Width - knobD;
+                    x1 = barw * (up - t0) / (t1 - t0);
+                    PaintCtrl();
+                    OnPropertyChanged("Upper");
+                }
             }
         }
 
-        /// <summary>
-        /// constructor
-        /// </summary>
-        /// <param name="bmp">canvas</param>
-        public DomainSlider(Bitmap bmp)
-        {
-            img = bmp;
-            author = new Graphics(img);
-            MouseUp += OnMouseUp;
-            MouseDown += OnMouseDn;
-        }
         public DomainSlider(int width)
         {
             img = new Bitmap(new Size(width, 10), PixelFormat.Format32bppRgba);
             author = new Graphics(img);
+            int barw = img.Width - knobD;
+            x0 = barw * (lo - t0) / (t1 - t0);
+            x1 = barw * (up - t0) / (t1 - t0);
             MouseUp += OnMouseUp;
             MouseDown += OnMouseDn;
         }
@@ -589,16 +626,38 @@ namespace Synapse
         protected void OnMouseDn(object s, MouseEventArgs e)
         {
             tracking = true;
+            double dx0 = Math.Abs(e.Location.X - Location.X - x0); // e.Location is actually relative to parent
+            double dx1 = Math.Abs(e.Location.X - Location.X - x1);
+            mvup = dx0 >= dx1;
+            mousenow = e.Location.X - Location.X;
             MouseMove += OnMouseMv;
         }
         protected void OnMouseMv(object s, MouseEventArgs e)
         {
             if (!tracking) return;
+            float d = e.Location.X - Location.X - mousenow;
+            if (mvup)
+            {
+                Upper += d/10; // division for dampening of movement
+                PaintCtrl();
+            }
+            else
+            {
+                Lower += d/10;
+                PaintCtrl();
+            }
+            mousenow += d;
         }
         protected void OnMouseUp(object s, MouseEventArgs e)
         {
             tracking = false;
             MouseMove -= OnMouseMv;
+            mousenow = e.Location.X - Location.X;
+        }
+
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
         public void PaintCtrl()
@@ -614,16 +673,19 @@ namespace Synapse
             int barh = 2;
             Point loc = new Point(knobD/2, knobD/2-barh/2);
             Rectangle rec = new Rectangle(loc, new Size(barw, barh));
+            Rectangle fillrec = new Rectangle(
+                new Point((int)Math.Round(x0,0), knobD / 2 - barh / 2),
+                new Point((int)Math.Round(x1,0), knobD/2 + barh/2)
+                );
             author.DrawRectangle(stroke, rec);
+            author.FillRectangle(stroke.Brush, fillrec);
         }
         protected void DrawKnob()
         {
             int barw = img.Width - knobD;
-            double x = barw * (lo - t0) / (t1 - t0);
-            Point loc = new Point((int)Math.Round(x, 0), 0);
+            Point loc = new Point((int)Math.Round(x0, 0), 0);
             author.FillEllipse(stroke.Brush, new Rectangle(loc, new Size(knobD, knobD)));
-            x = barw * (up - t0) / (t1 - t0);
-            loc = new Point((int)Math.Round(x, 0), 0);
+            loc = new Point((int)Math.Round(x1, 0), 0);
             author.FillEllipse(stroke.Brush, new Rectangle(loc, new Size(knobD, knobD)));
         }
     }
