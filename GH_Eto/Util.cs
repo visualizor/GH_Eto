@@ -272,7 +272,7 @@ namespace Synapse
             Slider = parent;
             Width = Slider.slider.Width;
             Shown += OnShown;
-            
+
             InputBox = new TextBox()
             {
                 Text = Slider.val.ToString(),

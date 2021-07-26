@@ -59,6 +59,11 @@ namespace Synapse.Ctrls
             }
         }
 
+        public override GH_Exposure Exposure
+        {
+            get { return GH_Exposure.hidden; }
+        }
+
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
         /// </summary>
