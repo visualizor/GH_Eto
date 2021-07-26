@@ -314,7 +314,6 @@ namespace Synapse
             LostFocus += OnUnfocus;
         }
     }
-
     internal class ComboSlider : StackLayout
     {
         public Slider slider;

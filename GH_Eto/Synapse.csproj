@@ -74,6 +74,7 @@
     <Compile Include="Ctrls\EtoComboBox.cs" />
     <Compile Include="Ctrls\EtoDropDn.cs" />
     <Compile Include="Ctrls\ImgBtn.cs" />
+    <Compile Include="Ctrls\SliderFromGH.cs" />
     <Compile Include="Params\EtoIcon.cs" />
     <Compile Include="Ctrls\EtoLabel.cs" />
     <Compile Include="Ctrls\EtoListBox.cs" />
