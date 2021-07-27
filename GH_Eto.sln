@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.1231
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Synapse", "GH_Eto\Synapse.csproj", "{7E97C848-B5B6-4593-96FB-D0D1EA60B367}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SynapseRCP", "SynapseRCP\SynapseRCP.csproj", "{A1DFE99B-C120-490F-BEF5-572E68F4900D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{7E97C848-B5B6-4593-96FB-D0D1EA60B367}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E97C848-B5B6-4593-96FB-D0D1EA60B367}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E97C848-B5B6-4593-96FB-D0D1EA60B367}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1DFE99B-C120-490F-BEF5-572E68F4900D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1DFE99B-C120-490F-BEF5-572E68F4900D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1DFE99B-C120-490F-BEF5-572E68F4900D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1DFE99B-C120-490F-BEF5-572E68F4900D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

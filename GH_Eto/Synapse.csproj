@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Containers\EtoDynamicLO.cs" />
     <Compile Include="Containers\EtoExpander.cs" />
+    <Compile Include="Containers\RCP.cs" />
     <Compile Include="Ctrls\DomSlider.cs" />
     <Compile Include="Ctrls\Slider2D.cs" />
     <Compile Include="Ctrls\EtoGridView.cs" />
@@ -233,6 +234,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ok_s.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SynapseRCP\SynapseRCP.csproj">
+      <Project>{a1dfe99b-c120-490f-bef5-572e68f4900d}</Project>
+      <Name>SynapseRCP</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
