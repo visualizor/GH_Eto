@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 using Grasshopper.Kernel;
-using Rhino.Geometry;
+using Eto.Forms;
 using Rhino.PlugIns;
 using Grasshopper.Kernel.Types;
 using SynapseRCP;
@@ -51,11 +51,19 @@ namespace Synapse
 
             Guid id = new Guid("a1dfe99b-c120-490f-bef5-572e68f4900d");
             
-            if (PlugIn.GetPlugInInfo(id).IsLoaded)
+            if (!PlugIn.GetPlugInInfo(id).IsLoaded)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " RCP isn't loaded\n try running \"SynapsePanel\" command in Rhino");
+                return;
+            }
+            
+            if (obj.Value is Form win)
             {
                 SynapseRH rcp = PlugIn.Find(id) as SynapseRH;
-                DA.SetData(0, rcp.ToString());
+                
+                DA.SetData(0, rcp.RemotePanel.ToString());
             }
+
         }
 
         /// <summary>

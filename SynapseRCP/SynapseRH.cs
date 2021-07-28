@@ -40,7 +40,7 @@ namespace SynapseRCP
             return base.OnLoad(ref errorMessage);
         }
 
-        public SPanel SynapseRCP { get; set; }
+        public SPanel RemotePanel { get; set; }
     }
 
 
@@ -48,6 +48,11 @@ namespace SynapseRCP
     [Guid("6bea5af8-4529-40b9-a470-6752017adeb6")]
     public class SPanel: Panel
     {
+        public SPanel()
+        {
+            Padding = 2;
+        }
+
         public static Guid PanelId
         {
             get { return typeof(SPanel).GUID; }
