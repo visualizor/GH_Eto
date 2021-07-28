@@ -238,4 +238,13 @@
   <data name="ok_s" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ok_s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="ghsl" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ghsl.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="rcp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\rcp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="domsl" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\domsl.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

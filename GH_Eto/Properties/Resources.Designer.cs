@@ -143,6 +143,16 @@ namespace Synapse.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap domsl {
+            get {
+                object obj = ResourceManager.GetObject("domsl", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap dynam {
             get {
                 object obj = ResourceManager.GetObject("dynam", resourceCulture);
@@ -186,6 +196,16 @@ namespace Synapse.Properties {
         internal static System.Drawing.Bitmap freedraw {
             get {
                 object obj = ResourceManager.GetObject("freedraw", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ghsl {
+            get {
+                object obj = ResourceManager.GetObject("ghsl", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -306,6 +326,16 @@ namespace Synapse.Properties {
         internal static System.Drawing.Bitmap radiobtn {
             get {
                 object obj = ResourceManager.GetObject("radiobtn", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap rcp {
+            get {
+                object obj = ResourceManager.GetObject("rcp", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

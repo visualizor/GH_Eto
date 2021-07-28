@@ -55,7 +55,7 @@ namespace Synapse.Ctrls
         {
             get
             {
-                return null;
+                return Properties.Resources.ghsl;
             }
         }
 

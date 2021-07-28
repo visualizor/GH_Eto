@@ -52,6 +52,7 @@ namespace SynapseRCP
         {
             Padding = 2;
             Load += OnSPanelLoad;
+            UnLoad += OnSPanelUnload;
         }
 
         public static Guid PanelId
@@ -62,6 +63,10 @@ namespace SynapseRCP
         protected void OnSPanelLoad(object s, EventArgs e)
         {
             SynapseRH.Instance.RemotePanel = this;
+        }
+        protected void OnSPanelUnload(object s, EventArgs e)
+        {
+            SynapseRH.Instance.RemotePanel = null;
         }
     }
 }

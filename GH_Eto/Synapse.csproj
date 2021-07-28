@@ -206,9 +206,6 @@
     <None Include="Resources\regions.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\window.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\winstyle.png" />
   </ItemGroup>
   <ItemGroup>
@@ -224,12 +221,6 @@
     <None Include="Resources\scroll.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\slider2d.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\etoimg.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\abort_s.png" />
   </ItemGroup>
   <ItemGroup>
@@ -240,6 +231,24 @@
       <Project>{a1dfe99b-c120-490f-bef5-572e68f4900d}</Project>
       <Name>SynapseRCP</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\etoimg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ghsl.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rcp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\slider2d.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\window.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\domsl.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
