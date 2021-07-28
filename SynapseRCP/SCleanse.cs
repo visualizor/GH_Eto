@@ -6,16 +6,15 @@ namespace SynapseRCP
 {
     public class SCleanse : Command
     {
-        static SCleanse _instance;
         public SCleanse()
         {
-            _instance = this;
+            Instance = this;
         }
 
         ///<summary>The only instance of the SynapseCleanse command.</summary>
         public static SCleanse Instance
         {
-            get { return _instance; }
+            get; private set;
         }
 
         public override string EnglishName
