@@ -15,18 +15,22 @@ namespace Synapse
         /// Initializes a new instance of the RCP class.
         /// </summary>
         public RCP()
-          : base("RCP", "RCP",
-              "Rhino control panel for Synapse elements",
+          : base("RemotePanel", "RCP",
+              "Rhino remote control panel for Synapse elements",
               "Synapse", "Containers")
         {
         }
+
+        protected IEnumerable<IGH_Param> srcs;
+        protected bool rectrl = true;
 
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddBooleanParameter("Send", "S", "set to true to send window to RCP", GH_ParamAccess.item);
+            pManager.AddBooleanParameter("Send", "S", "set to true to send window to RCP", GH_ParamAccess.item, false);
+            pManager[0].Optional = true;
             pManager.AddGenericParameter("Window", "W", "the window to be wrapped in the RCP", GH_ParamAccess.item);
         }
 
@@ -35,7 +39,6 @@ namespace Synapse
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("Out", "O", "output debug", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -44,26 +47,57 @@ namespace Synapse
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            if (rectrl)
+            {
+                OnPingDocument().ScheduleSolution(1, delegate {
+                    foreach (IGH_Param prm in Params.Input[1].Sources)
+                        prm.Attributes.GetTopLevel.DocObject.ExpireSolution(false);
+                    rectrl = false;
+                });
+                return;
+            }
+            else
+                rectrl = true;
+
+
             bool send = false;
             GH_ObjectWrapper obj = new GH_ObjectWrapper();
             DA.GetData(0, ref send);
             DA.GetData(1, ref obj);
+            SynapseRH rcp;
 
             Guid id = new Guid("a1dfe99b-c120-490f-bef5-572e68f4900d");
-            
             if (!PlugIn.GetPlugInInfo(id).IsLoaded)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " RCP isn't loaded\n try running \"SynapsePanel\" command in Rhino");
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " RCP isn't loaded\n go to Rhino plugin manager");
                 return;
+            }
+            else
+            {
+                rcp = PlugIn.Find(id) as SynapseRH;
+                if (rcp.RemotePanel == null)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " RCP isn't shown\n try \"SynapsePanel\" command in Rhino");
+                    return;
+                }
             }
             
             if (obj.Value is Form win)
-            {
-                SynapseRH rcp = PlugIn.Find(id) as SynapseRH;
-                rcp.RemotePanel.Content = win.Content;
-                DA.SetData(0, rcp.RemotePanel.ToString());
-            }
-
+                if (send)
+                {
+                    if (win.Visible)
+                    {
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " a shown window's content cannot be rendered elsewhere");
+                        return;
+                    }
+                    rcp.RemotePanel.Content = win.Content;
+                    win.Tag = EWinTag.InPanel;
+                }
+                else
+                {
+                    rcp.RemotePanel.Content = null;
+                    win.Tag = EWinTag.Indie;
+                }
         }
 
         /// <summary>

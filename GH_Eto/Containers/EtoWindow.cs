@@ -47,6 +47,7 @@ namespace Synapse
                 Height = 200,
                 Width = 400,
                 Title = "an Eto window",
+                Tag = EWinTag.Indie,
             };
             EWindow.Closing += EWClosing;
             EWindow.GotFocus += GhDocCheck;
@@ -163,6 +164,7 @@ namespace Synapse
                     Height = 200,
                     Width = 400,
                     Title = "an Eto window",
+                    Tag = EWinTag.Indie,
                 };
                 EWindow.Closing += EWClosing;
                 EWindow.GotFocus += GhDocCheck;
@@ -425,7 +427,13 @@ namespace Synapse
             EWindow.Content = content;
 
             if (run)
-                EWindow.Show();
+                if (EWindow.Tag is EWinTag tag)
+                {
+                    if (tag == EWinTag.Indie)
+                        EWindow.Show();
+                    else
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " this window's content is rendered to an RCP\n cannot be shown here");
+                }
             OutputProps(DA);
             DA.SetData(1, new GH_ObjectWrapper(EWindow));
         }

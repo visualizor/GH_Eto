@@ -9,9 +9,9 @@ using Rhino.Input.Custom;
 
 namespace SynapseRCP
 {
-    public class SynapseCmd : Command
+    public class SLaunch : Command
     {
-        public SynapseCmd()
+        public SLaunch()
         {
             // Rhino only creates one instance of each command class defined in a
             // plug-in, so it is safe to store a refence in a static property.
@@ -19,7 +19,7 @@ namespace SynapseRCP
         }
 
         ///<summary>The only instance of this command.</summary>
-        public static SynapseCmd Instance
+        public static SLaunch Instance
         {
             get; private set;
         }

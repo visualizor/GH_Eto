@@ -62,6 +62,12 @@ namespace Synapse
         }
     }
 
+    internal enum EWinTag
+    {
+        None,
+        Indie,
+        InPanel,
+    }
 
     /* ImageButton and CustomButton are copied from internet with minor mod
      * url https://gist.github.com/cwensley/95000998e37acd93e830

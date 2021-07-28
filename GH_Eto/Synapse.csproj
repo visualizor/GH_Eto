@@ -149,9 +149,6 @@
     <None Include="Resources\table.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\tablexy.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\label.png" />
   </ItemGroup>
   <ItemGroup>
@@ -249,6 +246,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\domsl.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tablexy.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

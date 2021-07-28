@@ -58,7 +58,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SynapseCmd.cs" />
+    <Compile Include="SCleanse.cs" />
+    <Compile Include="SLaunch.cs" />
     <Compile Include="SynapseRH.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
