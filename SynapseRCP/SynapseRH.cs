@@ -51,11 +51,17 @@ namespace SynapseRCP
         public SPanel()
         {
             Padding = 2;
+            Load += OnSPanelLoad;
         }
 
         public static Guid PanelId
         {
             get { return typeof(SPanel).GUID; }
+        }
+
+        protected void OnSPanelLoad(object s, EventArgs e)
+        {
+            SynapseRH.Instance.RemotePanel = this;
         }
     }
 }

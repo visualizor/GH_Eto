@@ -60,7 +60,7 @@ namespace Synapse
             if (obj.Value is Form win)
             {
                 SynapseRH rcp = PlugIn.Find(id) as SynapseRH;
-                
+                rcp.RemotePanel.Content = win.Content;
                 DA.SetData(0, rcp.RemotePanel.ToString());
             }
 
