@@ -50,4 +50,4 @@ It is likely that the query is listening to a container object that doesn't yiel
 #### How can I draw my own charts and illustrative graphics?
 Limited GUI level drawings with `Eto.Drawing` library is provided. I recommend plugins such as ProvingGround's [Conduit](https://provingground.io/tools/conduit-for-grasshopper/) for more tailored dashboard graphics.
 #### Why do my controls look different in RCP?
-  Rhino color schemes dictate the controls' on a docking panel. You can simply disable and re-enable all controls in GH if you want to switch back to typical, standalone windows.
+  Rhino color schemes dictate the controls' on a docking panel. You can simply disable and re-enable all controls in GH before you switch back to typical, standalone windows.
