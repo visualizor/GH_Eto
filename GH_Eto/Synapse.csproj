@@ -46,6 +46,7 @@
     </Reference>
     <Reference Include="Rhino.UI">
       <HintPath>C:\Program Files\Rhino 6\System\Rhino.UI.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="RhinoCommon">
       <HintPath>C:\Program Files\Rhino 6\System\RhinoCommon.dll</HintPath>

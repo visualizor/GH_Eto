@@ -251,7 +251,7 @@ namespace Synapse
                     GH_ObjectWrapper obj = objs[ii] as GH_ObjectWrapper;
                     if (obj.Value is Control ctrl)
                     {
-                        if (ctrl.ID == Guid.Empty.ToString() || ctrl.ID == string.Empty)
+                        if (ctrl.ID == Guid.Empty.ToString() || ctrl.ID == string.Empty || ctrl.ID==null)
                         {
                             AddRuntimeMessage(GH_RuntimeMessageLevel.Error, string.Format(" a {0} isn't initialized properly with a valid ID\n this is a code error; contact dev", ctrl.GetType()));
                             listening = true;
