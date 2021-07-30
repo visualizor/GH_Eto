@@ -117,106 +117,16 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\btn.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\color.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\stack.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\listen.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\numupdn.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\tb.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\fonts.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\checkbox.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\slider.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\dynam.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\table.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\label.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\expander.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\plugin.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\dd.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\group.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\slideronly.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\tabbed.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\tbplus.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\size.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\gridview.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\listbox.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\multitxt.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\pie.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\bars.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\trends.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\freedraw.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\radiobtn.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\regions.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\winstyle.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\override.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\combo.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\pietag.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\scroll.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\abort_s.png" />
@@ -231,25 +141,115 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\etoimg.png" />
+    <None Include="Resources\bars.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\ghsl.png" />
+    <None Include="Resources\btn.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\slider2d.png" />
+    <None Include="Resources\checkbox.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\window.png" />
+    <None Include="Resources\color.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\combo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dd.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\domsl.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\tablexy.png" />
+    <None Include="Resources\dynam.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\etoimg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\expander.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ghsl.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gridview.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\label.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\listen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\listview.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\multitxt.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\numupdn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\override.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pie.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\radiobtn.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\rcp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\regions.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\scroll.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\size.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\slider.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\slider2d.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\slideronly.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stack.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tabbed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\table.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tablexy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tbplus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\trends.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\window.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\winstyle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\group.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
