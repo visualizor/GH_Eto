@@ -165,9 +165,6 @@
     <None Include="Resources\dynam.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\etoimg.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\expander.png" />
   </ItemGroup>
   <ItemGroup>
@@ -216,9 +213,6 @@
     <None Include="Resources\slider.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\slider2d.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\slideronly.png" />
   </ItemGroup>
   <ItemGroup>
@@ -250,6 +244,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\group.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\etoimg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\slider2d.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
