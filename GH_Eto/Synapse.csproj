@@ -237,9 +237,6 @@
     <None Include="Resources\ghsl.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\rcp.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\slider2d.png" />
   </ItemGroup>
   <ItemGroup>
@@ -250,6 +247,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\tablexy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rcp.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
