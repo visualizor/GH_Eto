@@ -15,7 +15,7 @@ namespace Synapse
         /// </summary>
         public EtoDropDn()
           : base("SynapseDropMenu", "SDM",
-              "dropdown object",
+              "dropdown menu",
               "Synapse", "Controls")
         {
         }

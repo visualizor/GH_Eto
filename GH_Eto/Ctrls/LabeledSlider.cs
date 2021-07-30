@@ -14,7 +14,7 @@ namespace Synapse
         /// Initializes a new instance of the ExplicitSlider class.
         /// </summary>
         public LabeledSlider()
-          : base("SynapseSlider+", "SS",
+          : base("SynapseSlider", "SS",
               "slider with label",
               "Synapse", "Controls")
         {
