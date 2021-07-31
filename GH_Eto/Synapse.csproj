@@ -169,9 +169,6 @@
     <None Include="Resources\expander.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\ghsl.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\gridview.png" />
   </ItemGroup>
   <ItemGroup>
@@ -247,10 +244,16 @@
     <None Include="Resources\group.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\slider2d.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Resources\etoimg.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\slider2d.png" />
+    <None Include="Resources\ghsl.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tickergh.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

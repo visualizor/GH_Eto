@@ -191,8 +191,13 @@ namespace Synapse
         {
             get
             {
-                return null;
+                return Properties.Resources.tickergh;
             }
+        }
+
+        public override GH_Exposure Exposure
+        {
+            get { return GH_Exposure.primary | GH_Exposure.obscure; }
         }
 
         /// <summary>
