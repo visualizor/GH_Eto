@@ -64,12 +64,12 @@ namespace Synapse
                     NumericStepper ticker = new NumericStepper()
                     {
                         ID = Guid.NewGuid().ToString(),
-                        Value = (double)ghsl.Slider.Value,
                         MaxValue = (double)ghsl.Slider.Maximum,
                         MinValue = (double)ghsl.Slider.Minimum,
                         DecimalPlaces = ghsl.Slider.DecimalPlaces,
                         Increment = ghsl.Slider.Type== Grasshopper.GUI.Base.GH_SliderAccuracy.Integer?1:Math.Pow(10, -ghsl.Slider.DecimalPlaces),
                     };
+                    ticker.Value = (double)ghsl.Slider.Value;
                     tickers.Add(ticker);
                 }
 
