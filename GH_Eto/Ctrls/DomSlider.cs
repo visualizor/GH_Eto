@@ -24,8 +24,12 @@ namespace Synapse.Ctrls
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddNumberParameter("low", "l", "lower", GH_ParamAccess.item,1);
-            pManager.AddNumberParameter("up", "u", "upper", GH_ParamAccess.item,5);
+            pManager.AddTextParameter("Property", "P", "property to set", GH_ParamAccess.list);
+            pManager[0].DataMapping = GH_DataMapping.Flatten;
+            pManager[0].Optional = true;
+            pManager.AddGenericParameter("Property Value", "V", "values for the property", GH_ParamAccess.list);
+            pManager[1].DataMapping = GH_DataMapping.Flatten;
+            pManager[1].Optional = true;
         }
 
         /// <summary>
@@ -33,6 +37,7 @@ namespace Synapse.Ctrls
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
+            pManager.AddTextParameter("All Properties", "A", "list of all accessible properties", GH_ParamAccess.list);
             pManager.AddGenericParameter("Control", "C", "slider control", GH_ParamAccess.item);
         }
 
@@ -42,19 +47,80 @@ namespace Synapse.Ctrls
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            double l = 0;
-            double u = 0;
-            DA.GetData(0, ref l);
-            DA.GetData(1, ref u);
+            List<string> props = new List<string>();
+            List<GH_ObjectWrapper> vals = new List<GH_ObjectWrapper>();
+            DA.GetDataList(0, props);
+            DA.GetDataList(1, vals);
 
             ComboDomSl dsl = new ComboDomSl(140)
             {
                 ID = Guid.NewGuid().ToString(),
             };
-            dsl.DomSl.Lower = l;
-            dsl.DomSl.Upper = u;
 
-            DA.SetData(0, new GH_ObjectWrapper(dsl));
+            for (int i = 0; i < props.Count; i++)
+            {
+                string n = props[i];
+                object val;
+                try { val = vals[i].Value; }
+                catch (ArgumentOutOfRangeException)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "P, V should correspond each other");
+                    return;
+                }
+
+                if (n.ToLower() == "maxvalue" || n.ToLower() == "max")
+                {
+
+                }
+                else if (n.ToLower() == "minvalue" || n.ToLower() == "min")
+                {
+
+                }
+                else if (n.ToLower() == "rightstop" || n.ToLower() == "rightend")
+                {
+
+                }
+                else if (n.ToLower() == "leftstop" || n.ToLower() == "leftend")
+                {
+
+                }
+                else if (n.ToLower() == "width")
+                {
+
+                }
+                else if (n.ToLower() == "color")
+                {
+                    if (val is Color clr)
+                        dsl.DomSl.SliderColor = clr;
+                    else if (val is GH_String gstr)
+                    {
+                        if (Color.TryParse(gstr.Value, out Color c))
+                            dsl.DomSl.SliderColor = c;
+                    }
+                    else
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " can't parse color");
+                }
+                else if (n.ToLower() == "height")
+                {
+                    if (val is GH_Integer gint)
+                        dsl.DomSl.KnobDiameter = gint.Value;
+                    else if (val is GH_Number gn)
+                        dsl.DomSl.KnobDiameter = (int)Math.Round(gn.Value, 0);
+                    else if (val is GH_Interval gitvl)
+                        dsl.DomSl.KnobDiameter = (int)Math.Round(gitvl.Value.Length, 0);
+                    else if (val is GH_String gstr)
+                    {
+                        if (double.TryParse(gstr.Value, out double num))
+                            dsl.DomSl.KnobDiameter = (int)Math.Round(num, 0);
+                    }
+                    else
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " can't parse height");
+                }
+                else
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " not a valid property to set");
+            }
+
+            DA.SetData(1, new GH_ObjectWrapper(dsl));
         }
 
         /// <summary>

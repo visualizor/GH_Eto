@@ -593,7 +593,8 @@ namespace Synapse
     {
         protected Bitmap img;
         protected Graphics author;
-        protected Pen stroke = new Pen(Color.FromArgb(125, 125, 125, 255));
+        protected Color clr;
+        protected Pen stroke;
         protected int knobD = 12;
         protected double t0 = 0;
         protected double t1 = 10;
@@ -619,9 +620,6 @@ namespace Synapse
                     tracking = false;
                     lo = t0;
                 }
-                int barw = img.Width - knobD;
-                x0 = barw * (lo - t0) / (t1 - t0);
-                PaintCtrl();
                 OnPropertyChanged("Lower");
             }
         }
@@ -637,15 +635,60 @@ namespace Synapse
                     tracking = false;
                     up = t1;
                 }
-                int barw = img.Width - knobD;
-                x1 = barw * (up - t0) / (t1 - t0);
-                PaintCtrl();
                 OnPropertyChanged("Upper");
+            }
+        }
+        public int KnobDiameter
+        {
+            get { return knobD; }
+            set
+            {
+                if (value > 3)
+                {
+                    knobD = value;
+                    OnPropertyChanged("KnobDiameter");
+                }
+            }
+        }
+        public Color SliderColor
+        {
+            get { return clr; }
+            set
+            {
+                clr = value;
+                stroke = new Pen(clr);
+                OnPropertyChanged("SliderColor");
+            }
+        }
+        public double LeftEnd
+        {
+            get { return t0; }
+            set
+            {
+                if (value < lo)
+                    t0 = value;
+                else
+                    t0 = lo;
+                OnPropertyChanged("LeftEnd");
+            }
+        }
+        public double RightEnd
+        {
+            get { return t1; }
+            set
+            {
+                if (value > up)
+                    t1 = value;
+                else
+                    t1 = up;
+                OnPropertyChanged("RightEnd");
             }
         }
 
         public DomainSlider(int width)
         {
+            clr = Color.FromArgb(125, 125, 125);
+            stroke = new Pen(clr);
             img = new Bitmap(new Size(width, knobD), PixelFormat.Format32bppRgba);
             author = new Graphics(img);
             int barw = img.Width - knobD;
@@ -689,6 +732,10 @@ namespace Synapse
 
         protected void OnPropertyChanged(string name)
         {
+            int barw = img.Width - knobD;
+            x0 = barw * (lo - t0) / (t1 - t0);
+            x1 = barw * (up - t0) / (t1 - t0);
+            PaintCtrl();
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
