@@ -47,7 +47,10 @@ namespace Synapse.Ctrls
             DA.GetData(0, ref l);
             DA.GetData(1, ref u);
 
-            ComboDomSl dsl = new ComboDomSl(140);
+            ComboDomSl dsl = new ComboDomSl(140)
+            {
+                ID = Guid.NewGuid().ToString(),
+            };
             dsl.DomSl.Lower = l;
             dsl.DomSl.Upper = u;
 

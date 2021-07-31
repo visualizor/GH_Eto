@@ -53,7 +53,7 @@ namespace Synapse
             DA.GetDataList(0, props);
             DA.GetDataList(1, vals);
 
-            Label label = new Label();
+            Label label = new Label() { Text = "A Label", };
             for (int i = 0; i < props.Count; i++)
             {
                 string n = props[i];

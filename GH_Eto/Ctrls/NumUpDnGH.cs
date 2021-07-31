@@ -61,6 +61,8 @@ namespace Synapse
             foreach (IGH_Param prm in Params.Input[2].Sources)
                 if (prm is GH_NumberSlider ghsl)
                 {
+                    if (ghsl.IsExpression)
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " slider expressions are not evaluated here");
                     NumericStepper ticker = new NumericStepper()
                     {
                         ID = Guid.NewGuid().ToString(),

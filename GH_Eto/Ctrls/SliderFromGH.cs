@@ -63,6 +63,8 @@ namespace Synapse.Ctrls
             foreach (IGH_Param prm in Params.Input[2].Sources)
                 if (prm is GH_NumberSlider ghsl)
                 {
+                    if (ghsl.IsExpression)
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " slider expressions are not evaluated here");
                     ComboSlider csl = new ComboSlider()
                     {
                         ID = Guid.NewGuid().ToString(),

@@ -558,8 +558,28 @@ namespace Synapse
             Items.Add(max);
 
             DomSl.PropertyChanged += OnDomChanged;
+            MouseDoubleClick += OnUserVal;
         }
 
+        protected void OnUserVal(object s, MouseEventArgs e)
+        {
+            DomSlTB tb = new DomSlTB(this)
+            {
+                Location = new Point((int)Mouse.Position.X, (int)Mouse.Position.Y),
+                Topmost = true,
+                WindowStyle = WindowStyle.None,
+                Title = "awaiting input...",
+                Resizable = false,
+            };
+            try
+            {
+                tb.Show();
+            }
+            catch
+            {
+                // TODO: maybe handle this actually
+            }
+        }
         protected void OnDomChanged(object s, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Upper" || e.PropertyName == "Lower")
@@ -574,7 +594,7 @@ namespace Synapse
         protected Bitmap img;
         protected Graphics author;
         protected Pen stroke = new Pen(Color.FromArgb(125, 125, 125, 255));
-        protected int knobD = 8;
+        protected int knobD = 12;
         protected double t0 = 0;
         protected double t1 = 10;
         protected double lo = 1.3;
@@ -586,19 +606,23 @@ namespace Synapse
         protected float mousenow;
 
         public event PropertyChangedEventHandler PropertyChanged;
+        // setters of the following two will re-draw control
         public double Lower
         {
             get { return lo; }
             set
             {
                 if (value >= t0 && value < up)
-                {
                     lo = value;
-                    int barw = img.Width - knobD;
-                    x0 = barw * (lo - t0) / (t1 - t0);
-                    PaintCtrl();
-                    OnPropertyChanged("Lower");
+                else
+                {
+                    tracking = false;
+                    lo = t0;
                 }
+                int barw = img.Width - knobD;
+                x0 = barw * (lo - t0) / (t1 - t0);
+                PaintCtrl();
+                OnPropertyChanged("Lower");
             }
         }
         public double Upper
@@ -607,19 +631,22 @@ namespace Synapse
             set
             {
                 if (value <= t1 && value > lo)
-                {
                     up = value;
-                    int barw = img.Width - knobD;
-                    x1 = barw * (up - t0) / (t1 - t0);
-                    PaintCtrl();
-                    OnPropertyChanged("Upper");
+                else
+                {
+                    tracking = false;
+                    up = t1;
                 }
+                int barw = img.Width - knobD;
+                x1 = barw * (up - t0) / (t1 - t0);
+                PaintCtrl();
+                OnPropertyChanged("Upper");
             }
         }
 
         public DomainSlider(int width)
         {
-            img = new Bitmap(new Size(width, 10), PixelFormat.Format32bppRgba);
+            img = new Bitmap(new Size(width, knobD), PixelFormat.Format32bppRgba);
             author = new Graphics(img);
             int barw = img.Width - knobD;
             x0 = barw * (lo - t0) / (t1 - t0);
@@ -643,12 +670,12 @@ namespace Synapse
             float d = e.Location.X - Location.X - mousenow;
             if (mvup)
             {
-                Upper += d/10; // division for dampening of movement
+                Upper += d/12; // division for dampening of movement
                 PaintCtrl();
             }
             else
             {
-                Lower += d/10;
+                Lower += d/12;
                 PaintCtrl();
             }
             mousenow += d;
@@ -692,6 +719,68 @@ namespace Synapse
             author.FillEllipse(stroke.Brush, new Rectangle(loc, new Size(knobD, knobD)));
             loc = new Point((int)Math.Round(x1, 0), 0);
             author.FillEllipse(stroke.Brush, new Rectangle(loc, new Size(knobD, knobD)));
+        }
+    }
+    internal class DomSlTB:Form
+    {
+        public TextBox LowerInput { get; private set; }
+        public TextBox UpperInput { get; private set; }
+        public ComboDomSl Slider { get; private set; }
+
+        public DomSlTB(ComboDomSl parent)
+        {
+            Slider = parent;
+            Width = parent.DomSl.Width;
+            Shown += OnShown;
+
+            LowerInput = new TextBox()
+            {
+                Text = parent.DomSl.Lower.ToString("F"),
+                Width = (Width - 6)/2,
+            };
+            LowerInput.KeyUp += OnCommit;
+
+            UpperInput = new TextBox()
+            {
+                Text = parent.DomSl.Upper.ToString("F"),
+                Width = (Width - 6) / 2,
+            };
+            UpperInput.KeyUp += OnCommit;
+
+            DynamicLayout dlo = new DynamicLayout()
+            {
+                Padding = 2,
+                Spacing = new Size(2, 2),
+            };
+            dlo.AddSeparateRow(LowerInput, null, UpperInput);
+            Content = dlo;
+        }
+
+        protected void OnShown(object s, EventArgs e)
+        {
+            Focus();
+            LostFocus += OnUnfocus;
+        }
+        protected void OnUnfocus(object s, EventArgs e)
+        {
+            Close();
+        }
+        protected void OnCommit(object s, KeyEventArgs e)
+        {
+            if (e.Key == Keys.Escape)
+            {
+                Close();
+                return;
+            }
+            else if (e.Key == Keys.Enter)
+            {
+                if (double.TryParse(LowerInput.Text, out double lower))
+                    Slider.DomSl.Lower = lower;
+                if (double.TryParse(UpperInput.Text, out double upper))
+                    Slider.DomSl.Upper = upper;
+                Close();
+                return;
+            }
         }
     }
 
