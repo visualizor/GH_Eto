@@ -375,9 +375,9 @@ namespace Synapse
             {
                 tb.Show();
             }
-            catch
+            catch (Exception ex)
             {
-                // TODO: maybe handle this actually
+                MessageBox.Show(string.Format("Contact developer for this error:\n{0}", ex.Message));
             }
         }
         protected void OnRightMouse(object s, MouseEventArgs e)
@@ -543,12 +543,20 @@ namespace Synapse
         public DomainSlider DomSl;
         protected Label min;
         protected Label max;
+        protected int sw;
 
         public ComboDomSl(int width)
         {
-            DomSl = new DomainSlider(width);
+            sw = width;
+            InitDomSl();
+        }
+
+        protected void InitDomSl()
+        {
+            MouseDoubleClick -= OnUserVal;
+            DomSl = new DomainSlider(sw);
             DomSl.PaintCtrl();
-            min = new Label() { Text = DomSl.Lower.ToString("F"),};
+            min = new Label() { Text = DomSl.Lower.ToString("F"), };
             max = new Label() { Text = DomSl.Upper.ToString("F"), };
 
             Spacing = 2;
@@ -558,6 +566,7 @@ namespace Synapse
             Items.Add(max);
 
             DomSl.PropertyChanged += OnDomChanged;
+            DomSl.PropertyChanged += OnMetaChanged;
             MouseDoubleClick += OnUserVal;
         }
 
@@ -575,9 +584,9 @@ namespace Synapse
             {
                 tb.Show();
             }
-            catch
+            catch (Exception ex)
             {
-                // TODO: maybe handle this actually
+                MessageBox.Show(string.Format("Contact developer for this error:\n{0}", ex.Message));
             }
         }
         protected void OnDomChanged(object s, PropertyChangedEventArgs e)
@@ -586,6 +595,24 @@ namespace Synapse
             {
                 min.Text = DomSl.Lower.ToString("F");
                 max.Text = DomSl.Upper.ToString("F");
+            }
+        }
+        protected void OnMetaChanged(object s, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "KnobDiameter":
+                    SuspendLayout();
+                    ResumeLayout();
+                    break;
+                case "SliderColor":
+                    break;
+                case "LeftEnd":
+                    break;
+                case "RightEnd":
+                    break;
+                default:
+                    break;
             }
         }
     }

@@ -228,26 +228,24 @@ namespace Synapse
                     catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
             }
 
-            //dyna.AddRange(added);
             if (!hz)
+            {
                 foreach (Control c in added)
                     dyna.AddAutoSized(c);
+            }
             else
             {
                 dyna.BeginHorizontal();
                 foreach (Control c in added)
                 {
-                    dyna.BeginHorizontal();
                     dyna.BeginVertical();
+                    dyna.BeginHorizontal();
                     dyna.AddAutoSized(c);
-                    dyna.EndVertical();
                     dyna.EndHorizontal();
+                    dyna.EndVertical();
                 }
                 dyna.EndHorizontal();
             }
-                
-
-            //TODO: currently not able to add separate columns i.e. flow horizontally
 
             DA.SetData(1, new GH_ObjectWrapper(dyna));
 

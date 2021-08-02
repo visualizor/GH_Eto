@@ -68,25 +68,22 @@ namespace Synapse.Ctrls
                     return;
                 }
 
-                if (n.ToLower() == "maxvalue" || n.ToLower() == "max")
+                
+                if (n.ToLower() == "width")
                 {
-
-                }
-                else if (n.ToLower() == "minvalue" || n.ToLower() == "min")
-                {
-
-                }
-                else if (n.ToLower() == "rightstop" || n.ToLower() == "rightend")
-                {
-
-                }
-                else if (n.ToLower() == "leftstop" || n.ToLower() == "leftend")
-                {
-
-                }
-                else if (n.ToLower() == "width")
-                {
-
+                    if (val is GH_String gs)
+                    {
+                        if (double.TryParse(gs.Value, out double num))
+                            dsl.DomSl.Width = (int)Math.Round(num, 0);
+                    }
+                    else if (val is GH_Number gn)
+                        dsl.DomSl.Width = (int)Math.Round(gn.Value, 0);
+                    else if (val is GH_Integer gi)
+                        dsl.DomSl.Width = gi.Value;
+                    else if (val is GH_Interval gitvl)
+                        dsl.DomSl.Width = (int)Math.Round(gitvl.Value.Length, 0);
+                    else
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " can't parse value for slider width");
                 }
                 else if (n.ToLower() == "color")
                 {
@@ -116,11 +113,110 @@ namespace Synapse.Ctrls
                     else
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " can't parse height");
                 }
+                else if (n.ToLower() == "enabled" || n.ToLower() == "active")
+                {
+                    if (val is GH_Boolean gb)
+                        dsl.Enabled = gb.Value;
+                    else if (val is GH_String gs)
+                    {
+                        if (bool.TryParse(gs.Value, out bool b))
+                            dsl.Enabled = b;
+                    }
+                    else if (val is GH_Integer gi)
+                        switch (gi.Value)
+                        {
+                            case 0:
+                                dsl.Enabled = false;
+                                break;
+                            case 1:
+                                dsl.Enabled = false;
+                                break;
+                            default:
+                                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " only 0 or 1 can be interpreted as a boolean value");
+                                break;
+                        }
+                    else
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " cannot parse boolean value");
+                }
+                else if (n.ToLower() == "upperbound" || n.ToLower() == "max")
+                {
+                    if (val is GH_String gs)
+                    {
+                        if (double.TryParse(gs.Value, out double num))
+                            dsl.DomSl.Upper = num;
+                    }
+                    else if (val is GH_Number gn)
+                        dsl.DomSl.Upper = gn.Value;
+                    else if (val is GH_Integer gi)
+                        dsl.DomSl.Upper = gi.Value;
+                    else if (val is GH_Interval gitvl)
+                        dsl.DomSl.Upper = gitvl.Value.Length;
+                    else
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " can't parse upper bound value");
+                }
+                else if (n.ToLower() == "lowerbound" || n.ToLower() == "min")
+                {
+                    if (val is GH_String gs)
+                    {
+                        if (double.TryParse(gs.Value, out double num))
+                            dsl.DomSl.Lower = num;
+                    }
+                    else if (val is GH_Number gn)
+                        dsl.DomSl.Lower = gn.Value;
+                    else if (val is GH_Integer gi)
+                        dsl.DomSl.Lower = gi.Value;
+                    else if (val is GH_Interval gitvl)
+                        dsl.DomSl.Lower = gitvl.Value.Length;
+                    else
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " can't parse lower bound value");
+                }
+                else if (n.ToLower() == "rightstop" || n.ToLower() == "rightend")
+                {
+                    if (val is GH_String gs)
+                    {
+                        if (double.TryParse(gs.Value, out double num))
+                            dsl.DomSl.RightEnd = num;
+                    }
+                    else if (val is GH_Number gn)
+                        dsl.DomSl.RightEnd = gn.Value;
+                    else if (val is GH_Integer gi)
+                        dsl.DomSl.RightEnd = gi.Value;
+                    else if (val is GH_Interval gitvl)
+                        dsl.DomSl.RightEnd = gitvl.Value.Length;
+                    else
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " can't parse value for slider right end");
+                }
+                else if (n.ToLower() == "leftstop" || n.ToLower() == "leftend")
+                {
+                    if (val is GH_String gs)
+                    {
+                        if (double.TryParse(gs.Value, out double num))
+                            dsl.DomSl.LeftEnd = num;
+                    }
+                    else if (val is GH_Number gn)
+                        dsl.DomSl.LeftEnd = gn.Value;
+                    else if (val is GH_Integer gi)
+                        dsl.DomSl.LeftEnd = gi.Value;
+                    else if (val is GH_Interval gitvl)
+                        dsl.DomSl.LeftEnd = gitvl.Value.Length;
+                    else
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " can't parse value for slider left end");
+                }
                 else
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " not a valid property to set");
             }
 
             DA.SetData(1, new GH_ObjectWrapper(dsl));
+            DA.SetDataList(0, new string[]{
+                "LowerBound: number",
+                "UpperBound: number",
+                "RightEnd: number",
+                "LeftEnd: number",
+                "Height: integer",
+                "Color: Eto.Drawing.Color",
+                "Width: integer",
+                "Enabled: boolean",
+            });
         }
 
         /// <summary>

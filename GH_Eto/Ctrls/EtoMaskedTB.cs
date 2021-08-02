@@ -53,7 +53,6 @@ namespace Synapse
         public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
         {
             base.AppendAdditionalMenuItems(menu);
-            // TODO: this uses winforms, probably won't work on Mac
             try
             {
                 wf.ToolStripMenuItem asciionly = menu.Items.Add("ASCII only", null, OnAscii) as wf.ToolStripMenuItem;

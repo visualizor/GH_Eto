@@ -32,14 +32,11 @@ namespace SynapseRCP
 
         protected override Result RunCommand(RhinoDoc doc, RunMode mode)
         {
-            // TODO: start here modifying the behaviour of your command.
-            // ---
             Guid pid = SPanel.PanelId;
             bool open = Panels.IsPanelVisible(pid);
             if (open) Panels.ClosePanel(pid);
             else Panels.OpenPanel(pid);
 
-            // ---
 
             return Result.Success;
         }
