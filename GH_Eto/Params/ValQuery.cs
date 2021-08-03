@@ -7,6 +7,7 @@ using Eto.Drawing;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Grasshopper.Kernel.Data;
+using Rhino.Geometry;
 
 namespace Synapse
 {
@@ -104,6 +105,11 @@ namespace Synapse
                 listenees.Add(tp.ID);
                 tp.MouseUp += OnTrackPad;
             }
+            else if (ctrl is ComboDomSl combodom)
+            {
+                listenees.Add(combodom.ID);
+                combodom.DomSl.PropertyChanged += OnComboDom;
+            }
             else
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " unrecognized control detected");
         }
@@ -136,10 +142,13 @@ namespace Synapse
                 return new GH_ObjectWrapper(lbx.SelectedIndex);
             else if (ctrl is TrackPad tp)
                 return new GH_ObjectWrapper(tp.Position.ToString());
+            else if (ctrl is ComboDomSl combodom)
+                return new GH_ObjectWrapper(new Interval(combodom.DomSl.Lower, combodom.DomSl.Upper));
             else
                 return new GH_ObjectWrapper();
         }
 
+        #region expire solutions
         public void OnBtnDn(object s, EventArgs e)
         {
             if (s is Button btn)
@@ -189,6 +198,11 @@ namespace Synapse
         {
             ExpireSolution(true);
         }
+        public void OnComboDom(object s, EventArgs e)
+        {
+            ExpireSolution(true);
+        }
+        #endregion
 
         /// <summary>
         /// Registers all the input parameters for this component.

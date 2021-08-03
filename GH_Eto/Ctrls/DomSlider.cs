@@ -212,7 +212,6 @@ namespace Synapse.Ctrls
                 "UpperBound: number",
                 "RightEnd: number",
                 "LeftEnd: number",
-                "Height: integer",
                 "Color: Eto.Drawing.Color",
                 "Width: integer",
                 "Enabled: boolean",
