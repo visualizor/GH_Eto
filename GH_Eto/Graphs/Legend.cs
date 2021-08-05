@@ -14,7 +14,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoPieLg class.
         /// </summary>
         public EtoLegend()
-          : base("SynapseLegend", "Legend",
+          : base("SnpLegend", "SLegend",
               "chart legend",
               "Synapse", "Graphs")
         {

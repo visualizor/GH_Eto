@@ -16,7 +16,7 @@ namespace Synapse
         /// Initializes a new instance of the NumUpDnGH class.
         /// </summary>
         public NumUpDnGH()
-          : base("NumUpDnGH", "UDGH",
+          : base("SnpNumUpDnGH", "SUDGH",
               "numeric up down control from a Grasshopper slider",
               "Synapse", "Controls")
         {

@@ -16,7 +16,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoMaskedTB class.
         /// </summary>
         public EtoMaskedTB()
-          : base("SynapseTextBox+", "STB",
+          : base("SnpMaskedTxtBox", "STBm",
               "masked text box",
               "Synapse", "Controls")
         {

@@ -15,7 +15,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoNumUD class.
         /// </summary>
         public EtoNumUD()
-          : base("SynapseNumUpDn", "SNUD",
+          : base("SnpNumUpDn", "STicker",
               "numeric up-down control",
               "Synapse", "Controls")
         {

@@ -15,7 +15,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoTableXY class.
         /// </summary>
         public EtoTableXY()
-          : base("SynapseTableXY", "STxy",
+          : base("SnpTableXY", "STxy",
               "arrange controls into a TableLayout and produces coordinates text strings\ncontrols are placed from top to bottom, left to right",
               "Synapse", "Parameters")
         {

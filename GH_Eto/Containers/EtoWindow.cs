@@ -30,7 +30,7 @@ namespace Synapse
         /// new tabs/panels will automatically be created.
         /// </summary>
         public EtoWindow()
-          : base("SynapseWindow", "SWindow",
+          : base("SnpWindow", "SWin",
               "main window",
               "Synapse", "Containers")
         {

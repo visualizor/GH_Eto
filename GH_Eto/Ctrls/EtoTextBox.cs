@@ -17,7 +17,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoTextBox class.
         /// </summary>
         public EtoTextBox()
-          : base("SynapseTextBox", "STB",
+          : base("SnpTextBox", "STB",
               "text box",
               "Synapse", "Controls")
         {

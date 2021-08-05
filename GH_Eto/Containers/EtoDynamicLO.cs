@@ -15,7 +15,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoDynamicLO class.
         /// </summary>
         public EtoDynamicLO()
-          : base("SynapseDynamicLayout", "SDyLO",
+          : base("SnpDynaLayout", "SDyLO",
               "dynamic layout, somewhat autosized to controls",
               "Synapse", "Containers")
         {

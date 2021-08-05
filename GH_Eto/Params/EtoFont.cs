@@ -12,7 +12,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoFont class.
         /// </summary>
         public EtoFont()
-          : base("SynapseFont", "SFont",
+          : base("SnpFont", "SFont",
               "font object for Synapse controls",
               "Synapse", "Parameters")
         {

@@ -12,7 +12,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoFormStyle class.
         /// </summary>
         public EtoFormStyle()
-          : base("SynapseWinStyle", "WS",
+          : base("SnpWinStyle", "WS",
               "windows style",
               "Synapse", "Parameters")
         {

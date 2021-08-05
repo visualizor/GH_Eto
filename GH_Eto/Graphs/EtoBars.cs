@@ -14,7 +14,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoBars class.
         /// </summary>
         public EtoBars()
-          : base("SynapseHistogram", "SHisto",
+          : base("SnpHistogram", "SHisto",
               "histograms/bar chart",
               "Synapse", "Graphs")
         {

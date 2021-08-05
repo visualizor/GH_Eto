@@ -15,7 +15,7 @@ namespace Synapse.Containers
         /// Initializes a new instance of the EtoGroupBox class.
         /// </summary>
         public EtoGroupBox()
-          : base("SynapseGroup", "SGr",
+          : base("SnpGroup", "SGr",
               "group box container",
               "Synapse", "Containers")
         {

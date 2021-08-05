@@ -14,7 +14,7 @@ namespace Synapse
         /// Initializes a new instance of the ValOverride class.
         /// </summary>
         public ValOverride()
-          : base("SynapseOverride", "SetVal",
+          : base("SnpOverride", "SSetVal",
               "override control values\nthis lets you set the primary value of a control without re-instantiating the entire window",
               "Synapse", "Parameters")
         {

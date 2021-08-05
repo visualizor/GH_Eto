@@ -14,7 +14,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoComboBox class.
         /// </summary>
         public EtoComboBox()
-          : base("SynapseComboBox", "SCombo",
+          : base("SnpComboBox", "SCombo",
               "combo box allows text input or select from drop down",
               "Synapse", "Controls")
         {

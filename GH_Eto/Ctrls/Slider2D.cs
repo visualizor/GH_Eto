@@ -15,7 +15,7 @@ namespace Synapse.Ctrls
         /// Initializes a new instance of the Eto2DSlider class.
         /// </summary>
         public Slider2D()
-          : base("SynapseSampler", "Sampler",
+          : base("SnpSampler", "Sampler",
               "similar to a UV slider",
               "Synapse", "Controls")
         {

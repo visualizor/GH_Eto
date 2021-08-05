@@ -14,7 +14,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoMultiTxtBox class.
         /// </summary>
         public EtoMultiTxtBox()
-          : base("SynapseMultiTexts", "SMT",
+          : base("SnpMultiTxts", "SMT",
               "text area to input multiple lines of text",
               "Synapse", "Controls")
         {

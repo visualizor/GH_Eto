@@ -15,7 +15,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoButton class.
         /// </summary>
         public EtoButton()
-          : base("SynapseButton", "SBtn",
+          : base("SnpButton", "SBtn",
               "button",
               "Synapse", "Controls")
         {

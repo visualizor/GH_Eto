@@ -17,7 +17,7 @@ namespace Synapse.Ctrls
         /// </summary>
         public SliderFromGH()
         {
-            Name = "SynapseSliderGH";
+            Name = "SnpeSliderGH";
             NickName = "SSlGH";
             Description = "Synapse slider from a Grasshopper slider";
             Category = "Synapse";

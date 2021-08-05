@@ -15,7 +15,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoTableLO class.
         /// </summary>
         public EtoTableLO()
-          : base("SynapseTable", "STable",
+          : base("SnpTableLayout", "STable",
               "table layout of synapse controls",
               "Synapse", "Containers")
         {

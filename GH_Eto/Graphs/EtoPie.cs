@@ -15,7 +15,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoPie class.
         /// </summary>
         public EtoPie()
-          : base("SynapsePieChart", "SPie",
+          : base("SnpPieChart", "SPie",
               "pie chart",
               "Synapse", "Graphs")
         {

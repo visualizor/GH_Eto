@@ -16,8 +16,8 @@ namespace Synapse
         public EtoRegions()
           : base()
         {
-            Name = "SynapseHierarchy";
-            NickName = "SHrrchy";
+            Name = "SnpHierarchy";
+            NickName = "SHrch";
             Description = "rectangular areas showing proportions";
             Category = "Synapse";
             SubCategory = "Graphs";

@@ -16,7 +16,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoTrends class.
         /// </summary>
         public EtoTrends()
-          : base("SynapseTrends", "STrends",
+          : base("SnpTrends", "STrends",
               "line graph",
               "Synapse", "Graphs")
         {

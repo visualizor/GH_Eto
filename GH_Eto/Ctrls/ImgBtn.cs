@@ -12,7 +12,7 @@ namespace Synapse
         /// Initializes a new instance of the ImgBtn class.
         /// </summary>
         public ImgBtn()
-          : base("ImageButton", "ImgBtn",
+          : base("SnpImageButton", "ImgBtn",
               "image as a button",
               "Synapse", "Controls")
         {
@@ -56,6 +56,7 @@ namespace Synapse
         public override GH_Exposure Exposure
         {
             get { return GH_Exposure.hidden; }
+            // TODO: expose this
         }
 
         /// <summary>

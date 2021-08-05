@@ -13,7 +13,7 @@ namespace Synapse.Ctrls
         /// Initializes a new instance of the DomSlider class.
         /// </summary>
         public DomSlider()
-          : base("DomSlider", "DomSl",
+          : base("SnpDomSlider", "SDomSl",
               "domain slider",
               "Synapse", "Controls")
         {

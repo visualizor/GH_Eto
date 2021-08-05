@@ -13,7 +13,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoIcon class.
         /// </summary>
         public EtoIcon()
-          : base("SynapseIcon", "SIcon",
+          : base("SnpIcon", "SIcon",
               "image icon that can be used by Synapse controls",
               "Synapse", "Parameters")
         {

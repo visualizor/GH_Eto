@@ -14,7 +14,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoDropDn class.
         /// </summary>
         public EtoDropDn()
-          : base("SynapseDropMenu", "SDM",
+          : base("SnpDropMenu", "SDM",
               "dropdown menu",
               "Synapse", "Controls")
         {
