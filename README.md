@@ -51,3 +51,5 @@ It is likely that the query is listening to a container object that doesn't yiel
 Limited GUI level drawings with `Eto.Drawing` library is provided. I recommend plugins such as ProvingGround's [Conduit](https://provingground.io/tools/conduit-for-grasshopper/) for more tailored dashboard graphics.
 #### Why do my controls look different in RCP?
   Rhino color schemes dictate the controls' on a docking panel. You can simply disable and re-enable all controls in GH before you switch back to typical, standalone windows.
+#### What are these mysterious out of range or null reference errors?
+  Out-of-range errors happen when a list of things is expected to have certain number of items but doesn't. Null reference typically means the ingredients necessary to start something are bad. Contact author with bad script attached, if you need to trouble-shoot these errors.
