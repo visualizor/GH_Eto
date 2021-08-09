@@ -15,7 +15,7 @@ namespace Synapse
         /// </summary>
         public EtoFileFilter()
           : base("SnpFileType", "SExt",
-              "file types that can be recognized by the file picker",
+              "file types(extensions) that can be recognized by the file picker",
               "Synapse", "Parameters")
         {
         }
@@ -25,11 +25,9 @@ namespace Synapse
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Type Name", "N", "name of file types", GH_ParamAccess.list, "Plain Text");
+            pManager.AddTextParameter("Type Name", "N", "name of file types\nwhen this is multiple, output will be an array object\nthat you can use for the filters property of SnpFilePicker", GH_ParamAccess.list, "Plain Text");
             pManager[0].DataMapping = GH_DataMapping.Flatten;
-            pManager[0].Optional = true;
             pManager.AddTextParameter("Extensions", "E", "file extensions", GH_ParamAccess.tree, ".txt");
-            pManager[1].Optional = true;
         }
 
         /// <summary>
@@ -59,12 +57,13 @@ namespace Synapse
             else if (names.Count ==1 && exts.Branches.Count == 1)
             {
                 DA.SetData(0, new FileFilter(names[0], exts.Branches[0].Select(t => t.Value).ToArray()));
+                return;
             }
 
             FileFilter[] filters = new FileFilter[names.Count];
             for (int i = 0; i < filters.Length; i++)
             {
-                GH_String[] allexts = exts.Branches[0].ToArray();
+                GH_String[] allexts = exts.Branches[i].ToArray();
                 IEnumerable<string> extstrs = allexts.Select(t => t.Value);
                 filters.SetValue(new FileFilter(names[i], extstrs.ToArray()), i);
             }
@@ -78,7 +77,7 @@ namespace Synapse
         {
             get
             {
-                return null;
+                return Properties.Resources.plugin;
             }
         }
 
