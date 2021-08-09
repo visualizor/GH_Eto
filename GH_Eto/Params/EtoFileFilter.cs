@@ -77,8 +77,13 @@ namespace Synapse
         {
             get
             {
-                return Properties.Resources.plugin;
+                return Properties.Resources.filefilter;
             }
+        }
+
+        public override GH_Exposure Exposure
+        {
+            get { return GH_Exposure.obscure| GH_Exposure.primary; }
         }
 
         /// <summary>

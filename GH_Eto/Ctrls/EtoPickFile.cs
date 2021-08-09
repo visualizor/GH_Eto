@@ -52,7 +52,7 @@ namespace Synapse
             DA.GetDataList(0, props);
             DA.GetDataList(1, vals);
 
-            FilePicker picker = new FilePicker();
+            FilePicker picker = new FilePicker() { ID = Guid.NewGuid().ToString(), };
 
             for (int i = 0; i < props.Count; i++)
             {
@@ -116,12 +116,17 @@ namespace Synapse
                             AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " string cannot be interpreted");
                             AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message);
                         }
+                    else if (val is FileFilter[] ffs)
+                        foreach (FileFilter f in ffs)
+                            picker.Filters.Add(f);
+                    else if (val is FileFilter f)
+                        picker.Filters.Add(f);
                     else
-                        try { Util.SetProp(picker, "Filters", val); }
-                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " cannot set filters; use a multiline text string like this:\n  Text|.txt\n  3D File|.3dm,.obj,.skp\n  PDF|.pdf");
                 }
             }
 
+            DA.SetData(1, new GH_ObjectWrapper(picker));
 
             PropertyInfo[] allprops = picker.GetType().GetProperties();
             List<string> printouts = new List<string>();
@@ -138,8 +143,13 @@ namespace Synapse
         {
             get
             {
-                return null;
+                return Properties.Resources.filepicker;
             }
+        }
+
+        public override GH_Exposure Exposure
+        {
+            get { return GH_Exposure.obscure | GH_Exposure.primary; }
         }
 
         /// <summary>

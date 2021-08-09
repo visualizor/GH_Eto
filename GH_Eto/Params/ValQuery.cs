@@ -110,6 +110,11 @@ namespace Synapse
                 listenees.Add(combodom.ID);
                 combodom.DomSl.PropertyChanged += OnComboDom;
             }
+            else if (ctrl is FilePicker fp)
+            {
+                listenees.Add(fp.ID);
+                fp.FilePathChanged += OnPathChanged;
+            }
             else
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " unrecognized control detected");
         }
@@ -144,6 +149,8 @@ namespace Synapse
                 return new GH_ObjectWrapper(tp.Position.ToString());
             else if (ctrl is ComboDomSl combodom)
                 return new GH_ObjectWrapper(new Interval(combodom.DomSl.Lower, combodom.DomSl.Upper));
+            else if (ctrl is FilePicker fp)
+                return new GH_ObjectWrapper(fp.FilePath);
             else
                 return new GH_ObjectWrapper();
         }
@@ -199,6 +206,10 @@ namespace Synapse
             ExpireSolution(true);
         }
         public void OnComboDom(object s, EventArgs e)
+        {
+            ExpireSolution(true);
+        }
+        protected void OnPathChanged(object s, EventArgs e)
         {
             ExpireSolution(true);
         }
