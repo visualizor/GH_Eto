@@ -106,7 +106,7 @@ namespace Synapse
                             string[] lines = gs.Value.Split('\n');
                             for (int j = 0; j < lines.Length; j++)
                             {
-                                string[] n_e = lines[i].Split('|');
+                                string[] n_e = lines[j].Split('|');
                                 string[] exts = n_e[1].Split(',');
                                 picker.Filters.Add(new FileFilter(n_e[0], exts));
                             }
