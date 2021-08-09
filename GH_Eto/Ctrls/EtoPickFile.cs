@@ -124,6 +124,9 @@ namespace Synapse
                     else
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " cannot set filters; use a multiline text string like this:\n  Text|.txt\n  3D File|.3dm,.obj,.skp\n  PDF|.pdf");
                 }
+                else
+                    try { Util.SetProp(picker, n, Util.GetGooVal(val)); }
+                    catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
             }
 
             DA.SetData(1, new GH_ObjectWrapper(picker));
