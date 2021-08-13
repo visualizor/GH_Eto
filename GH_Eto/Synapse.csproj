@@ -65,6 +65,7 @@
     <Compile Include="Containers\EtoExpander.cs" />
     <Compile Include="Containers\RCP.cs" />
     <Compile Include="Ctrls\DomSlider.cs" />
+    <Compile Include="Ctrls\EtoColorPicker.cs" />
     <Compile Include="Ctrls\EtoPickFile.cs" />
     <Compile Include="Ctrls\NumUpDnGH.cs" />
     <Compile Include="Ctrls\Slider2D.cs" />
