@@ -63,12 +63,6 @@ namespace Synapse
             }
         }
 
-
-        public override GH_Exposure Exposure
-        {
-            get { return GH_Exposure.obscure | GH_Exposure.primary; }
-        }
-
         /// <summary>
         /// Provides an Icon for the component.
         /// </summary>

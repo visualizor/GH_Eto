@@ -199,7 +199,7 @@ namespace Synapse
 
         public override GH_Exposure Exposure
         {
-            get { return GH_Exposure.primary | GH_Exposure.obscure; }
+            get { return GH_Exposure.primary; }
         }
 
         /// <summary>
