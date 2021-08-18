@@ -41,29 +41,29 @@ namespace Synapse
             {
                 listenees.Add(tb.ID);
                 if (tb.Live)
-                    tb.TextChanged += OnTBText;
+                    tb.TextChanged += OnCtrl;
                 else
                     tb.KeyUp += OnTBEnter;
             }
             else if (ctrl is CheckBox cb)
             {
                 listenees.Add(cb.ID);
-                cb.CheckedChanged += OnCBCheck;
+                cb.CheckedChanged += OnCtrl;
             }
             else if (ctrl is Slider sl)
             {
                 listenees.Add(sl.ID);
-                sl.ValueChanged += OnSlide;
+                sl.ValueChanged += OnCtrl;
             }
             else if (ctrl is NumericStepper numsteps)
             {
                 listenees.Add(numsteps.ID);
-                numsteps.ValueChanged += OnNumStepped;
+                numsteps.ValueChanged += OnCtrl;
             }
             else if (ctrl is RadioButtonList rblist)
             {
                 listenees.Add(rblist.ID);
-                rblist.SelectedValueChanged += OnRBChange;
+                rblist.SelectedValueChanged += OnCtrl;
             }
             else if (ctrl is Label lb) { }
             else if (ctrl is DropDown dd)
@@ -71,49 +71,54 @@ namespace Synapse
                 if (dd is ComboBox combo)
                 {
                     listenees.Add(combo.ID);
-                    combo.SelectedIndexChanged += OnSelection;
-                    combo.TextChanged += OnTBText;
+                    combo.SelectedIndexChanged += OnCtrl;
+                    combo.TextChanged += OnCtrl;
                 }
                 else
                 {
                     listenees.Add(dd.ID);
-                    dd.SelectedIndexChanged += OnSelection;
+                    dd.SelectedIndexChanged += OnCtrl;
                 }
             }
             else if (ctrl is ComboSlider csl)
             {
                 listenees.Add(csl.ID);
-                csl.slider.ValueChanged += OnSlide;
+                csl.slider.ValueChanged += OnCtrl;
             }
             else if (ctrl is MaskedTextBox mtb)
             {
                 listenees.Add(mtb.ID);
-                mtb.TextChanged += OnTBText;
+                mtb.TextChanged += OnCtrl;
             }
             else if (ctrl is TextArea multi)
             {
                 listenees.Add(multi.ID);
-                multi.TextChanged += OnTBText;
+                multi.TextChanged += OnCtrl;
             }
             else if (ctrl is ListBox lbx)
             {
                 listenees.Add(lbx.ID);
-                lbx.SelectedIndexChanged += OnSelection;
+                lbx.SelectedIndexChanged += OnCtrl;
             }
             else if (ctrl is TrackPad tp)
             {
                 listenees.Add(tp.ID);
-                tp.MouseUp += OnTrackPad;
+                tp.MouseUp += OnCtrl;
             }
             else if (ctrl is ComboDomSl combodom)
             {
                 listenees.Add(combodom.ID);
-                combodom.DomSl.PropertyChanged += OnComboDom;
+                combodom.DomSl.PropertyChanged += OnCtrl;
             }
             else if (ctrl is FilePicker fp)
             {
                 listenees.Add(fp.ID);
-                fp.FilePathChanged += OnPathChanged;
+                fp.FilePathChanged += OnCtrl;
+            }
+            else if (ctrl is ColorPicker cp)
+            {
+                listenees.Add(cp.ID);
+                cp.ValueChanged += OnCtrl;
             }
             else
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " unrecognized control detected");
@@ -151,6 +156,8 @@ namespace Synapse
                 return new GH_ObjectWrapper(new Interval(combodom.DomSl.Lower, combodom.DomSl.Upper));
             else if (ctrl is FilePicker fp)
                 return new GH_ObjectWrapper(fp.FilePath);
+            else if (ctrl is ColorPicker cp)
+                return new GH_ObjectWrapper(cp.Value.ToString());
             else
                 return new GH_ObjectWrapper();
         }
@@ -172,44 +179,12 @@ namespace Synapse
                 return;
             ExpireSolution(true);
         }
-        public void OnTBText(object s, EventArgs e)
-        {
-            ExpireSolution(true);
-        }
         public void OnTBEnter(object s, KeyEventArgs e)
         {
             if (e.Key == Keys.Enter)
                 ExpireSolution(true);
         }
-        public void OnCBCheck(object s, EventArgs e)
-        {
-            ExpireSolution(true);
-        }
-        public void OnSlide(object s, EventArgs e)
-        {
-            ExpireSolution(true);
-        }
-        public void OnNumStepped(object s, EventArgs e)
-        {
-            ExpireSolution(true);
-        }
-        public void OnRBChange(object s, EventArgs e)
-        {
-            ExpireSolution(true);
-        }
-        public void OnSelection(object s, EventArgs e)
-        {
-            ExpireSolution(true);
-        }
-        public void OnTrackPad(object s, EventArgs e)
-        {
-            ExpireSolution(true);
-        }
-        public void OnComboDom(object s, EventArgs e)
-        {
-            ExpireSolution(true);
-        }
-        protected void OnPathChanged(object s, EventArgs e)
+        protected void OnCtrl(object s, EventArgs e)
         {
             ExpireSolution(true);
         }

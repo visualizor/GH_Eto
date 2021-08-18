@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Grasshopper.Kernel;
+using Grasshopper.Kernel.Types;
 using Eto.Forms;
+using Eto.Drawing;
 
 namespace Synapse
 {
@@ -46,6 +48,87 @@ namespace Synapse
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            List<string> props = new List<string>();
+            List<GH_ObjectWrapper> vals = new List<GH_ObjectWrapper>();
+            DA.GetDataList(0, props);
+            DA.GetDataList(1, vals);
+
+            ColorPicker picker = new ColorPicker() { ID = Guid.NewGuid().ToString(), };
+
+            for (int i = 0; i < props.Count; i++)
+            {
+                string n = props[i];
+                object val;
+                try { val = vals[i].Value; }
+                catch (ArgumentOutOfRangeException)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "P, V should correspond each other");
+                    return;
+                }
+
+                if (n.ToLower() == "color" || n.ToLower() == "value")
+                {
+                    if (val is GH_String gs)
+                        if (Color.TryParse(gs.Value, out Color cl))
+                            picker.Value = cl;
+                        else
+                            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " not a valid string representation for a color");
+                    else if (val is GH_Colour gc)
+                        picker.Value = Color.FromArgb(gc.Value.ToArgb());
+                    else
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " not a valid color value");
+                }
+                else if (n.ToLower() == "size")
+                {
+                    if (val is GH_Point pt)
+                    {
+                        Size size = new Size((int)pt.Value.X, (int)pt.Value.Y);
+                        picker.Size = size;
+                    }
+                    else if (val is Size es)
+                        picker.Size = es;
+                    else if (val is GH_Vector vec)
+                    {
+                        Size size = new Size((int)vec.Value.X, (int)vec.Value.Y);
+                        picker.Size = size;
+                    }
+                    else if (val is GH_String sstr)
+                    {
+                        string[] xy = sstr.Value.Split(',');
+                        bool xp = int.TryParse(xy[0], out int x);
+                        bool yp = int.TryParse(xy[1], out int y);
+                        if (xp && yp)
+                            picker.Size = new Size(x, y);
+                    }
+                    else if (val is GH_Rectangle grec)
+                    {
+                        int x = (int)grec.Value.X.Length;
+                        int y = (int)grec.Value.Y.Length;
+                        picker.Size = new Size(x, y);
+                    }
+                    else if (val is GH_ComplexNumber gcomp)
+                    {
+                        int x = (int)gcomp.Value.Real;
+                        int y = (int)gcomp.Value.Imaginary;
+                        picker.Size = new Size(x, y);
+                    }
+                    else
+                        try { Util.SetProp(picker, "Size", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                }
+                else
+                    try { Util.SetProp(picker, n, Util.GetGooVal(val)); }
+                    catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+            }
+
+            DA.SetData(1, new GH_ObjectWrapper(picker));
+
+            PropertyInfo[] allprops = picker.GetType().GetProperties();
+            List<string> printouts = new List<string>();
+            foreach (PropertyInfo prop in allprops)
+                if (prop.CanWrite)
+                    printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
+            DA.SetDataList(0, printouts);
         }
 
         /// <summary>
@@ -55,9 +138,7 @@ namespace Synapse
         {
             get
             {
-                //You can add image files to your project resources and access them like this:
-                // return Resources.IconForThisComponent;
-                return null;
+                return Properties.Resources.pickcolor;
             }
         }
 
