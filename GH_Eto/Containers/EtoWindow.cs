@@ -111,6 +111,13 @@ namespace Synapse
                 wf.ToolStripMenuItem o = menu.Items.Add(
                     ghowned ? "Follow Rhino" : "Follow GH",
                     Properties.Resources.window, OnOwnerChange) as wf.ToolStripMenuItem;
+                menu.Items.Add(new wf.ToolStripSeparator());
+                wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
+                click.ToolTipText = "put all properties of this control in a check list";
+                Util.ListPropLoc = Attributes.Pivot;
+                Form dummy = new Form();
+                Util.ListPropType = dummy.GetType();
+                dummy.Dispose();
             }
             catch { }
         }
@@ -434,6 +441,7 @@ namespace Synapse
                     else
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " this window's content is rendered to an RCP\n cannot be shown here");
                 }
+
             OutputProps(DA);
             DA.SetData(1, new GH_ObjectWrapper(EWindow));
         }

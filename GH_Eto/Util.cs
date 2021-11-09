@@ -5,7 +5,13 @@ using System.Reflection;
 using Eto.Forms;
 using Eto.Drawing;
 using Grasshopper.Kernel.Types;
+using Grasshopper;
+using Grasshopper.Kernel;
+using Grasshopper.Kernel.Special;
 using System.ComponentModel;
+using wdraw = System.Drawing;
+using wf = System.Windows.Forms;
+using Grasshopper.GUI.Canvas;
 
 namespace Synapse
 {
@@ -15,6 +21,7 @@ namespace Synapse
         /// the random seeder object all everything should call for arbitrary numbers within this namespace
         /// </summary>
         public static Random Rand = new Random();
+        
 
         /// <summary>
         /// set eto control properties
@@ -60,6 +67,44 @@ namespace Synapse
             else
                 return goo;
         }
+
+
+        /// <summary>
+        /// location to initialize value list for component properties
+        /// </summary>
+        public static wdraw.PointF ListPropLoc = wdraw.PointF.Empty;
+        /// <summary>
+        /// pass control type here upon context menu click
+        /// </summary>
+        public static Type ListPropType = null;
+        /// <summary>
+        /// shared event handler when user wants to list all properties of a component
+        /// </summary>
+        /// <param name="s">sender</param>
+        /// <param name="e">event</param>
+        public static void OnListProps(object s, EventArgs e)
+        {
+            var gcv = Instances.ActiveCanvas;
+            var gsrv = Instances.ComponentServer;
+            var gdoc = gcv.Document;
+
+            Guid cid = gsrv.FindObjectByName("ValueList", true, false).Guid;
+            gcv.InstantiateNewObject(cid, ListPropLoc, false);
+            GH_ValueList gvl = gdoc.Objects.Last() as GH_ValueList;
+            gvl.ListItems.Clear();
+            gvl.NickName = "Properties";
+            gvl.ListMode = GH_ValueListMode.CheckList;
+
+            PropertyInfo[] btnprops = ListPropType.GetProperties();
+            foreach (PropertyInfo prop in btnprops)
+                if (prop.CanWrite)
+                    gvl.ListItems.Add(new GH_ValueListItem(prop.Name, "\"" + prop.Name + "\""));
+
+            ListPropLoc = wdraw.PointF.Empty;
+            ListPropType = null;
+            gdoc.ScheduleSolution(1);
+        }
+
     }
 
     internal enum EWinTag
@@ -259,6 +304,9 @@ namespace Synapse
         }
     }
 
+    /// <summary>
+    /// TextBox with only one additional property
+    /// </summary>
     internal class LatentTB: TextBox
     {
         public bool Live { get; set; } = true;

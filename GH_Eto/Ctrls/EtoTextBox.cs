@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
-using Eto.Forms;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Eto.Drawing;
-using wf = System.Windows.Forms;
+using System.Windows.Forms;
 using GH_IO.Serialization;
 
 namespace Synapse
@@ -29,12 +28,19 @@ namespace Synapse
             live = !live;
             ExpireSolution(true);
         }
-        public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
+        public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
         {
             base.AppendAdditionalMenuItems(menu);
-            wf.ToolStripMenuItem mi = menu.Items.Add("Live", null, OnLive) as wf.ToolStripMenuItem;
+            ToolStripMenuItem mi = menu.Items.Add("Live", null, OnLive) as ToolStripMenuItem;
             mi.Checked = live;
-            mi.ToolTipText = "check to update on every key stroke\nthis property may be overriden with P/V parameter inputs";
+            mi.ToolTipText = "check to update on every key stroke\nCareful: this property may be overriden with P/V inputs";
+
+            ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as ToolStripMenuItem;
+            click.ToolTipText = "put all properties of this control in a check list";
+            Util.ListPropLoc = Attributes.Pivot;
+            LatentTB dummy = new LatentTB();
+            Util.ListPropType = dummy.GetType();
+            dummy.Dispose();
         }
 
         /// <summary>

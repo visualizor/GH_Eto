@@ -5,6 +5,7 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Eto.Forms;
 using Eto.Drawing;
+using wf = System.Windows.Forms;
 
 namespace Synapse
 {
@@ -18,6 +19,17 @@ namespace Synapse
               "Synapse color picker control",
               "Synapse", "Controls")
         {
+        }
+
+        public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
+        {
+            base.AppendAdditionalMenuItems(menu);
+            wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
+            click.ToolTipText = "put all properties of this control in a check list";
+            Util.ListPropLoc = Attributes.Pivot;
+            ColorPicker dummy = new ColorPicker();
+            Util.ListPropType = dummy.GetType();
+            dummy.Dispose();
         }
 
         /// <summary>

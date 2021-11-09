@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Eto.Forms;
 using Eto.Drawing;
+using wf = System.Windows.Forms;
 using System.Reflection;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
@@ -18,6 +19,17 @@ namespace Synapse
               "list of items to choose from",
               "Synapse", "Controls")
         {
+        }
+
+        public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
+        {
+            base.AppendAdditionalMenuItems(menu);
+            wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
+            click.ToolTipText = "put all properties of this control in a check list";
+            Util.ListPropLoc = Attributes.Pivot;
+            ListBox dummy = new ListBox();
+            Util.ListPropType = dummy.GetType();
+            dummy.Dispose();
         }
 
         /// <summary>
