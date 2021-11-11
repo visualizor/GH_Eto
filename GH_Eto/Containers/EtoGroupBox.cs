@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using wf=System.Windows.Forms;
 using Eto.Drawing;
 using Eto.Forms;
 
@@ -19,6 +20,17 @@ namespace Synapse.Containers
               "group box container",
               "Synapse", "Containers")
         {
+        }
+
+        public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
+        {
+            base.AppendAdditionalMenuItems(menu);
+            wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
+            click.ToolTipText = "put all properties of this control in a check list";
+            Util.ListPropLoc = Attributes.Pivot;
+            GroupBox dummy = new GroupBox();
+            Util.ListPropType = dummy.GetType();
+            dummy.Dispose();
         }
 
         /// <summary>

@@ -59,6 +59,7 @@ namespace Synapse
                 asciionly.Checked = ascii;
 
                 wf.FlowLayoutPanel flowpanel = new wf.FlowLayoutPanel() { FlowDirection = wf.FlowDirection.TopDown };
+                wf.Label rblabel = new wf.Label() { Text = "String culture" };
                 wf.RadioButton rb1 = new wf.RadioButton() { Text = "UI" };
                 wf.RadioButton rb2 = new wf.RadioButton() { Text = "Installed" };
                 wf.RadioButton rb3 = new wf.RadioButton() { Text = "Invariant" };
@@ -70,12 +71,19 @@ namespace Synapse
                     rb3.Checked = true;
                 else
                     rb3.Checked = true;
-                flowpanel.Controls.AddRange(new wf.Control[] { rb1, rb2, rb3, });
+                flowpanel.Controls.AddRange(new wf.Control[] { rblabel,rb1, rb2, rb3, });
                 rb1.Click += OnCheck;
                 rb2.Click += OnCheck;
                 rb3.Click += OnCheck;
 
                 menu.Items.Add(new wf.ToolStripControlHost(flowpanel));
+
+                wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
+                click.ToolTipText = "put all properties of this control in a check list";
+                Util.ListPropLoc = Attributes.Pivot;
+                MaskedTextBox dummy = new MaskedTextBox();
+                Util.ListPropType = dummy.GetType();
+                dummy.Dispose();
             }
             catch { }
         }

@@ -6,6 +6,7 @@ using Eto.Drawing;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
+using wf=System.Windows.Forms;
 
 namespace Synapse
 {
@@ -19,6 +20,17 @@ namespace Synapse
               "scrollable container",
               "Synapse", "Containers")
         {
+        }
+
+        public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
+        {
+            base.AppendAdditionalMenuItems(menu);
+            wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
+            click.ToolTipText = "put all properties of this control in a check list";
+            Util.ListPropLoc = Attributes.Pivot;
+            Scrollable dummy = new Scrollable();
+            Util.ListPropType = dummy.GetType();
+            dummy.Dispose();
         }
 
         /// <summary>
