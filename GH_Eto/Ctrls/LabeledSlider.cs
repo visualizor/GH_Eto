@@ -5,6 +5,7 @@ using Eto.Drawing;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
+using wf=System.Windows.Forms;
 
 namespace Synapse
 {
@@ -18,6 +19,22 @@ namespace Synapse
               "slider with label",
               "Synapse", "Controls")
         {
+        }
+
+        protected bool live = false;
+
+        public void OnLive(object s, EventArgs e)
+        {
+            live = !live;
+            ExpireSolution(true);
+        }
+        public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
+        {
+            base.AppendAdditionalMenuItems(menu);
+
+            wf.ToolStripMenuItem livebtn = menu.Items.Add("Live", null, OnLive) as wf.ToolStripMenuItem;
+            livebtn.Checked = live;
+            livebtn.ToolTipText = "check if you want every single sliding motion to trigger a value update\nmay slow UI";
         }
 
         /// <summary>
@@ -60,7 +77,10 @@ namespace Synapse
             {
                 ID = Guid.NewGuid().ToString(),
                 coef = f,
+                Live = live,
             };
+            if (live) Message = "Live";
+            else Message = "OnRelease";
 
             for (int i = 0; i < props.Count; i++)
             {

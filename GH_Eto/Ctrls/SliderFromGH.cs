@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Eto.Drawing;
 using Eto.Forms;
+using wf = System.Windows.Forms;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Data;
@@ -22,6 +23,15 @@ namespace Synapse.Ctrls
             Description = "Synapse slider from a Grasshopper slider";
             Category = "Synapse";
             SubCategory = "Controls";
+        }
+
+        public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
+        {
+            base.AppendAdditionalMenuItems(menu);
+
+            wf.ToolStripMenuItem livebtn = menu.Items.Add("Live", null, OnLive) as wf.ToolStripMenuItem;
+            livebtn.Checked = live;
+            livebtn.ToolTipText = "check if you want every single sliding motion to trigger a value update\nmay slow UI";
         }
 
         /// <summary>
@@ -69,6 +79,7 @@ namespace Synapse.Ctrls
                     {
                         ID = Guid.NewGuid().ToString(),
                         coef = ghsl.Slider.Type == Grasshopper.GUI.Base.GH_SliderAccuracy.Integer ? 1.0 : Math.Pow(10, -ghsl.Slider.DecimalPlaces),
+                        Live = live,
                     };
                     csl.SetMax((double)ghsl.Slider.Maximum);
                     csl.SetMin((double)ghsl.Slider.Minimum);

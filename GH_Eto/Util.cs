@@ -68,7 +68,6 @@ namespace Synapse
                 return goo;
         }
 
-
         /// <summary>
         /// location to initialize value list for component properties
         /// </summary>
@@ -316,6 +315,9 @@ namespace Synapse
         }
     }
 
+    /// <summary>
+    /// pop up textbox for slider double clicks
+    /// </summary>
     internal class SliderTB: Form
     {
         public TextBox InputBox { get; private set; }
@@ -368,12 +370,16 @@ namespace Synapse
             LostFocus += OnUnfocus;
         }
     }
+    /// <summary>
+    /// slider with a value label
+    /// </summary>
     internal class ComboSlider : StackLayout
     {
         public Slider slider;
         public Label label;
         public double coef=1.0;
         public double val;
+        public bool Live { get; set; } = false;
         protected double min;
         protected double max;
         protected int tickers = 10;

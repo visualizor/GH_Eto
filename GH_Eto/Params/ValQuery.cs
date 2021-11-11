@@ -83,7 +83,10 @@ namespace Synapse
             else if (ctrl is ComboSlider csl)
             {
                 listenees.Add(csl.ID);
-                csl.slider.ValueChanged += OnCtrl;
+                if (csl.Live)
+                    csl.slider.ValueChanged += OnCtrl;
+                else
+                    csl.slider.MouseUp += OnCtrl;
             }
             else if (ctrl is MaskedTextBox mtb)
             {
