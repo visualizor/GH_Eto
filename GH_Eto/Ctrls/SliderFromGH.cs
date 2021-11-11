@@ -25,15 +25,6 @@ namespace Synapse.Ctrls
             SubCategory = "Controls";
         }
 
-        public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
-        {
-            base.AppendAdditionalMenuItems(menu);
-
-            wf.ToolStripMenuItem livebtn = menu.Items.Add("Live", null, OnLive) as wf.ToolStripMenuItem;
-            livebtn.Checked = live;
-            livebtn.ToolTipText = "check if you want every single sliding motion to trigger a value update\nmay slow UI";
-        }
-
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
@@ -70,6 +61,8 @@ namespace Synapse.Ctrls
             }
 
             List<ComboSlider> allsl = new List<ComboSlider>();
+            if (live) Message = "Live";
+            else Message = "OnRelease";
             foreach (IGH_Param prm in Params.Input[2].Sources)
                 if (prm is GH_NumberSlider ghsl)
                 {
