@@ -104,6 +104,7 @@
     <Compile Include="Params\EtoSize.cs" />
     <Compile Include="Params\EtoTableXY.cs" />
     <Compile Include="Params\ReSolve.cs" />
+    <Compile Include="Params\RHSelect.cs" />
     <Compile Include="Params\ValOverride.cs" />
     <Compile Include="SynapseInfo.cs" />
     <Compile Include="Params\ValQuery.cs" />
@@ -176,7 +177,7 @@
     <None Include="Resources\label.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\listen.png" />
+    <None Include="Resources\select.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\listview.png" />
@@ -270,6 +271,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\resolve.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\query.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

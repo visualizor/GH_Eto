@@ -295,7 +295,7 @@ namespace Synapse
         {
             get
             {
-                return Properties.Resources.listen;
+                return Properties.Resources.query;
             }
         }
 
