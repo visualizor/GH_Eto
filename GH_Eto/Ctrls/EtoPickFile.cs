@@ -136,6 +136,7 @@ namespace Synapse
             foreach (PropertyInfo prop in allprops)
                 if (prop.CanWrite)
                     printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
+            printouts.Add("Filters: string");
             DA.SetDataList(0, printouts);
         }
 
