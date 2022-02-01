@@ -123,6 +123,10 @@ namespace Synapse
                 listenees.Add(cp.ID);
                 cp.ValueChanged += OnCtrl;
             }
+            else if (ctrl is WebView wv)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " WebCtrls outputs values itself on the component");
+            }
             else
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " unrecognized control detected");
         }
@@ -256,7 +260,7 @@ namespace Synapse
                     {
                         if (ctrl.ID == Guid.Empty.ToString() || ctrl.ID == string.Empty || ctrl.ID==null)
                         {
-                            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, string.Format(" a {0} isn't initialized properly with a valid ID\n this is a code error; contact dev", ctrl.GetType()));
+                            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, string.Format(" a {0} isn't initialized properly with a valid ID\n contact dev", ctrl.GetType()));
                             listening = true;
                         }
                         else if (!listenees.Contains(ctrl.ID))

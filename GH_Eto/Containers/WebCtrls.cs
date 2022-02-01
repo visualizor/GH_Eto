@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Grasshopper.Kernel;
 using Grasshopper;
@@ -54,10 +55,14 @@ namespace Synapse
 ";
             }
         }
+        protected Dictionary<string, string> ctrlvals = new Dictionary<string, string>();
 
         protected void OnRefresh(object s, WebViewLoadingEventArgs e)
         {
-
+            if (e.Uri.Scheme == "synapse")
+            {
+                
+            }
         }
 
         /// <summary>
@@ -84,6 +89,7 @@ namespace Synapse
         {
             pManager.AddTextParameter("All Properties", "A", "list of all accessible properties", GH_ParamAccess.list);
             pManager.AddGenericParameter("WebForm", "C", "WebView control", GH_ParamAccess.item);
+            pManager.AddTextParameter("ControlValues", "Q", "queried values from controls on the web form", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -93,25 +99,24 @@ namespace Synapse
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             string html = "";
-            List<string> prms = new List<string>();
+            List<string> ids = new List<string>();
             DA.GetData(0, ref html);
-            DA.GetDataList(1, prms);
+            DA.GetDataList(1, ids);
             List<string> props = new List<string>();
             List<GH_ObjectWrapper> vals = new List<GH_ObjectWrapper>();
             DA.GetDataList(2, props);
             DA.GetDataList(3, vals);
 
 
-            WebForm wv = new WebForm()
+            WebView wv = new WebView()
             {
-                Html = html,
                 ID = Guid.NewGuid().ToString(),
             };
-
+            wv.DocumentLoading += OnRefresh;
 
             DA.SetData(1, new GH_ObjectWrapper(wv));
-
-            PropertyInfo[] allprops = wv.GetType().GetProperties();
+            
+            PropertyInfo[] allprops = typeof(Control).GetProperties();
             List<string> printouts = new List<string>();
             foreach (PropertyInfo prop in allprops)
                 if (prop.CanWrite)
