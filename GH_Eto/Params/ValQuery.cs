@@ -167,7 +167,7 @@ namespace Synapse
             else if (ctrl is ColorPicker cp)
                 return new GH_ObjectWrapper(cp.Value.ToString());
             else if (ctrl is WebForm webf)
-                return new GH_ObjectWrapper(webf.ctrlvals.Values);
+                return new GH_ObjectWrapper(webf.ctrlvals.Values.ToArray());
             else
                 return new GH_ObjectWrapper();
         }
@@ -216,6 +216,16 @@ namespace Synapse
                                 v = wv.ExecuteScript(string.Format("return document.getElementById('{0}').value;", prm));
                                 break;
                             case "button":
+                                try
+                                {
+                                    btnpress[prm] = !btnpress[prm];
+                                }
+                                catch (KeyNotFoundException)
+                                {
+                                    btnpress[prm] = false;
+                                    btnpress[prm] = !btnpress[prm];
+                                }
+                                v = btnpress[prm].ToString();
                                 break;
                             case "text":
                                 break;
@@ -226,7 +236,7 @@ namespace Synapse
                     }
                     e.Cancel = true;
                 }
-            ExpireSolution(true);
+            ExpireSolution(true); //safe, this is event handler so not expiring during a solution
         }
         #endregion
 
