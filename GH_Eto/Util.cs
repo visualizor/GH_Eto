@@ -113,24 +113,16 @@ namespace Synapse
         InPanel,
     }
 
-    internal class WebForm : Scrollable
+    internal class WebForm : WebView
     {
         public string Html { get; set; }
-        public string[] CtrlVals { get; private set; }
-        public WebView Browser;
-
-        protected List<string> eids = new List<string>();
-        protected List<string> evals = new List<string>();
+        public Dictionary<string, string> ctrlvals = new Dictionary<string, string>();
 
         public WebForm() : base()
         {
 
         }
 
-        protected void OnRefresh(object s, WebViewLoadingEventArgs e)
-        {
-
-        }
     }
 
     /* ImageButton and CustomButton are copied from internet with minor mod

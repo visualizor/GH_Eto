@@ -123,9 +123,10 @@ namespace Synapse
                 listenees.Add(cp.ID);
                 cp.ValueChanged += OnCtrl;
             }
-            else if (ctrl is WebView wv)
+            else if (ctrl is WebForm webf)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " WebCtrls outputs values itself on the component");
+                listenees.Add(webf.ID);
+                webf.DocumentLoading += OnRefresh;
             }
             else
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " unrecognized control detected");
@@ -165,6 +166,8 @@ namespace Synapse
                 return new GH_ObjectWrapper(fp.FilePath);
             else if (ctrl is ColorPicker cp)
                 return new GH_ObjectWrapper(cp.Value.ToString());
+            else if (ctrl is WebForm webf)
+                return new GH_ObjectWrapper(webf.ctrlvals.Values);
             else
                 return new GH_ObjectWrapper();
         }
@@ -193,6 +196,36 @@ namespace Synapse
         }
         protected void OnCtrl(object s, EventArgs e)
         {
+            ExpireSolution(true);
+        }
+        protected void OnRefresh(object s, WebViewLoadingEventArgs e)
+        {
+            if (s is WebForm wv)
+                if (e.Uri.Scheme == "synapse")
+                {
+                    foreach (string prm in wv.ctrlvals.Keys)
+                    {
+                        string ptype = wv.ExecuteScript(string.Format("return document.getElementById('{0}').type;", prm));
+                        string v = "";
+                        switch (ptype)
+                        {
+                            case "checkbox":
+                                v = wv.ExecuteScript(string.Format("return document.getElementById('{0}').checked;", prm));
+                                break;
+                            case "range":
+                                v = wv.ExecuteScript(string.Format("return document.getElementById('{0}').value;", prm));
+                                break;
+                            case "button":
+                                break;
+                            case "text":
+                                break;
+                            default:
+                                break;
+                        }
+                        wv.ctrlvals[prm] = v;
+                    }
+                    e.Cancel = true;
+                }
             ExpireSolution(true);
         }
         #endregion

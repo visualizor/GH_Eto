@@ -55,15 +55,6 @@ namespace Synapse
 ";
             }
         }
-        protected Dictionary<string, string> ctrlvals = new Dictionary<string, string>();
-
-        protected void OnRefresh(object s, WebViewLoadingEventArgs e)
-        {
-            if (e.Uri.Scheme == "synapse")
-            {
-                
-            }
-        }
 
         /// <summary>
         /// Registers all the input parameters for this component.
@@ -107,12 +98,8 @@ namespace Synapse
             DA.GetDataList(2, props);
             DA.GetDataList(3, vals);
 
-
-            WebView wv = new WebView()
-            {
-                ID = Guid.NewGuid().ToString(),
-            };
-            wv.DocumentLoading += OnRefresh;
+            WebForm wv = new WebForm() { ID = Guid.NewGuid().ToString(), Html = html,};
+            wv.LoadHtml(wv.Html);
 
             DA.SetData(1, new GH_ObjectWrapper(wv));
             
