@@ -113,6 +113,22 @@ namespace Synapse
         InPanel,
     }
 
+    internal class WebForm : DynamicLayout
+    {
+        public string Html { get; set; }
+        public string[] CtrlVals { get; private set; }
+
+        protected List<string> eids = new List<string>();
+        protected List<string> evals = new List<string>();
+
+        public WebForm() : base()
+        {
+
+        }
+
+
+    }
+
     /* ImageButton and CustomButton are copied from internet with minor mod
      * url https://gist.github.com/cwensley/95000998e37acd93e830
      */

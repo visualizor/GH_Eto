@@ -31,7 +31,7 @@ namespace Synapse
         protected ObjectType otype;
         protected ObjRef[] picked;
 
-        protected async void Trigger(string txt = " Synapse initiated select", bool nothing = true)
+        protected async void Trigger(string txt = "select objects for Synapse", bool nothing = true)
         {
             await Task.Delay(1);
             running = true;

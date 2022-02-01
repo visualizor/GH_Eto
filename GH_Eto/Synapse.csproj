@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Containers\EtoDynamicLO.cs" />
     <Compile Include="Containers\EtoExpander.cs" />
+    <Compile Include="Containers\WebCtrls.cs" />
     <Compile Include="Containers\RCP.cs" />
     <Compile Include="Ctrls\DomSlider.cs" />
     <Compile Include="Ctrls\EtoColorPicker.cs" />
