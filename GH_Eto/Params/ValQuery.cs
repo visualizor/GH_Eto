@@ -23,6 +23,7 @@ namespace Synapse
         {
         }
 
+        private bool live = true; // set to false to not expire downstream
         private Guid[] srcs; // gh comp linked to this
         private bool listening = false;  // this isn't used anywhere!!
         private List<string> listenees = new List<string>(); // eto comp this listens to
@@ -126,50 +127,62 @@ namespace Synapse
             else if (ctrl is WebForm webf)
             {
                 listenees.Add(webf.ID);
-                webf.DocumentLoading += OnRefresh;
+                webf.DocumentLoading += OnWebView;
             }
             else
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " unrecognized control detected");
         }
-        private GH_ObjectWrapper GetCtrlValue(Control ctrl)
+        private GH_ObjectWrapper[] GetCtrlValue(Control ctrl)
         {
+            List<GH_ObjectWrapper> val_out = new List<GH_ObjectWrapper>();
             if (ctrl is Button btn)
-                return new GH_ObjectWrapper(btnpress[btn.ID]);
+                val_out.Add(new GH_ObjectWrapper(btnpress[btn.ID]));
             else if (ctrl is TextBox tb)
-                return new GH_ObjectWrapper(tb.Text);
+                val_out.Add(new GH_ObjectWrapper(tb.Text));
             else if (ctrl is CheckBox cb)
-                return new GH_ObjectWrapper(cb.Checked);
+                val_out.Add(new GH_ObjectWrapper(cb.Checked));
             else if (ctrl is Slider sl)
-                return new GH_ObjectWrapper(sl.Value);
+                val_out.Add(new GH_ObjectWrapper(sl.Value));
             else if (ctrl is NumericStepper numsteps)
-                return new GH_ObjectWrapper(numsteps.Value);
+                val_out.Add(new GH_ObjectWrapper(numsteps.Value));
             else if (ctrl is RadioButtonList rblist)
-                return new GH_ObjectWrapper(rblist.SelectedIndex);
+                val_out.Add(new GH_ObjectWrapper(rblist.SelectedIndex));
             else if (ctrl is DropDown dd)
                 if (dd is ComboBox combo)
-                    return new GH_ObjectWrapper(combo.Text);
+                    val_out.Add(new GH_ObjectWrapper(combo.Text));
                 else
-                    return new GH_ObjectWrapper(dd.SelectedIndex);
+                    val_out.Add(new GH_ObjectWrapper(dd.SelectedIndex));
             else if (ctrl is ComboSlider csl)
-                return new GH_ObjectWrapper(csl.val);
+                val_out.Add(new GH_ObjectWrapper(csl.val));
             else if (ctrl is MaskedTextBox mtb)
-                return new GH_ObjectWrapper(mtb.Text);
+                val_out.Add(new GH_ObjectWrapper(mtb.Text));
             else if (ctrl is TextArea multi)
-                return new GH_ObjectWrapper(multi.Text);
+                val_out.Add(new GH_ObjectWrapper(multi.Text));
             else if (ctrl is ListBox lbx)
-                return new GH_ObjectWrapper(lbx.SelectedIndex);
+                val_out.Add(new GH_ObjectWrapper(lbx.SelectedIndex));
             else if (ctrl is TrackPad tp)
-                return new GH_ObjectWrapper(tp.Position.ToString());
+                val_out.Add(new GH_ObjectWrapper(tp.Position.ToString()));
             else if (ctrl is ComboDomSl combodom)
-                return new GH_ObjectWrapper(new Interval(combodom.DomSl.Lower, combodom.DomSl.Upper));
+                val_out.Add(new GH_ObjectWrapper(
+                    new Interval(combodom.DomSl.Lower, combodom.DomSl.Upper)
+                    ));
             else if (ctrl is FilePicker fp)
-                return new GH_ObjectWrapper(fp.FilePath);
+                val_out.Add(new GH_ObjectWrapper(fp.FilePath));
             else if (ctrl is ColorPicker cp)
-                return new GH_ObjectWrapper(cp.Value.ToString());
+                val_out.Add(new GH_ObjectWrapper(cp.Value.ToString()));
             else if (ctrl is WebForm webf)
-                return new GH_ObjectWrapper(webf.ctrlvals.Values.ToArray());
+            {
+                GH_ObjectWrapper[] vs = new GH_ObjectWrapper[webf.OrderedKeys.Count];
+                for (int i = 0; i < vs.Length; i++)
+                    vs.SetValue(
+                        new GH_ObjectWrapper(webf.CtrlVals[webf.OrderedKeys[i]]),
+                        i);
+                val_out.AddRange(vs);
+            }
             else
-                return new GH_ObjectWrapper();
+                val_out.Add(new GH_ObjectWrapper());
+
+            return val_out.ToArray();
         }
 
         #region expire solutions
@@ -198,13 +211,15 @@ namespace Synapse
         {
             ExpireSolution(true);
         }
-        protected void OnRefresh(object s, WebViewLoadingEventArgs e)
+        protected void OnWebView(object s, WebViewLoadingEventArgs e)
         {
             if (s is WebForm wv)
                 if (e.Uri.Scheme == "synapse")
                 {
-                    foreach (string prm in wv.ctrlvals.Keys)
+                    foreach (string prm in wv.CtrlVals.Keys.ToArray())
                     {
+                        if (e.Uri.PathAndQuery != prm)
+                            continue;
                         string ptype = wv.ExecuteScript(string.Format("return document.getElementById('{0}').type;", prm));
                         string v = "";
                         switch (ptype)
@@ -216,23 +231,16 @@ namespace Synapse
                                 v = wv.ExecuteScript(string.Format("return document.getElementById('{0}').value;", prm));
                                 break;
                             case "button":
-                                try
-                                {
-                                    btnpress[prm] = !btnpress[prm];
-                                }
-                                catch (KeyNotFoundException)
-                                {
-                                    btnpress[prm] = false;
-                                    btnpress[prm] = !btnpress[prm];
-                                }
+                                btnpress[prm] = !btnpress[prm];
                                 v = btnpress[prm].ToString();
                                 break;
                             case "text":
+                                v = wv.ExecuteScript(string.Format("return document.getElementById('{0}').value;", prm));
                                 break;
                             default:
                                 break;
                         }
-                        wv.ctrlvals[prm] = v;
+                        wv.CtrlVals[prm] = v;
                     }
                     e.Cancel = true;
                 }
@@ -247,6 +255,7 @@ namespace Synapse
         {
             pManager.AddGenericParameter("Synapse Object", "C", "control object to query", GH_ParamAccess.tree);
             pManager[0].Optional = true;
+            pManager.AddBooleanParameter("Update", "T", "an update trigger helpful when you only want values to update with a click of a button\nor leave this on true to be live update", GH_ParamAccess.item, true);
         }
 
         /// <summary>
@@ -282,6 +291,7 @@ namespace Synapse
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             DA.GetDataTree(0, out GH_Structure<IGH_Goo> objtree);
+            DA.GetData(1, ref live);
             if (objtree.IsEmpty)
             {
                 listenees.Clear();
@@ -317,7 +327,7 @@ namespace Synapse
                         }
                         else
                         {
-                            outputs.Append(GetCtrlValue(ctrl), pth);
+                            outputs.AppendRange(GetCtrlValue(ctrl), pth);
                         }
                     }
                     else
@@ -328,6 +338,12 @@ namespace Synapse
                 
             }
             DA.SetDataTree(0, outputs);
+        }
+
+        protected override void ExpireDownStreamObjects()
+        {
+            if (live)
+                base.ExpireDownStreamObjects();
         }
 
         public override GH_Exposure Exposure

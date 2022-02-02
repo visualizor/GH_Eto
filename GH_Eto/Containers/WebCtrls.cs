@@ -16,7 +16,7 @@ namespace Synapse
         /// Initializes a new instance of the EtoWebCtrls class.
         /// </summary>
         public WebCtrls()
-          : base("SnpWebCtrls", "WebCtrls",
+          : base("SnpWebCtrls", "SWebCtrls",
               "a web form that contains web controls styled with HTML and CSS",
               "Synapse", "Containers")
         {
@@ -80,7 +80,6 @@ namespace Synapse
         {
             pManager.AddTextParameter("All Properties", "A", "list of all accessible properties", GH_ParamAccess.list);
             pManager.AddGenericParameter("WebForm", "C", "WebView control", GH_ParamAccess.item);
-            pManager.AddTextParameter("ControlValues", "Q", "queried values from controls on the web form", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -98,8 +97,9 @@ namespace Synapse
             DA.GetDataList(2, props);
             DA.GetDataList(3, vals);
 
-            WebForm wv = new WebForm() { ID = Guid.NewGuid().ToString(), Html = html,};
-            wv.LoadHtml(wv.Html);
+            WebForm wv = new WebForm(html, ids) { ID = Guid.NewGuid().ToString(), };
+            if (!wv.TryLoadHtml())
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "something wrong with html text");
 
             DA.SetData(1, new GH_ObjectWrapper(wv));
             

@@ -115,14 +115,41 @@ namespace Synapse
 
     internal class WebForm : WebView
     {
-        public string Html { get; set; }
-        public Dictionary<string, string> ctrlvals = new Dictionary<string, string>();
+        public string Html { get; }
+        public Dictionary<string, string> CtrlVals { get; } = new Dictionary<string, string>();
+        public List<string> OrderedKeys { get; protected set; } = new List<string>();
 
         public WebForm() : base()
         {
-
         }
 
+        public WebForm(string html) : base()
+        {
+            Html = html;
+        }
+
+        public WebForm(string html, IEnumerable<string> vars) : base()
+        {
+            Html = html;
+            foreach (string k in vars)
+            {
+                CtrlVals[k] = "";
+                OrderedKeys.Add(k);
+            }
+        }
+
+        public bool TryLoadHtml()
+        {
+            try
+            {
+                LoadHtml(Html);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 
     /* ImageButton and CustomButton are copied from internet with minor mod
