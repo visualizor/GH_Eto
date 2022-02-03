@@ -218,9 +218,9 @@ namespace Synapse
                 {
                     foreach (string prm in wv.CtrlVals.Keys.ToArray())
                     {
-                        if (e.Uri.PathAndQuery != prm)
+                        if (e.Uri.LocalPath != prm)
                             continue;
-                        string ptype = wv.ExecuteScript(string.Format("return document.getElementById('{0}').type;", prm));
+                        string ptype = wv.ExecuteScript(string.Format("return document.getElementById('{0}').type;", prm)); //TODO: refactor this js block
                         string v = "";
                         switch (ptype)
                         {
@@ -231,7 +231,12 @@ namespace Synapse
                                 v = wv.ExecuteScript(string.Format("return document.getElementById('{0}').value;", prm));
                                 break;
                             case "button":
-                                btnpress[prm] = !btnpress[prm];
+                                if (e.Uri.Query == "?press")
+                                    btnpress[prm] = true;
+                                else if (e.Uri.Query == "?lift")
+                                    btnpress[prm] = false;
+                                else
+                                    break; //exit early
                                 v = btnpress[prm].ToString();
                                 break;
                             case "text":
