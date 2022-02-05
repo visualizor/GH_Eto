@@ -5,34 +5,37 @@
         <title>Rhino GH UI</title>
     </head>
     <body>
-        <input type='range' min='0' max='100' value='50' class='slider' id='num_param'/>
+        <input type='range' min='0' max='100' value='50' class='slider' id='num_param' onchange="window.location = 'synapse:num_param';"/>
 		<br/>
-		<input type="button" class='click' id="btn_param" value='click here'/>
-		<input type='text' class='tb' id='tb_param'/>
+		<input type="button" class='click' id="btn_param" value='click here' onmousedown="window.location = 'synapse:btn_param?press';" onmouseup="window.location='synapse:btn_param?lift';"/>
+
+		<input type='text' class='tb' id='tb_param' onchange="window.location='synapse:tb_param';"/>
 		<br/>
-		<input type='number' class='numticker' id='ticker_param'/>
-		<input type='checkbox' class = 'truefalse' id = 'tf_param'/>
+		<input type='number' class='numticker' id='ticker_param' onchange="window.location = 'synapse:ticker_param';"/>
+        
+		<input type='checkbox' class = 'truefalse' id = 'tf_param' onchange="window.location = 'synapse:tf_param';"/>
 		<label for'tf_param'>enable</label>
 		<br/>
-		<input type='file' class='filepath' id='file_param'/>
+		<input type='file' class='filepath' id='file_param' onchange="window.location='synapse:file_param';"/>
 		<br/>
 		<input type='radio' class='rb' id='rb0_param' name='rbgroup0' value='option0'/>
 		<label for'rb0_param'>option0</label>
 		<input type='radio' class='rb' id='rb1_param' name='rbgroup0' value='option1'/>
 		<label for'rb1_param'>option1</label>
-		<select id='dd_param' class='dropdown'>
+		
+        <select id='dd_param' class='dropdown' onchange="window.location='synapse:dd_param';">
 			<option value='first thing'>first thing</option>
 			<option value='second thing'>second thing</option>
 			<option value='nothing'>nothing</option>
-		</select> 
+		</select>
     </body>
 
     <style>
         input[type='button'] {
             border: none;
             border-radius: 2px;
-            padding: 12px 18px;
-            font-size: 16px;
+            padding: 10px 15px;
+            font-size: 12px;
             text-transform: uppercase;
             cursor: pointer;
             color: white;
@@ -48,40 +51,10 @@
     </style>
 
     <script>
-        onslider = function(){
-            window.location = 'synapse:num_param';
-            /*important to keep what's after the semi-colon :
-            it tells the script which control is triggered*/
-        }
-        onflip = function(){
-            window.location = 'synapse:tf_param';
-        }
-        onpress = function(){
-            window.location = 'synapse:btn_param?press';
-        }
-        onlift = function(){
-            window.location='synapse:btn_param?lift';
-        }
-        ontick = function(){
-            window.location = 'synapse:ticker_param';
-        }
-        ondd = function(){
-            window.location = 'synapse:dd_param';
-        }
-        onfilepick=function(){
-            window.location='synapse:file_param';
-        }
-        ontbchange = function(){
-            window.location='synapse:tb_param';
+        onrbchange=function(){
+
         }
 
-        document.getElementById('num_param').onchange = onslider;
-        document.getElementById('tf_param').onchange = onflip;
-        document.getElementById('btn_param').onmousedown = onpress;
-        document.getElementById('btn_param').onmouseup=onlift;
-        document.getElementById('ticker_param').onchange=ontick;
-        document.getElementById('dd_param').onchange=ondd;
-        document.getElementById('file_param').onchange=onfilepick;
-        document.getElementById('tb_param').onchange=ontbchange;
+        document.getElementById('rb0_param').onchange=onrbchange; // only need to set listener on one radio button of a group
     </script>
 </html>
