@@ -16,14 +16,14 @@
 		<br/>
 		<input type='file' class='filepath' id='file_param'/>
 		<br/>
-		<input type='radio' class='rb' id='rb0_param' name='group0' value='option0'/>
+		<input type='radio' class='rb' id='rb0_param' name='rbgroup0' value='option0'/>
 		<label for'rb0_param'>option0</label>
-		<input type='radio' class='rb' id='rb1_param' name='group0' value='option1'/>
+		<input type='radio' class='rb' id='rb1_param' name='rbgroup0' value='option1'/>
 		<label for'rb1_param'>option1</label>
 		<select id='dd_param' class='dropdown'>
-			<option value='firstthing'>first thing</option>
-			<option value='secondthing'>second thing</option>
-			<option value='nothing'>Nothing</option>
+			<option value='first thing'>first thing</option>
+			<option value='second thing'>second thing</option>
+			<option value='nothing'>nothing</option>
 		</select> 
     </body>
 
@@ -71,6 +71,10 @@
         onfilepick=function(){
             window.location='synapse:file_param';
         }
+        ontbchange = function(){
+            window.location='synapse:tb_param';
+        }
+
         document.getElementById('num_param').onchange = onslider;
         document.getElementById('tf_param').onchange = onflip;
         document.getElementById('btn_param').onmousedown = onpress;
@@ -78,5 +82,6 @@
         document.getElementById('ticker_param').onchange=ontick;
         document.getElementById('dd_param').onchange=ondd;
         document.getElementById('file_param').onchange=onfilepick;
+        document.getElementById('tb_param').onchange=ontbchange;
     </script>
 </html>

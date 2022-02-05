@@ -213,6 +213,11 @@ namespace Synapse
         }
         protected void OnWebView(object s, WebViewLoadingEventArgs e)
         {
+            string js = @"
+var el = document.getElementById('{0}');
+try{{ return el.{1};}}
+catch (er) {{return 'ERROR getting element';}}
+"; // double curly brackets for string format method
             if (s is WebForm wv)
                 if (e.Uri.Scheme == "synapse")
                 {
@@ -220,15 +225,15 @@ namespace Synapse
                     {
                         if (e.Uri.LocalPath != prm)
                             continue;
-                        string ptype = wv.ExecuteScript(string.Format("return document.getElementById('{0}').type;", prm)); //TODO: refactor this js block
+                        string ptype = wv.ExecuteScript(string.Format(js, prm, "type"));
                         string v = "";
                         switch (ptype)
                         {
                             case "checkbox":
-                                v = wv.ExecuteScript(string.Format("return document.getElementById('{0}').checked;", prm));
+                                v = wv.ExecuteScript(string.Format(js, prm,"checked"));
                                 break;
                             case "range":
-                                v = wv.ExecuteScript(string.Format("return document.getElementById('{0}').value;", prm));
+                                v = wv.ExecuteScript(string.Format(js, prm, "value"));
                                 break;
                             case "button":
                                 if (e.Uri.Query == "?press")
@@ -240,13 +245,17 @@ namespace Synapse
                                 v = btnpress[prm].ToString();
                                 break;
                             case "text":
-                                v = wv.ExecuteScript(string.Format("return document.getElementById('{0}').value;", prm));
+                                v = wv.ExecuteScript(string.Format(js, prm, "value"));
+                                break;
+                            case "select-one":
+                                v = wv.ExecuteScript(string.Format(js, prm, "value"));
                                 break;
                             default:
                                 break;
                         }
                         wv.CtrlVals[prm] = v;
                     }
+
                     e.Cancel = true;
                 }
             ExpireSolution(true); //safe, this is event handler so not expiring during a solution
