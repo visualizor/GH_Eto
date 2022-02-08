@@ -251,7 +251,15 @@ catch (er) {{return 'ERROR getting element';}}
                                 v = wv.ExecuteScript(string.Format(js, prm, "value"));
                                 break;
                             case "radio":
-
+                                v = wv.ExecuteScript(string.Format(@"var el = document.getElementById('{0}');
+var els = document.getElementsByName(el.name);
+var valstr = '';
+for (let i=0;i<els.length;i++){{
+	if (els[i].checked){{
+		valstr = els[i].value;
+	}}
+}}
+return valstr;", prm));
                                 break;
                             default:
                                 break;

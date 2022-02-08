@@ -18,10 +18,10 @@
 		<br/>
 		<input type='file' class='filepath' id='file_param' onchange="window.location='synapse:file_param';"/>
 		<br/>
-		<input type='radio' class='rb' id='rb0_param' name='rbgroup0' value='option0' onclick="window.location = 'synapse:rb0_param';"/>
-        <!--crawl and find group by js initiated from webview-->
+		<input type='radio' class='rb' id='rb0_param' name='rbgroup' value='option0' onclick="window.location = 'synapse:rb0_param';"/>
+        <!--set all radio onclick to first radio location-->
 		<label for'rb0_param'>option0</label>
-		<input type='radio' class='rb' id='rb1_param' name='rbgroup0' value='option1'/>
+		<input type='radio' class='rb' id='rb1_param' name='rbgroup' value='option1' onclick="window.location='synapse:rb0_param';"/>
 		<label for'rb1_param'>option1</label>
 		
         <select id='dd_param' class='dropdown' onchange="window.location='synapse:dd_param';">
@@ -52,10 +52,6 @@
     </style>
 
     <script>
-        onrbchange=function(){
 
-        }
-
-        document.getElementById('rb0_param').onchange=onrbchange; // only need to set listener on one radio button of a group
     </script>
 </html>
