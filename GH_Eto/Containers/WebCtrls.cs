@@ -118,7 +118,7 @@ namespace Synapse
         {
             get
             {
-                return null;
+                return Properties.Resources.webview;
             }
         }
 

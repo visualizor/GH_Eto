@@ -31,7 +31,12 @@ namespace Synapse
 
         private void Relisten(Control ctrl)
         {
-            if (ctrl is Button btn)
+            if (ctrl is ToggleButton tbtn)
+            {
+                listenees.Add(tbtn.ID);
+                tbtn.CheckedChanged += OnCtrl;
+            }
+            else if (ctrl is Button btn)
             {
                 listenees.Add(btn.ID);
                 btnpress[btn.ID] = false;
@@ -135,7 +140,9 @@ namespace Synapse
         private GH_ObjectWrapper[] GetCtrlValue(Control ctrl)
         {
             List<GH_ObjectWrapper> val_out = new List<GH_ObjectWrapper>();
-            if (ctrl is Button btn)
+            if (ctrl is ToggleButton tbtn)
+                val_out.Add(new GH_ObjectWrapper(tbtn.Checked));
+            else if (ctrl is Button btn)
                 val_out.Add(new GH_ObjectWrapper(btnpress[btn.ID]));
             else if (ctrl is TextBox tb)
                 val_out.Add(new GH_ObjectWrapper(tb.Text));

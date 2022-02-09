@@ -68,6 +68,7 @@
     <Compile Include="Ctrls\DomSlider.cs" />
     <Compile Include="Ctrls\EtoColorPicker.cs" />
     <Compile Include="Ctrls\EtoPickFile.cs" />
+    <Compile Include="Ctrls\EtoToggle.cs" />
     <Compile Include="Ctrls\NumUpDnGH.cs" />
     <Compile Include="Ctrls\Slider2D.cs" />
     <Compile Include="Ctrls\EtoGridView.cs" />
@@ -275,6 +276,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\query.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toggle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\webview.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
