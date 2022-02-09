@@ -1,7 +1,10 @@
 # Synapse (GH_Eto)
 [Overview](https://github.com/visualizor/GH_Eto#overview)
+
 [Installation](https://github.com/visualizor/GH_Eto#installation)
+
 [Starter's Guide](https://github.com/visualizor/GH_Eto#starters-guide)
+
 [FAQs](https://github.com/visualizor/GH_Eto#faqs)
 
 
