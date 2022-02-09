@@ -34,7 +34,7 @@ Containers can nest in other containers, because containers are also recognized 
 #### Parameters
 These are mostly helper components working in tandem. Some `Eto.Forms` objects require special property types. A moderate level of intelligence will be built in for common inputs such as automatically converting the text string "255,0,0" to an Eto-recognized `Color` type. However, sometimes the user must provide the exact kind of data type, which will likely be in this category of components. For advanced users, see example file on how to script explicit property objects in GhPython. 
 
-A special component in parameters is the `ValueQuery` component. It listens to any control element and reports its value. This is the critical link between the GUI a user creates and the Grasshopper canvas. For example, when wired to a `SynapseTextBox`, this component will refresh and report the text content whenever a user types in the text box.
+A special component in parameters is the `ValueQuery` component. It listens to any control element and reports its value. This is the critical link between the GUI a user creates and the Grasshopper canvas. For example, when wired to a `SynapseTextBox`, this component will refresh and report the text content whenever a user types in the text box. Sometimes a "container" may be queried too such as the `WebCtrls` component.
 #### Examples
 A walkthrough of Synapse component and how they are set up can be found [here](https://www.youtube.com/embed/tbC_d84EmuU). Skip to about 3:30 mark for the actual Synapse set-up. Download the [example file](https://github.com/visualizor/GH_Eto/raw/master/SynapseExample.gh) yourself and see thigns in action.
 #### Fixed Interface
