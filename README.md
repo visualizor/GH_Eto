@@ -3,7 +3,7 @@
 
 [Installation](https://github.com/visualizor/GH_Eto#installation)
 
-[Starter's Guide](https://github.com/visualizor/GH_Eto#starters-guide)
+[Starter's Guide](#starters-guide)
 
 [FAQs](https://github.com/visualizor/GH_Eto#faqs)
 
