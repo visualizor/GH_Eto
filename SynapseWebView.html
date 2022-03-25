@@ -25,6 +25,7 @@
 		<label for'rb1_param'>option1</label>
 		
         <select id='dd_param' class='dropdown' onchange="window.location='synapse:dd_param';">
+            <option value="">Select...</option>
 			<option value='first thing'>first thing</option>
 			<option value='second thing'>second thing</option>
 			<option value='nothing'>nothing</option>
@@ -47,7 +48,11 @@
         input {
             margin: 5px;
         }
-        label {font-family:monospace;}
+        label {
+            font-family:monospace;
+        }
+
+
         /*this is where all the CSS nerds shine*/
     </style>
 
