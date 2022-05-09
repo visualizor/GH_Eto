@@ -276,7 +276,7 @@ return valstr;", prm));
 
                     e.Cancel = true;
                 }
-            ExpireSolution(true); //safe, this is event handler so not expiring during a solution
+            ExpireSolution(true); //safe, we're in event handler so not expiring during a solution
         }
         #endregion
 
