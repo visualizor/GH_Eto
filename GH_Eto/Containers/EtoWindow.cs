@@ -62,7 +62,7 @@ namespace Synapse
                 }
             
         }
-        internal bool ctrlfill = false;
+        internal bool ctrlfill = true;
         internal bool ctrlredo = false;
         internal bool ghowned = false;
 
