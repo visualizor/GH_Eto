@@ -111,6 +111,13 @@ namespace Synapse
             DA.SetDataList(0, printouts);
         }
 
+
+        public override GH_Exposure Exposure
+        {
+            get { return GH_Exposure.hidden; }
+            // TODO: expose this once done
+        }
+
         /// <summary>
         /// Provides an Icon for the component.
         /// </summary>
