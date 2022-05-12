@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Eto.Drawing;
+using System.Windows.Forms;
 
 namespace Synapse
 {
@@ -17,6 +18,20 @@ namespace Synapse
               "image icon that can be used by Synapse controls",
               "Synapse", "Parameters")
         {
+        }
+
+        protected bool usebitmap = true;
+
+        public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
+        {
+            base.AppendAdditionalMenuItems(menu);
+            ToolStripMenuItem menuitem = menu.Items.Add("Output Bitmap object", null, OnBitmap) as ToolStripMenuItem;
+            menuitem.Checked = usebitmap;
+        }
+        protected void OnBitmap(object s, EventArgs e)
+        {
+            usebitmap = !usebitmap;
+            ExpireSolution(true);
         }
 
         /// <summary>
@@ -49,23 +64,48 @@ namespace Synapse
             bool issized = DA.GetData(1, ref sizeobj);
 
             Bitmap bitmap = new Bitmap(pth);
-
-            if (!issized)
-                DA.SetData(0, new GH_ObjectWrapper(bitmap));
+            Icon icon = new Icon(pth);
+            if (usebitmap)
+            {
+                Message = "Bitmap";
+                if (!issized)
+                    DA.SetData(0, new GH_ObjectWrapper(bitmap));
+                else
+                {
+                    if (sizeobj.Value is Size es)
+                        DA.SetData(0, new GH_ObjectWrapper(bitmap.WithSize(es)));
+                    else if (sizeobj.Value is GH_ComplexNumber ri)
+                        DA.SetData(0, new GH_ObjectWrapper(bitmap.WithSize(new Size((int)ri.Value.Real, (int)ri.Value.Imaginary))));
+                    else if (sizeobj.Value is GH_Vector gv)
+                        DA.SetData(0, new GH_ObjectWrapper(bitmap.WithSize(new Size((int)gv.Value.X, (int)gv.Value.Y))));
+                    else if (sizeobj.Value is GH_Point gp)
+                        DA.SetData(0, new GH_ObjectWrapper(bitmap.WithSize(new Size((int)gp.Value.X, (int)gp.Value.Y))));
+                    else if (sizeobj.Value is GH_Rectangle grec)
+                        DA.SetData(0, new GH_ObjectWrapper(bitmap.WithSize(new Size((int)grec.Value.X.Length, (int)grec.Value.Y.Length))));
+                    else
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " check size input data type");
+                }
+            }
             else
             {
-                if (sizeobj.Value is Size es)
-                    DA.SetData(0, new GH_ObjectWrapper(bitmap.WithSize(es)));
-                else if (sizeobj.Value is GH_ComplexNumber ri)
-                    DA.SetData(0, new GH_ObjectWrapper(bitmap.WithSize(new Size((int)ri.Value.Real, (int)ri.Value.Imaginary))));
-                else if (sizeobj.Value is GH_Vector gv)
-                    DA.SetData(0, new GH_ObjectWrapper(bitmap.WithSize(new Size((int)gv.Value.X, (int)gv.Value.Y))));
-                else if (sizeobj.Value is GH_Point gp)
-                    DA.SetData(0, new GH_ObjectWrapper(bitmap.WithSize(new Size((int)gp.Value.X, (int)gp.Value.Y))));
-                else if (sizeobj.Value is GH_Rectangle grec)
-                    DA.SetData(0, new GH_ObjectWrapper(bitmap.WithSize(new Size((int)grec.Value.X.Length, (int)grec.Value.Y.Length))));
+                Message = "Icon";
+                if (!issized)
+                    DA.SetData(0, new GH_ObjectWrapper(icon));
                 else
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " check size input data type");
+                {
+                    if (sizeobj.Value is Size es)
+                        DA.SetData(0, new GH_ObjectWrapper(icon.WithSize(es)));
+                    else if (sizeobj.Value is GH_ComplexNumber ri)
+                        DA.SetData(0, new GH_ObjectWrapper(icon.WithSize(new Size((int)ri.Value.Real, (int)ri.Value.Imaginary))));
+                    else if (sizeobj.Value is GH_Vector gv)
+                        DA.SetData(0, new GH_ObjectWrapper(icon.WithSize(new Size((int)gv.Value.X, (int)gv.Value.Y))));
+                    else if (sizeobj.Value is GH_Point gp)
+                        DA.SetData(0, new GH_ObjectWrapper(icon.WithSize(new Size((int)gp.Value.X, (int)gp.Value.Y))));
+                    else if (sizeobj.Value is GH_Rectangle grec)
+                        DA.SetData(0, new GH_ObjectWrapper(icon.WithSize(new Size((int)grec.Value.X.Length, (int)grec.Value.Y.Length))));
+                    else
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " check size input data type");
+                }
             }
         }
 
