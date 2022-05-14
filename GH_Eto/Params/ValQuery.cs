@@ -49,7 +49,7 @@ namespace Synapse
                 if (tb.Live)
                     tb.TextChanged += OnCtrl;
                 else
-                    tb.KeyUp += OnTBEnter;
+                    tb.KeyUp += OnEnterUp;
             }
             else if (ctrl is CheckBox cb)
             {
@@ -92,7 +92,10 @@ namespace Synapse
                 if (csl.Live)
                     csl.slider.ValueChanged += OnCtrl;
                 else
+                {
                     csl.slider.MouseUp += OnCtrl;
+                    csl.slider.KeyUp += OnEnterUp;
+                }
             }
             else if (ctrl is MaskedTextBox mtb)
             {
@@ -209,7 +212,7 @@ namespace Synapse
                 return;
             ExpireSolution(true);
         }
-        public void OnTBEnter(object s, KeyEventArgs e)
+        public void OnEnterUp(object s, KeyEventArgs e)
         {
             if (e.Key == Keys.Enter)
                 ExpireSolution(true);

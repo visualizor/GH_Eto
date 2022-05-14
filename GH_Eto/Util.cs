@@ -360,17 +360,17 @@ namespace Synapse
     internal class SliderTB: Form
     {
         public TextBox InputBox { get; private set; }
-        public ComboSlider Slider { get; private set; }
+        public ComboSlider ParentSL { get; private set; }
 
         public SliderTB(ComboSlider parent)
         {
-            Slider = parent;
-            Width = Slider.slider.Width;
+            ParentSL = parent;
+            Width = ParentSL.slider.Width;
             Shown += OnShown;
 
             InputBox = new TextBox()
             {
-                Text = Slider.val.ToString(),
+                Text = ParentSL.val.ToString(),
                 Width = Width - 4,
             };
             InputBox.KeyUp += OnCommit;
@@ -394,7 +394,7 @@ namespace Synapse
             else if (e.Key == Keys.Enter)
             {
                 if (double.TryParse(InputBox.Text, out double userval))
-                    Slider.SetVal(userval); // out-of-bounds safeguard already built in :)
+                    ParentSL.SetVal(userval); // out-of-bounds safeguard already built in :)
                 Close();
                 return;
             }
@@ -470,7 +470,7 @@ namespace Synapse
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format("Contact developer for this error:\n{0}", ex.Message));
+                MessageBox.Show(string.Format("ComboSlider: OnUserVal\nContact developer for this error:\n{0}", ex.Message));
             }
         }
         protected void OnRightMouse(object s, MouseEventArgs e)
