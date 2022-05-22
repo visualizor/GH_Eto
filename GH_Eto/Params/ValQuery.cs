@@ -95,6 +95,7 @@ namespace Synapse
                 {
                     csl.slider.MouseUp += OnCtrl;
                     csl.slider.KeyUp += OnEnterUp;
+                    csl.UserInputClosed += OnCtrl;
                 }
             }
             else if (ctrl is MaskedTextBox mtb)
@@ -290,7 +291,7 @@ return valstr;", prm));
         {
             pManager.AddGenericParameter("Synapse Object", "C", "control object to query", GH_ParamAccess.tree);
             pManager[0].Optional = true;
-            pManager.AddBooleanParameter("Update", "T", "an update trigger helpful when you only want values to update with a click of a button\nor leave this on true to be live update", GH_ParamAccess.item, true);
+            pManager.AddBooleanParameter("Update", "T", "an update trigger: helpful when you only want values to update with a click of a button\nleave this on true to be live update", GH_ParamAccess.item, true);
         }
 
         /// <summary>
