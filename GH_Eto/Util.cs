@@ -388,6 +388,7 @@ namespace Synapse
         {
             if (e.Key == Keys.Escape)
             {
+                ParentSL.OnUserInputClosed(e);
                 Close();
                 return;
             }
@@ -395,12 +396,14 @@ namespace Synapse
             {
                 if (double.TryParse(InputBox.Text, out double userval))
                     ParentSL.SetVal(userval); // out-of-bounds safeguard already built in :)
+                ParentSL.OnUserInputClosed(e);
                 Close();
                 return;
             }
         }
         protected void OnUnfocus(object s, EventArgs e)
         {
+            ParentSL.OnUserInputClosed(e);
             Close();
         }
         protected void OnShown(object s, EventArgs e)
@@ -446,6 +449,13 @@ namespace Synapse
             Items.Add(slider);
             Items.Add(label);
             Spacing = 2;
+        }
+
+        //TODO: incorporate custom event for when user key in values
+        public event EventHandler UserInputClosed;
+        public virtual void OnUserInputClosed(EventArgs e)
+        {
+            UserInputClosed?.Invoke(this, e);
         }
 
         protected void OnSlide(object s, EventArgs e)
