@@ -79,6 +79,11 @@ namespace Synapse.Ctrls
                     csl.SetVal((double)ghsl.Slider.Value);
                     allsl.Add(csl);
                 }
+                else if (prm.Attributes.GetTopLevel.DocObject is GH_Relay ghr)
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " please hook up S directly with slider, not a relay component");
+                else
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " one or more inputs in S isn't a slider");
+                
             
             if (allprops.Branches.Count>1 && allprops.Branches.Count != allsl.Count)
             {
