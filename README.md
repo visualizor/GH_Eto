@@ -17,7 +17,7 @@ This plugin is meant to help not only build more intuitive GUIs with Grasshopper
 
 See [complete doc](http://pages.picoe.ca/docs/api/html/R_Project_EtoForms.htm) for more information on each Eto object. 
 
-Eto itself does not have many of the graphic features found in other GUI libraries likely due to its cross-platform conformity. Synapse further simplifies the pieces one has to assemble to get a working GUI. Minimalist functionality will take precedent over ornate design. 
+Eto itself does not have many of the graphic features found in other GUI libraries likely due to its cross-platform compliances. Synapse further simplifies the pieces one has to assemble to get a working GUI. Minimalist functionality will take precedent over ornate design. 
 ## Installation
 This is your typical Grasshopper plugin. Drop the ".gha" file into your Grasshopper library folder. On a PC it's `%AppData%/Roaming/Grasshopper/Libraries/`. On a Mac it's <missing path>. The "Synapse.gha" is published on [food4rhino.com](https://www.food4rhino.com/app/synapse) as well as Rhino 7's package manager. v0.4 onwards, you can drag and drop the SynapseRCP.rhp onto Rhino to install the remote control panel. Type "SynapsePanel" to launch; "SynapseCleanse" to clear contents. 
 ## Starter's Guide
