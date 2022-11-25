@@ -87,9 +87,12 @@ namespace Synapse
 
         protected async void PeriodicReSolve(IGH_DocumentObject c, int i)
         {
-            await Task.Delay(i);
+            if (i < 1)
+                i = 1;
+            await Task.Delay(i-1);
             object locker = new object();
-            OnPingDocument().ScheduleSolution(1, (doc) => c.ExpireSolution(false));
+            try { OnPingDocument().ScheduleSolution(1, (doc) => c.ExpireSolution(false)); }
+            catch (NullReferenceException) { }
             lock (locker)
                 srcstats[c.InstanceGuid] = false;
         }
