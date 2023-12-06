@@ -243,7 +243,7 @@ namespace Synapse
             if (!hz)
             {
                 foreach (Control c in added)
-                    dyna.AddAutoSized(c);
+                    dyna.Add(c);
             }
             else
             {
@@ -252,7 +252,7 @@ namespace Synapse
                 {
                     dyna.BeginVertical();
                     dyna.BeginHorizontal();
-                    dyna.AddAutoSized(c);
+                    dyna.Add(c);
                     dyna.EndHorizontal();
                     dyna.EndVertical();
                 }

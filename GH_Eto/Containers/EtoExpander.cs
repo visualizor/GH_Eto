@@ -185,7 +185,7 @@ namespace Synapse
             DynamicLayout content = new DynamicLayout() { DefaultPadding = 1,};
             foreach (GH_ObjectWrapper ghobj in ctrls)
                 if (ghobj.Value is Control ctrl)
-                    content.AddAutoSized(ctrl);
+                    content.Add(ctrl);
                 else
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " one or more object cannot be added\n are they non-Synapse components?");
             xpdr.Content = content;

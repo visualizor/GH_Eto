@@ -75,7 +75,7 @@ namespace Synapse
             DynamicLayout layout = new DynamicLayout();
             foreach (GH_ObjectWrapper gho in ctrls)
                 if (gho.Value is Control c)
-                    layout.AddAutoSized(c);
+                    layout.Add(c);
             scroll.Content = layout;
 
             for (int i = 0; i < props.Count; i++)

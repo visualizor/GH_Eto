@@ -84,7 +84,7 @@ namespace Synapse
                     if (ctrls[i].Value is Control ctrl)
                     {
                         DynamicLayout layout = new DynamicLayout();
-                        layout.AddAutoSized(ctrl);
+                        layout.Add(ctrl);
                         tp.Content = layout;
                     }
                 }
