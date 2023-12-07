@@ -110,6 +110,7 @@ namespace Synapse
             }
         }
 
+
         public override bool Write(GH_IWriter writer)
         {
             writer.SetBoolean("usebitmap", usebitmap);
