@@ -5,6 +5,7 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Eto.Drawing;
 using System.Windows.Forms;
+using GH_IO.Serialization;
 
 namespace Synapse
 {
@@ -107,6 +108,17 @@ namespace Synapse
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " check size input data type");
                 }
             }
+        }
+
+        public override bool Write(GH_IWriter writer)
+        {
+            writer.SetBoolean("usebitmap", usebitmap);
+            return base.Write(writer);
+        }
+        public override bool Read(GH_IReader reader)
+        {
+            reader.TryGetBoolean("usebitmap", ref usebitmap);
+            return base.Read(reader);
         }
 
         /// <summary>
