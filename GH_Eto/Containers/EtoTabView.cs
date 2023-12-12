@@ -6,6 +6,7 @@ using Eto.Drawing;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using wf = System.Windows.Forms;
+using GH_IO.Serialization;
 
 namespace Synapse
 {
@@ -21,9 +22,19 @@ namespace Synapse
         {
         }
 
+        protected bool stretchy = true;
+
+        protected void OnStretch(object s, EventArgs e)
+        {
+            stretchy = !stretchy;
+            ExpireSolution(true);
+        }
+
         public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
         {
             base.AppendAdditionalMenuItems(menu);
+            wf.ToolStripMenuItem stretch = menu.Items.Add(stretchy ? "Fix control sizes" : "Flex control sizes", null, OnStretch) as wf.ToolStripMenuItem;
+
             wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
             click.ToolTipText = "put all properties of this control in a check list";
             Util.ListPropLoc = Attributes.Pivot;
@@ -74,6 +85,7 @@ namespace Synapse
             DA.GetDataList(1, vals);
             DA.GetDataList(2, ctrls);
             DA.GetDataList(3, tabs);
+            Message = stretchy ? "ResizeCtrl" : "FixedCtrl";
 
             TabControl tabview = new TabControl();
             for (int i=0; i<tabs.Count; i++)
@@ -84,7 +96,7 @@ namespace Synapse
                     if (ctrls[i].Value is Control ctrl)
                     {
                         DynamicLayout layout = new DynamicLayout();
-                        layout.Add(ctrl);
+                        layout.Add(ctrl, stretchy, stretchy);
                         tp.Content = layout;
                     }
                 }
@@ -144,6 +156,17 @@ namespace Synapse
                 if (prop.CanWrite)
                     printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
             DA.SetDataList(0, printouts);
+        }
+
+        public override bool Write(GH_IWriter writer)
+        {
+            writer.SetBoolean("stretchy", stretchy);
+            return base.Write(writer);
+        }
+        public override bool Read(GH_IReader reader)
+        {
+            reader.TryGetBoolean("stretchy", ref stretchy);
+            return base.Read(reader);
         }
 
         /// <summary>

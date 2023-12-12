@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using wf=System.Windows.Forms;
+using wf = System.Windows.Forms;
 using Eto.Drawing;
 using Eto.Forms;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
+using GH_IO.Serialization;
 
 namespace Synapse.Containers
 {
@@ -22,9 +23,19 @@ namespace Synapse.Containers
         {
         }
 
+        protected bool stretchy = true;
+
+        protected void OnStretch(object s, EventArgs e)
+        {
+            stretchy = !stretchy;
+            ExpireSolution(true);
+        }
+
         public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
         {
             base.AppendAdditionalMenuItems(menu);
+            wf.ToolStripMenuItem stretch = menu.Items.Add(stretchy ? "Fix control sizes" : "Flex control sizes", null, OnStretch) as wf.ToolStripMenuItem;
+
             wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
             click.ToolTipText = "put all properties of this control in a check list";
             Util.ListPropLoc = Attributes.Pivot;
@@ -70,6 +81,7 @@ namespace Synapse.Containers
             DA.GetDataList(0, props);
             DA.GetDataList(1, vals);
             DA.GetDataList(2, ctrls);
+            Message = stretchy ? "ResizeCtrl" : "FixedCtrl";
 
             GroupBox gb = new GroupBox(); // container doesn't need id initialized
 
@@ -191,7 +203,7 @@ namespace Synapse.Containers
             DynamicLayout content = new DynamicLayout() { DefaultPadding = 1, };
             foreach (GH_ObjectWrapper ghobj in ctrls)
                 if (ghobj.Value is Control ctrl)
-                    content.Add(ctrl);
+                    content.Add(ctrl, stretchy, stretchy);
                 else
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " one or more object cannot be added\n are they non-Synapse components?");
             gb.Content = content;
@@ -204,6 +216,17 @@ namespace Synapse.Containers
                 if (prop.CanWrite)
                     printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
             DA.SetDataList(0, printouts);
+        }
+
+        public override bool Write(GH_IWriter writer)
+        {
+            writer.SetBoolean("stretchy", stretchy);
+            return base.Write(writer);
+        }
+        public override bool Read(GH_IReader reader)
+        {
+            reader.TryGetBoolean("stretchy", ref stretchy);
+            return base.Read(reader);
         }
 
         /// <summary>

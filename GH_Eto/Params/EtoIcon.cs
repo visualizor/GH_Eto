@@ -3,11 +3,12 @@ using System.Collections.Generic;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
+using Grasshopper.Kernel.Data;
+using Grasshopper.Kernel.Parameters;
 using Eto.Drawing;
-using System.Windows.Forms;
-using GH_IO.Serialization;
+using Eto.Forms;
 
-namespace Synapse
+namespace Synapse.Params
 {
     public class EtoIcon : GH_Component
     {
@@ -21,28 +22,20 @@ namespace Synapse
         {
         }
 
-        protected bool usebitmap = true;
-
-        public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
-        {
-            base.AppendAdditionalMenuItems(menu);
-            ToolStripMenuItem menuitem = menu.Items.Add("Output Bitmap object", null, OnBitmap) as ToolStripMenuItem;
-            menuitem.Checked = usebitmap;
-        }
-        protected void OnBitmap(object s, EventArgs e)
-        {
-            usebitmap = !usebitmap;
-            ExpireSolution(true);
-        }
-
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddTextParameter("File Location", "F", "file location for the image", GH_ParamAccess.item);
-            pManager.AddGenericParameter("Size", "S", "optional size to fit image", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Size", "S", "optional size to fit image\nirrelevant if T is set to bitmap", GH_ParamAccess.item);
             pManager[1].Optional = true;
+            pManager.AddIntegerParameter("Format", "T", "use the image for display(0), as icon(1) or simply bitmap type(2)", GH_ParamAccess.item, 0);
+            Param_Integer pint = pManager[2] as Param_Integer;
+            pint.AddNamedValue("Display", 0);
+            pint.AddNamedValue("Icon", 1);
+            pint.AddNamedValue("Bitmap", 2);
+
         }
 
         /// <summary>
@@ -61,65 +54,65 @@ namespace Synapse
         {
             string pth = "";
             GH_ObjectWrapper sizeobj = new GH_ObjectWrapper();
+            int t = 0;
             DA.GetData(0, ref pth);
             bool issized = DA.GetData(1, ref sizeobj);
+            DA.GetData(2, ref t);
 
+            if (t>2 || t < 0)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Format(T) index must be 0, 1 or 2");
+                return;
+            }
             Bitmap bitmap = new Bitmap(pth);
             Icon icon = new Icon(pth);
-            if (usebitmap)
+
+            switch (t)
             {
-                Message = "Bitmap";
-                if (!issized)
+                case 0:
+                    if (!issized)
+                        DA.SetData(0, new GH_ObjectWrapper((Control)bitmap));
+                    else
+                    {
+                        if (sizeobj.Value is Size es)
+                            DA.SetData(0, new GH_ObjectWrapper((Control)bitmap.WithSize(es)));
+                        else if (sizeobj.Value is GH_ComplexNumber ri)
+                            DA.SetData(0, new GH_ObjectWrapper((Control)bitmap.WithSize(new Size((int)ri.Value.Real, (int)ri.Value.Imaginary))));
+                        else if (sizeobj.Value is GH_Vector gv)
+                            DA.SetData(0, new GH_ObjectWrapper((Control)bitmap.WithSize(new Size((int)gv.Value.X, (int)gv.Value.Y))));
+                        else if (sizeobj.Value is GH_Point gp)
+                            DA.SetData(0, new GH_ObjectWrapper((Control)bitmap.WithSize(new Size((int)gp.Value.X, (int)gp.Value.Y))));
+                        else if (sizeobj.Value is GH_Rectangle grec)
+                            DA.SetData(0, new GH_ObjectWrapper((Control)bitmap.WithSize(new Size((int)grec.Value.X.Length, (int)grec.Value.Y.Length))));
+                        else
+                            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " check size input data type");
+                    }
+                    break;
+                case 1:
+                    if (!issized)
+                        DA.SetData(0, new GH_ObjectWrapper(icon));
+                    else
+                    {
+                        if (sizeobj.Value is Size es)
+                            DA.SetData(0, new GH_ObjectWrapper(icon.WithSize(es)));
+                        else if (sizeobj.Value is GH_ComplexNumber ri)
+                            DA.SetData(0, new GH_ObjectWrapper(icon.WithSize(new Size((int)ri.Value.Real, (int)ri.Value.Imaginary))));
+                        else if (sizeobj.Value is GH_Vector gv)
+                            DA.SetData(0, new GH_ObjectWrapper(icon.WithSize(new Size((int)gv.Value.X, (int)gv.Value.Y))));
+                        else if (sizeobj.Value is GH_Point gp)
+                            DA.SetData(0, new GH_ObjectWrapper(icon.WithSize(new Size((int)gp.Value.X, (int)gp.Value.Y))));
+                        else if (sizeobj.Value is GH_Rectangle grec)
+                            DA.SetData(0, new GH_ObjectWrapper(icon.WithSize(new Size((int)grec.Value.X.Length, (int)grec.Value.Y.Length))));
+                        else
+                            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " check size input data type");
+                    }
+                    break;
+                case 2:
                     DA.SetData(0, new GH_ObjectWrapper(bitmap));
-                else
-                {
-                    if (sizeobj.Value is Size es)
-                        DA.SetData(0, new GH_ObjectWrapper(bitmap.WithSize(es)));
-                    else if (sizeobj.Value is GH_ComplexNumber ri)
-                        DA.SetData(0, new GH_ObjectWrapper(bitmap.WithSize(new Size((int)ri.Value.Real, (int)ri.Value.Imaginary))));
-                    else if (sizeobj.Value is GH_Vector gv)
-                        DA.SetData(0, new GH_ObjectWrapper(bitmap.WithSize(new Size((int)gv.Value.X, (int)gv.Value.Y))));
-                    else if (sizeobj.Value is GH_Point gp)
-                        DA.SetData(0, new GH_ObjectWrapper(bitmap.WithSize(new Size((int)gp.Value.X, (int)gp.Value.Y))));
-                    else if (sizeobj.Value is GH_Rectangle grec)
-                        DA.SetData(0, new GH_ObjectWrapper(bitmap.WithSize(new Size((int)grec.Value.X.Length, (int)grec.Value.Y.Length))));
-                    else
-                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " check size input data type");
-                }
+                    break;
+                default:
+                    break;
             }
-            else
-            {
-                Message = "Icon";
-                if (!issized)
-                    DA.SetData(0, new GH_ObjectWrapper(icon));
-                else
-                {
-                    if (sizeobj.Value is Size es)
-                        DA.SetData(0, new GH_ObjectWrapper(icon.WithSize(es)));
-                    else if (sizeobj.Value is GH_ComplexNumber ri)
-                        DA.SetData(0, new GH_ObjectWrapper(icon.WithSize(new Size((int)ri.Value.Real, (int)ri.Value.Imaginary))));
-                    else if (sizeobj.Value is GH_Vector gv)
-                        DA.SetData(0, new GH_ObjectWrapper(icon.WithSize(new Size((int)gv.Value.X, (int)gv.Value.Y))));
-                    else if (sizeobj.Value is GH_Point gp)
-                        DA.SetData(0, new GH_ObjectWrapper(icon.WithSize(new Size((int)gp.Value.X, (int)gp.Value.Y))));
-                    else if (sizeobj.Value is GH_Rectangle grec)
-                        DA.SetData(0, new GH_ObjectWrapper(icon.WithSize(new Size((int)grec.Value.X.Length, (int)grec.Value.Y.Length))));
-                    else
-                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " check size input data type");
-                }
-            }
-        }
-
-
-        public override bool Write(GH_IWriter writer)
-        {
-            writer.SetBoolean("usebitmap", usebitmap);
-            return base.Write(writer);
-        }
-        public override bool Read(GH_IReader reader)
-        {
-            reader.TryGetBoolean("usebitmap", ref usebitmap);
-            return base.Read(reader);
         }
 
         /// <summary>
@@ -127,10 +120,7 @@ namespace Synapse
         /// </summary>
         protected override System.Drawing.Bitmap Icon
         {
-            get
-            {
-                return Properties.Resources.etoimg;
-            }
+            get { return Properties.Resources.etoimg;}
         }
 
         /// <summary>
@@ -138,7 +128,7 @@ namespace Synapse
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("cfe54b4a-0bc4-4f56-872f-9cbacf6fd908"); }
+            get { return new Guid("3a863a33-e0f9-4a81-bebb-76346790aef3"); }
         }
     }
 }

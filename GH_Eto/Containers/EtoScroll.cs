@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Eto.Forms;
 using Eto.Drawing;
-
+using GH_IO.Serialization;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using wf=System.Windows.Forms;
@@ -22,9 +22,19 @@ namespace Synapse
         {
         }
 
+        protected bool stretchy = true;
+
+        protected void OnStretch(object s, EventArgs e)
+        {
+            stretchy = !stretchy;
+            ExpireSolution(true);
+        }
+
         public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
         {
             base.AppendAdditionalMenuItems(menu);
+            wf.ToolStripMenuItem stretch = menu.Items.Add(stretchy ? "Fix control sizes" : "Flex control sizes", null, OnStretch) as wf.ToolStripMenuItem;
+
             wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
             click.ToolTipText = "put all properties of this control in a check list";
             Util.ListPropLoc = Attributes.Pivot;
@@ -70,12 +80,13 @@ namespace Synapse
             DA.GetDataList(0, props);
             DA.GetDataList(1, vals);
             DA.GetDataList(2, ctrls);
+            Message = stretchy ? "ResizeCtrl" : "FixedCtrl";
 
             Scrollable scroll = new Scrollable();
             DynamicLayout layout = new DynamicLayout();
             foreach (GH_ObjectWrapper gho in ctrls)
                 if (gho.Value is Control c)
-                    layout.Add(c);
+                    layout.Add(c, stretchy, stretchy);
             scroll.Content = layout;
 
             for (int i = 0; i < props.Count; i++)
@@ -185,6 +196,18 @@ namespace Synapse
                     printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
             DA.SetDataList(0, printouts);
         }
+
+        public override bool Write(GH_IWriter writer)
+        {
+            writer.SetBoolean("stretchy", stretchy);
+            return base.Write(writer);
+        }
+        public override bool Read(GH_IReader reader)
+        {
+            reader.TryGetBoolean("stretchy", ref stretchy);
+            return base.Read(reader);
+        }
+
 
         /// <summary>
         /// Provides an Icon for the component.
