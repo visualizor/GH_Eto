@@ -24,6 +24,8 @@ namespace Synapse
         {
         }
 
+        internal Expander xpdr=null;
+
         protected bool stretchy = true;
         protected void OnStretch(object s, EventArgs e)
         {
@@ -83,7 +85,10 @@ namespace Synapse
             DA.GetDataList(2, ctrls);
             Message = stretchy ? "ResizeCtrl" : "FixedCtrl";
 
-            Expander xpdr = new Expander();
+            if (xpdr == null)
+                xpdr = new Expander();
+            else
+                xpdr.Content = null;
 
             for (int i = 0; i < props.Count; i++)
             {
