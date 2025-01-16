@@ -31,7 +31,7 @@ using Rhino.PlugIns;
 [assembly: AssemblyProduct("SynapseRCP")]
 [assembly: AssemblyCopyright(@"
 Synapse, Grasshopper plugin to make GUIs based on Eto.Forms
-Copyright © 2021  Zichu Will Wang
+Copyright © 2025  Zichu Will Wang
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
