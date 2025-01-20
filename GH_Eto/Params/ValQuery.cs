@@ -25,7 +25,7 @@ namespace Synapse
 
         private bool live = true; // set to false to not expire downstream
         private Guid[] srcs; // gh comp linked to this
-        private bool listening = false;  // this isn't used anywhere!!
+        private bool listening = false;  // this isn't affecting anything
         private List<string> listenees = new List<string>(); // eto comp this listens to
         private Dictionary<string, bool> btnpress = new Dictionary<string, bool>(); // button press state
 
@@ -144,6 +144,8 @@ namespace Synapse
         private GH_ObjectWrapper[] GetCtrlValue(Control ctrl)
         {
             List<GH_ObjectWrapper> val_out = new List<GH_ObjectWrapper>();
+            if (!ctrl.Enabled) return new GH_ObjectWrapper[]{ };
+
             if (ctrl is ToggleButton tbtn)
                 val_out.Add(new GH_ObjectWrapper(tbtn.Checked));
             else if (ctrl is Button btn)
