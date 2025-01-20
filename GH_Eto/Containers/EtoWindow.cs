@@ -84,7 +84,7 @@ namespace Synapse
         private void OnFill(object s, EventArgs e)
         {
             ctrlfill = !ctrlfill;
-            ExpireSolution(false);
+            ExpireSolution(true);
         }
         private void OnRepaint(object s, EventArgs e)
         {
@@ -163,6 +163,7 @@ namespace Synapse
             bool param2 = DA.GetDataList(2, vals);
             List<GH_ObjectWrapper> contents = new List<GH_ObjectWrapper>();
             DA.GetDataList(3, contents);
+            Message = ctrlfill ? "Fill" : "";
 
             if (EWindow == null)
             {

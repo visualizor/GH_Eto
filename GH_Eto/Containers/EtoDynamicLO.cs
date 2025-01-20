@@ -7,6 +7,7 @@ using Eto.Drawing;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using wf=System.Windows.Forms;
+using GH_IO.Serialization;
 
 namespace Synapse
 {
@@ -23,10 +24,20 @@ namespace Synapse
         }
 
         protected bool hz = false;
+        protected bool stretchy = true;
+        protected void OnStretch(object s, EventArgs e)
+        {
+            stretchy = !stretchy;
+            ExpireSolution(true);
+        }
 
         public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
         {
             base.AppendAdditionalMenuItems(menu);
+            wf.ToolStripMenuItem sb = menu.Items.Add(stretchy ? "Fix Ctrl sizes" : "Resize controls", null, OnStretch) as wf.ToolStripMenuItem;
+            menu.Items.Add(new wf.ToolStripSeparator());
+            sb.ToolTipText = "whether controls in this container resize with it";
+
             wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
             click.ToolTipText = "put all properties of this control in a check list";
             Util.ListPropLoc = Attributes.Pivot;
@@ -72,6 +83,7 @@ namespace Synapse
             DA.GetDataList(0, props);
             DA.GetDataList(1, vals);
             DA.GetDataList(2, ctrls);
+            Message = stretchy ? "ResizeCtrl" : "FixedCtrl";
 
             DynamicLayout dyna = new DynamicLayout();
 
@@ -243,7 +255,7 @@ namespace Synapse
             if (!hz)
             {
                 foreach (Control c in added)
-                    dyna.AddAutoSized(c);
+                    dyna.Add(c, stretchy, stretchy);
             }
             else
             {
@@ -252,7 +264,7 @@ namespace Synapse
                 {
                     dyna.BeginVertical();
                     dyna.BeginHorizontal();
-                    dyna.AddAutoSized(c);
+                    dyna.Add(c, stretchy, stretchy);
                     dyna.EndHorizontal();
                     dyna.EndVertical();
                 }
@@ -268,6 +280,17 @@ namespace Synapse
                     printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
             printouts.Add("Flow: set boolean to true to flow horizontally, false vertically");
             DA.SetDataList(0, printouts);
+        }
+
+        public override bool Write(GH_IWriter writer)
+        {
+            writer.SetBoolean("stretchy", stretchy);
+            return base.Write(writer);
+        }
+        public override bool Read(GH_IReader reader)
+        {
+            reader.TryGetBoolean("stretchy", ref stretchy);
+            return base.Read(reader);
         }
 
         /// <summary>
