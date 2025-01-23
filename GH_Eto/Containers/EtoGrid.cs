@@ -70,17 +70,32 @@ namespace Synapse
             // instantiate gridview
             GridView gv = new GridView { DataStore = ds.ToArray(), };
             for (int hi = 0; hi < ghtree.Branches[0].Count; hi++)
-                gv.Columns.Add(new GridColumn
+            {
+                GridColumn gc = new GridColumn
                 {
                     HeaderText = ghtree.Branches[0][hi].Value,
                     DataCell = new TextBoxCell(hi),
-                });
-            
+                };
+                
+                gv.Columns.Add(gc);
 
+            }
 
             DA.SetData(1, new GH_ObjectWrapper(gv));
         }
 
+
+        protected void SortDS(GridView g, int coli)
+        {
+            if (!(g.DataStore is string[][] d) || d.Length == 0)
+                return;
+
+            string[][] sorted = d.OrderBy(r => r[coli]).ToArray();
+
+            g.DataStore = sorted;
+            for (int ri = 0; ri < sorted.Length; ri++)
+                g.ReloadData(ri);
+        }
 
         public override GH_Exposure Exposure
         {
