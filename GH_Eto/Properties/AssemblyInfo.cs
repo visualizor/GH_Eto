@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("Synapse")]
 [assembly: AssemblyCopyright(@"
 Synapse, Grasshopper plugin to make GUIs based on Eto.Forms
-Copyright © 2024  Zichu Will Wang
+Copyright © 2025  Zichu Will Wang
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -49,5 +49,5 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.5")]
-[assembly: AssemblyFileVersion("0.5")]
+[assembly: AssemblyVersion("0.4.2")]
+[assembly: AssemblyFileVersion("0.4.2")]
