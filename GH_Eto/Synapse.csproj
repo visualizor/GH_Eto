@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="Containers\EtoDynamicLO.cs" />
     <Compile Include="Containers\EtoExpander.cs" />
+    <Compile Include="Containers\EtoGrid.cs" />
     <Compile Include="Containers\WebCtrls.cs" />
     <Compile Include="Containers\RCP.cs" />
     <Compile Include="Ctrls\DomSlider.cs" />
@@ -81,7 +82,6 @@
     <Compile Include="Ctrls\EtoToggle.cs" />
     <Compile Include="Ctrls\NumUpDnGH.cs" />
     <Compile Include="Ctrls\Slider2D.cs" />
-    <Compile Include="Ctrls\EtoGridView.cs" />
     <Compile Include="Containers\EtoGroupBox.cs" />
     <Compile Include="Containers\EtoScroll.cs" />
     <Compile Include="Containers\EtoTableLO.cs" />
