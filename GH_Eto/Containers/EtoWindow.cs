@@ -37,20 +37,31 @@ namespace Synapse
         }
 
         internal Form EWindow = null;
-        private void EWClosing(object s, CancelEventArgs e)
-        {
-            if (OnPingDocument() is null)
-                return; // no need to re-instantiate when ghdoc is closed
 
-            EWindow = new Form()
+        /// <summary>
+        /// initialize a new window
+        /// </summary>
+        /// <returns>new window(an Eto form)</returns>
+        internal Form InitEWin()
+        {
+            Form ew = new Form()
             {
                 Height = 200,
                 Width = 400,
                 Title = "an Eto window",
                 Tag = EWinTag.Indie,
             };
-            EWindow.Closing += EWClosing;
-            EWindow.GotFocus += GhDocCheck;
+            Rhino.UI.EtoExtensions.UseRhinoStyle(ew); //use system light/dark theme
+            ew.Closing += EWClosing;
+            ew.GotFocus += GhDocCheck;
+            return ew;
+        }
+        private void EWClosing(object s, CancelEventArgs e)
+        {
+            if (OnPingDocument() is null)
+                return; // no need to re-instantiate when ghdoc is closed
+
+            EWindow = InitEWin();
         }
         private void GhDocCheck(object s, EventArgs e)
         {
@@ -166,15 +177,7 @@ namespace Synapse
 
             if (EWindow == null)
             {
-                EWindow = new Form()
-                {
-                    Height = 200,
-                    Width = 400,
-                    Title = "an Eto window",
-                    Tag = EWinTag.Indie,
-                };
-                EWindow.Closing += EWClosing;
-                EWindow.GotFocus += GhDocCheck;
+                EWindow = InitEWin();
             }
             else if (EWindow.Visible && !run)
             {

@@ -10,12 +10,12 @@ using wf=System.Windows.Forms;
 
 namespace Synapse
 {
-    public class EtoDynamicLO : GH_Component
+    public class EtoDynamicLO_OBSOLETE : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the EtoDynamicLO class.
         /// </summary>
-        public EtoDynamicLO()
+        public EtoDynamicLO_OBSOLETE()
           : base("SnpDynaLayout", "SDyLO",
               "dynamic layout, somewhat autosized to controls",
               "Synapse", "Containers")
@@ -279,6 +279,11 @@ namespace Synapse
             {
                 return Properties.Resources.dynam;
             }
+        }
+
+        public override GH_Exposure Exposure 
+        {
+            get { return GH_Exposure.hidden; }
         }
 
         /// <summary>
