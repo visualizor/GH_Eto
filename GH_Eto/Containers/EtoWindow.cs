@@ -12,6 +12,7 @@ using wf = System.Windows.Forms;
 using GH_IO.Serialization;
 using Grasshopper;
 using Rhino.UI;
+using System.Xml.Linq;
 
 // In order to load the result of this wizard, you will also need to
 // add the output bin/ folder of this project to the list of loaded
@@ -51,11 +52,26 @@ namespace Synapse
                 Title = "an Eto window",
                 Tag = EWinTag.Indie,
             };
-            Rhino.UI.EtoExtensions.UseRhinoStyle(ew); //use system light/dark theme
+
+            //use system light/dark theme
+            Type ext = typeof(Rhino.UI.EtoExtensions);
+            MethodInfo extMethod = ext.GetMethod(
+                "UseRhinoStyle",
+                BindingFlags.Public | BindingFlags.Static,
+                null,
+                new Type[] { typeof(Form) }, // plus any other parameters if needed
+                null
+                );
+            extMethod?.Invoke(null, new object[] { ew });
+            /*old code that won't run in Rhino7
+             * try { Rhino.UI.EtoExtensions.UseRhinoStyle(ew); }
+            catch (Exception) { }*/
+
             ew.Closing += EWClosing;
             ew.GotFocus += GhDocCheck;
             return ew;
         }
+        
         private void EWClosing(object s, CancelEventArgs e)
         {
             if (OnPingDocument() is null)
