@@ -10,30 +10,50 @@ using Grasshopper;
 using Grasshopper.Kernel.Types;
 using Grasshopper.Kernel.Special;
 using wf = System.Windows.Forms;
+using Rhino;
+using GH_IO.Serialization;
 
-namespace Synapse
+namespace Synapse.Ctrls
 {
-    public class EtoButton : GH_Component
+    public class EtoBtn : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the EtoButton class.
+        /// Initializes a new instance of the EtoBtn class.
         /// </summary>
-        public EtoButton()
+        public EtoBtn()
           : base("SnpButton", "SBtn",
               "button, true on click, false on release",
               "Synapse", "Controls")
         {
         }
-        
+
+        internal bool trueonly = true;
+
         public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
         {
             base.AppendAdditionalMenuItems(menu);
-            wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
-            click.ToolTipText = "put all properties of this control in a check list";
-            Util.ListPropLoc = Attributes.Pivot;
-            Button dummy = new Button();
-            Util.ListPropType = dummy.GetType();
-            dummy.Dispose();
+            try
+            {
+                wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
+                wf.ToolStripMenuItem to = menu.Items.Add("TrueOnly", null, OnTO) as wf.ToolStripMenuItem;
+                to.Checked = trueonly;
+                to.ToolTipText = !trueonly ? "check to only fire a true after clicking" : "uncheck to get true while pressed, false after released";
+                click.ToolTipText = "put all properties of this control in a check list";
+                Util.ListPropLoc = Attributes.Pivot;
+                Button dummy = new Button();
+                Util.ListPropType = dummy.GetType();
+                dummy.Dispose();
+            }
+            catch (NullReferenceException)
+            {
+                
+            }
+        }
+
+        protected void OnTO(object s, EventArgs e)
+        {
+            trueonly = !trueonly;
+            ExpireSolution(true);
         }
 
         /// <summary>
@@ -69,8 +89,13 @@ namespace Synapse
             DA.GetDataList(0, props);
             DA.GetDataList(1, vals);
 
-            Button btn = new Button() { Text = "a button", ID = Guid.NewGuid().ToString() };
-            for (int i = 0; i< props.Count; i++)
+            Button btn = new Button() 
+            {
+                Text = "a button", 
+                ID = Guid.NewGuid().ToString() ,
+                Tag = trueonly,
+            };
+            for (int i = 0; i < props.Count; i++)
             {
                 string n = props[i];
                 object val;
@@ -151,7 +176,7 @@ namespace Synapse
                         try { Util.SetProp(btn, "Font", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
-                else if (n.ToLower()=="textcolor" || n.ToLower() == "fontcolor")
+                else if (n.ToLower() == "textcolor" || n.ToLower() == "fontcolor")
                 {
                     if (val is GH_Colour gclr)
                         btn.TextColor = Color.FromArgb(gclr.Value.ToArgb());
@@ -187,7 +212,7 @@ namespace Synapse
                         try { Util.SetProp(btn, "Image", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
-                else if (n.ToLower()=="imageposition" || n.ToLower() == "imageplacement")
+                else if (n.ToLower() == "imageposition" || n.ToLower() == "imageplacement")
                 {
                     if (val is GH_String gstr)
                         switch (gstr.Value.ToLower())
@@ -226,6 +251,8 @@ namespace Synapse
                     catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
             }
 
+            Message = trueonly ? "TrueOnly" : "";
+
             DA.SetData(1, new GH_ObjectWrapper(btn));
 
             PropertyInfo[] allprops = btn.GetType().GetProperties();
@@ -242,6 +269,17 @@ namespace Synapse
             get { return GH_Exposure.secondary; }
         }
 
+        public override bool Write(GH_IWriter writer)
+        {
+            writer.SetBoolean("trueonly", trueonly);
+            return base.Write(writer);
+        }
+        public override bool Read(GH_IReader reader)
+        {
+            reader.TryGetBoolean("trueonly", ref trueonly);
+            return base.Read(reader);
+        }
+
         /// <summary>
         /// Provides an Icon for the component.
         /// </summary>
@@ -252,13 +290,12 @@ namespace Synapse
                 return Properties.Resources.btn;
             }
         }
-
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("f8b49b4f-5bbf-450f-b111-7c0d1ca7b000"); }
+            get { return new Guid("22691AC4-A76B-4CBA-A02D-5DD4CB5D06C5"); }
         }
     }
 }

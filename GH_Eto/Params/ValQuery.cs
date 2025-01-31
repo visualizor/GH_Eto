@@ -40,8 +40,27 @@ namespace Synapse
             {
                 listenees.Add(btn.ID);
                 btnpress[btn.ID] = false;
-                btn.MouseDown += OnBtnDn;
-                btn.MouseUp += OnBtnUp;
+                if (btn.Tag is bool trueonly)
+                {
+                    if (!trueonly)
+                    {
+                        btn.MouseDown += OnBtnDn;
+                        btn.MouseUp += OnBtnUp;
+                        btn.KeyDown += OnEnterDn;
+                        btn.KeyUp += OnEnterUp;
+                    }
+                    else
+                        btn.Click += OnBtnClick;
+                }
+                else
+                {
+                    // this is for obsolete button
+                    btn.MouseDown += OnBtnDn;
+                    btn.MouseUp += OnBtnUp;
+                    btn.KeyDown += OnEnterDn;
+                    btn.KeyUp += OnEnterUp;
+                }
+                
             }
             else if (ctrl is LatentTB tb)
             {
@@ -201,22 +220,40 @@ namespace Synapse
         {
             if (s is Button btn)
                 btnpress[btn.ID] = true;
-            else
-                return;
+            else return;
             ExpireSolution(true);
         }
         public void OnBtnUp(object s, EventArgs e)
         {
             if (s is Button btn)
                 btnpress[btn.ID] = false;
-            else
-                return;
+            else return;
             ExpireSolution(true);
+        }
+        public void OnEnterDn(object s, KeyEventArgs e)
+        {
+            if (e.Key == Keys.Enter)
+            {
+                if (s is Button btn)
+                    btnpress[btn.ID] = true;
+                ExpireSolution(true);
+            }
         }
         public void OnEnterUp(object s, KeyEventArgs e)
         {
             if (e.Key == Keys.Enter)
+            {
+                if (s is Button btn)
+                    btnpress[btn.ID] = false;
                 ExpireSolution(true);
+            }
+        }
+        public void OnBtnClick(object s, EventArgs e)
+        {
+            if (s is Button btn)
+                btnpress[btn.ID] = true;
+            else return;
+            ExpireSolution(true);
         }
         protected void OnCtrl(object s, EventArgs e)
         {

@@ -77,6 +77,7 @@
     <Compile Include="Containers\WebCtrls.cs" />
     <Compile Include="Containers\RCP.cs" />
     <Compile Include="Ctrls\DomSlider.cs" />
+    <Compile Include="Ctrls\EtoBtn.cs" />
     <Compile Include="Ctrls\EtoColorPicker.cs" />
     <Compile Include="Ctrls\EtoPickFile.cs" />
     <Compile Include="Ctrls\EtoToggle.cs" />
@@ -86,7 +87,7 @@
     <Compile Include="Containers\EtoScroll.cs" />
     <Compile Include="Containers\EtoTableLO.cs" />
     <Compile Include="Containers\EtoTabView.cs" />
-    <Compile Include="Ctrls\EtoButton.cs" />
+    <Compile Include="Obsoletes\EtoButton_OBSOLETE.cs" />
     <Compile Include="Ctrls\EtoCheckBox.cs" />
     <Compile Include="Ctrls\EtoComboBox.cs" />
     <Compile Include="Ctrls\EtoDropDn.cs" />
