@@ -9,23 +9,27 @@ using Eto.Drawing;
 
 namespace Synapse
 {
-    public class EtoToggle : GH_Component
+    public class EtoSwitch : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the EtoToggle class.
+        /// Initializes a new instance of the EtoSwitch class.
         /// </summary>
-        public EtoToggle()
+        public EtoSwitch()
           : base("SnpToggle", "SToggle",
-              "a special toggle button",
+              "a toggle switch",
               "Synapse", "Controls")
         {
         }
-
         public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
         {
             base.AppendAdditionalMenuItems(menu);
-            wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
-            click.ToolTipText = "put all properties of this control in a check list";
+            try
+            {
+                wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
+                click.ToolTipText = "put all properties of this control in a check list";
+            }
+            catch (NullReferenceException) { }
+            
             Util.ListPropLoc = Attributes.Pivot;
             ToggleButton dummy = new ToggleButton();
             Util.ListPropType = dummy.GetType();
@@ -65,11 +69,11 @@ namespace Synapse
             DA.GetDataList(0, props);
             DA.GetDataList(1, vals);
 
-            ToggleButton toggle = new ToggleButton() { ID = Guid.NewGuid().ToString(), Text="a toggle",};
+            ESwitch es = new ESwitch() { ID = Guid.NewGuid().ToString(), };
 
             for (int i = 0; i < props.Count; i++)
             {
-                string n = props[i];
+                string n = props[i].Trim();
                 object val;
                 try { val = vals[i].Value; }
                 catch (ArgumentOutOfRangeException)
@@ -83,14 +87,14 @@ namespace Synapse
                     if (val is GH_Point pt)
                     {
                         Size size = new Size((int)pt.Value.X, (int)pt.Value.Y);
-                        toggle.Size = size;
+                        es.Size = size;
                     }
-                    else if (val is Size es)
-                        toggle.Size = es;
+                    else if (val is Size esize)
+                        es.Size = esize;
                     else if (val is GH_Vector vec)
                     {
                         Size size = new Size((int)vec.Value.X, (int)vec.Value.Y);
-                        toggle.Size = size;
+                        es.Size = size;
                     }
                     else if (val is GH_String sstr)
                     {
@@ -98,134 +102,114 @@ namespace Synapse
                         bool xp = int.TryParse(xy[0], out int x);
                         bool yp = int.TryParse(xy[1], out int y);
                         if (xp && yp)
-                            toggle.Size = new Size(x, y);
+                            es.Size = new Size(x, y);
                     }
                     else if (val is GH_Rectangle grec)
                     {
                         int x = (int)grec.Value.X.Length;
                         int y = (int)grec.Value.Y.Length;
-                        toggle.Size = new Size(x, y);
+                        es.Size = new Size(x, y);
                     }
                     else if (val is GH_ComplexNumber gcomp)
                     {
                         int x = (int)gcomp.Value.Real;
                         int y = (int)gcomp.Value.Imaginary;
-                        toggle.Size = new Size(x, y);
+                        es.Size = new Size(x, y);
                     }
                     else
-                        try { Util.SetProp(toggle, "Size", Util.GetGooVal(val)); }
+                        try { Util.SetProp(es, "Size", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
-                else if (n.ToLower() == "text" || n.ToLower() == "label")
-                {
-                    if (val is GH_String txt)
-                        toggle.Text = txt.Value;
-                    else
-                        toggle.Text = val.ToString();
-                }
-                else if (n.ToLower() == "tooltip" || n.ToLower() == "tool tip" || n.ToLower() == "hint")
-                {
-                    if (val is GH_String txt)
-                        toggle.ToolTip = txt.Value;
-                    else
-                        toggle.ToolTip = val.ToString();
-                }
-                else if (n.ToLower() == "font" || n.ToLower() == "typeface")
-                {
-                    if (val is GH_String txt)
-                    {
-                        string fam = txt.Value;
-                        try
-                        {
-                            Font efont = new Font(fam, (float)8.25);
-                            toggle.Font = efont;
-                        }
-                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
-                    }
-                    else if (val is Font f)
-                        toggle.Font = f;
-                    else
-                        try { Util.SetProp(toggle, "Font", Util.GetGooVal(val)); }
-                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
-                }
-                else if (n.ToLower() == "textcolor" || n.ToLower() == "fontcolor")
+                else if (n.ToLower() == "color" || n.ToLower() == "activecolor")
                 {
                     if (val is GH_Colour gclr)
-                        toggle.TextColor = Color.FromArgb(gclr.Value.ToArgb());
+                        es.ActiveColor = Color.FromArgb(gclr.Value.ToArgb());
                     else if (val is GH_String gstr)
                     {
                         if (Color.TryParse(gstr.Value, out Color clr))
-                            toggle.TextColor = clr;
+                            es.ActiveColor = clr;
                     }
                     else if (val is GH_Point pt)
                     {
                         Color clr = Color.FromArgb((int)pt.Value.X, (int)pt.Value.Y, (int)pt.Value.Z);
-                        toggle.TextColor = clr;
+                        es.ActiveColor = clr;
                     }
                     else if (val is GH_Vector vec)
                     {
                         Color clr = Color.FromArgb((int)vec.Value.X, (int)vec.Value.Y, (int)vec.Value.Z);
-                        toggle.TextColor = clr;
+                        es.ActiveColor = clr;
                     }
                     else if (val is Color etoclr)
-                        toggle.TextColor = etoclr;
+                        es.ActiveColor = etoclr;
                     else
-                        try { Util.SetProp(toggle, "TextColor", Util.GetGooVal(val)); }
+                        try { Util.SetProp(es, "ActiveColor", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
-                else if (n.ToLower() == "image")
+                else if (n.ToLower() == "inactivecolor" || n.ToLower()=="backgroundcolor")
                 {
-                    if (val is GH_String gstr)
+                    if (val is GH_Colour gclr)
+                        es.InactiveColor = Color.FromArgb(gclr.Value.ToArgb());
+                    else if (val is GH_String gstr)
                     {
-                        Bitmap img = new Bitmap(gstr.Value);
-                        toggle.Image = img;
+                        if (Color.TryParse(gstr.Value, out Color clr))
+                            es.InactiveColor = clr;
                     }
+                    else if (val is GH_Point pt)
+                    {
+                        Color clr = Color.FromArgb((int)pt.Value.X, (int)pt.Value.Y, (int)pt.Value.Z);
+                        es.InactiveColor = clr;
+                    }
+                    else if (val is GH_Vector vec)
+                    {
+                        Color clr = Color.FromArgb((int)vec.Value.X, (int)vec.Value.Y, (int)vec.Value.Z);
+                        es.InactiveColor = clr;
+                    }
+                    else if (val is Color etoclr)
+                        es.InactiveColor = etoclr;
                     else
-                        try { Util.SetProp(toggle, "Image", Util.GetGooVal(val)); }
+                        try { Util.SetProp(es, "InactiveColor", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
-                else if (n.ToLower() == "imageposition" || n.ToLower() == "imageplacement")
+                else if (n.ToLower() == "knobcolor" || n.ToLower() == "handlecolor")
                 {
-                    if (val is GH_String gstr)
-                        switch (gstr.Value.ToLower())
-                        {
-                            case "left":
-                                toggle.ImagePosition = ButtonImagePosition.Left;
-                                break;
-                            case "right":
-                                toggle.ImagePosition = ButtonImagePosition.Right;
-                                break;
-                            case "above":
-                                toggle.ImagePosition = ButtonImagePosition.Above;
-                                break;
-                            case "below":
-                                toggle.ImagePosition = ButtonImagePosition.Below;
-                                break;
-                            case "overlay":
-                                toggle.ImagePosition = ButtonImagePosition.Overlay;
-                                break;
-                            case "overlap":
-                                toggle.ImagePosition = ButtonImagePosition.Overlay;
-                                break;
-                            default:
-                                toggle.ImagePosition = ButtonImagePosition.Left;
-                                break;
-                        }
-                    else if (val is GH_Integer gint)
-                        try { toggle.ImagePosition = (ButtonImagePosition)gint.Value; }
-                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Error, ex.Message); }
+                    if (val is GH_Colour gclr)
+                        es.KnobColor = Color.FromArgb(gclr.Value.ToArgb());
+                    else if (val is GH_String gstr)
+                    {
+                        if (Color.TryParse(gstr.Value, out Color clr))
+                            es.KnobColor = clr;
+                    }
+                    else if (val is GH_Point pt)
+                    {
+                        Color clr = Color.FromArgb((int)pt.Value.X, (int)pt.Value.Y, (int)pt.Value.Z);
+                        es.KnobColor = clr;
+                    }
+                    else if (val is GH_Vector vec)
+                    {
+                        Color clr = Color.FromArgb((int)vec.Value.X, (int)vec.Value.Y, (int)vec.Value.Z);
+                        es.KnobColor = clr;
+                    }
+                    else if (val is Color etoclr)
+                        es.KnobColor = etoclr;
                     else
-                        try { Util.SetProp(toggle, "ImagePosition", Util.GetGooVal(val)); }
+                        try { Util.SetProp(es, "KnobColor", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                }
+                else if (n.ToLower() == "tooltip" || n.ToLower() == "tool tip" || n.ToLower() == "hint")
+                {
+                    if (val is GH_String txt)
+                        es.ToolTip = txt.Value;
+                    else
+                        es.ToolTip = val.ToString();
                 }
                 else
-                    try { Util.SetProp(toggle, n, Util.GetGooVal(val)); }
+                    try { Util.SetProp(es, n, Util.GetGooVal(val)); }
                     catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+
             }
+            DA.SetData(1, new GH_ObjectWrapper(es));
 
-            DA.SetData(1, new GH_ObjectWrapper(toggle));
-
-            PropertyInfo[] allprops = toggle.GetType().GetProperties();
+            PropertyInfo[] allprops = es.GetType().GetProperties();
             List<string> printouts = new List<string>();
             foreach (PropertyInfo prop in allprops)
                 if (prop.CanWrite)
@@ -244,17 +228,12 @@ namespace Synapse
             }
         }
 
-        public override GH_Exposure Exposure 
-        {
-            get { return GH_Exposure.hidden; }
-        }
-
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("a0f20b58-ac54-4cc9-a615-f2ea2772e211"); }
+            get { return new Guid("726109F5-EA8E-42B4-B97C-FD63B86CA4C8"); }
         }
     }
 }

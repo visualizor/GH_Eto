@@ -1303,4 +1303,119 @@ namespace Synapse
             }
         }
     }
+
+    internal class ESwitch : Drawable
+    {
+        private bool _isOn;
+        public Color ActiveColor = Colors.DarkGray;
+        public Color InactiveColor = Colors.LightGrey;
+        public Color KnobColor = Colors.White;
+
+        /// <summary>
+        ///  Fires whenever the toggle changes state.
+        /// </summary>
+        public event EventHandler<EventArgs> Toggled;
+
+        /// <summary>
+        ///  Gets or sets the toggle state (true for On, false for Off).
+        /// </summary>
+        public bool IsOn
+        {
+            get => _isOn;
+            private set
+            {
+                if (_isOn != value)
+                {
+                    _isOn = value;
+                    Invalidate();//queues repaint
+                    OnToggled();
+                }
+            }
+        }
+
+        public ESwitch()
+        {
+            // Set a preferred size (can be changed to suit your design).
+            Size = new Size(50, 25);
+
+            // Handle mouse clicks.
+            MouseDown += (sender, e) =>
+            {
+                if (e.Buttons == MouseButtons.Primary)
+                {
+                    // Toggle the current state.
+                    IsOn = !IsOn;
+                }
+            };
+
+            Paint += OnPaint;
+        }
+
+        
+        private void OnPaint(object sender, PaintEventArgs e)
+        {
+            var g = e.Graphics;
+            g.AntiAlias = true;
+
+            // Basic geometry params
+            float cornerR = Height / 2f;
+
+            // Colors and styling (customize as desired)
+            var backgroundColor = _isOn ? ActiveColor : InactiveColor;
+            var togglecirclr = KnobColor;
+
+            // Draw the background track as a rounded rectangle
+            var bgRect = new RectangleF(0, 0, Width, Height);
+            using (var path = new GraphicsPath())
+            {
+                AddRoundedRectangle(path, bgRect, cornerR);
+                using (var brush = new SolidBrush(backgroundColor))
+                {
+                    g.FillPath(brush, path);
+                }
+            }
+
+            // Position of the toggle circle
+            float cirDia = Height - 4;
+            float cirY = 2;
+            float cirX = _isOn ? (Width - cirDia - 2) : 2;
+
+            // Draw the circle
+            g.FillEllipse(togglecirclr, cirX, cirY, cirDia, cirDia);
+        }
+
+        // ADDS a helper method for the rounded rectangle
+        private void AddRoundedRectangle(GraphicsPath path, RectangleF rect, float radius)
+        {
+            // Ensure radius isn't bigger than half the smallest dimension
+            radius = Math.Min(radius, Math.Min(rect.Width, rect.Height) / 2);
+
+            float x = rect.X;
+            float y = rect.Y;
+            float dia = radius * 2;
+
+            // Top-left arc
+            path.AddArc(x, y, dia, dia, 180, 90);
+            // Top edge
+            path.LineTo(x + rect.Width - radius, y);
+            // Top-right arc
+            path.AddArc(x + rect.Width - dia, y, dia, dia, 270, 90);
+            // Right edge
+            path.LineTo(x + rect.Width, y + rect.Height - radius);
+            // Bottom-right arc
+            path.AddArc(x + rect.Width - dia, y + rect.Height - dia, dia, dia, 0, 90);
+            // Bottom edge
+            path.LineTo(x + radius, y + rect.Height);
+            // Bottom-left arc
+            path.AddArc(x, y + rect.Height - dia, dia, dia, 90, 90);
+            path.CloseFigure();
+        }
+
+
+        protected virtual void OnToggled()
+        {
+            Toggled?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
 }

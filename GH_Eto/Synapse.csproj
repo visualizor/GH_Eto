@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Containers\EtoDynaLO.cs" />
+    <Compile Include="Ctrls\EtoSwitch.cs" />
     <Compile Include="Obsoletes\EtoDynamicLO_OBSOLETE.cs" />
     <Compile Include="Containers\EtoExpander.cs" />
     <Compile Include="Containers\EtoGrid.cs" />

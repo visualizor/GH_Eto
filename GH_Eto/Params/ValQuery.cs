@@ -157,6 +157,11 @@ namespace Synapse
                 listenees.Add(webf.ID);
                 webf.DocumentLoading += OnWebView;
             }
+            else if (ctrl is ESwitch esw)
+            {
+                listenees.Add(esw.ID);
+                esw.Toggled += OnCtrl;
+            }
             else
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " unrecognized control detected");
         }
@@ -200,6 +205,8 @@ namespace Synapse
                 val_out.Add(new GH_ObjectWrapper(fp.FilePath));
             else if (ctrl is ColorPicker cp)
                 val_out.Add(new GH_ObjectWrapper(cp.Value.ToString()));
+            else if (ctrl is ESwitch esw)
+                val_out.Add(new GH_ObjectWrapper(esw.IsOn));
             else if (ctrl is WebForm webf)
             {
                 GH_ObjectWrapper[] vs = new GH_ObjectWrapper[webf.OrderedKeys.Count];
