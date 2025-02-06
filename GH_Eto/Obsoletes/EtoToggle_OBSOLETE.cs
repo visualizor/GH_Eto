@@ -9,12 +9,12 @@ using Eto.Drawing;
 
 namespace Synapse
 {
-    public class EtoToggle : GH_Component
+    public class EtoToggle_OBSOLETE : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the EtoToggle class.
         /// </summary>
-        public EtoToggle()
+        public EtoToggle_OBSOLETE()
           : base("SnpToggle", "SToggle",
               "a special toggle button",
               "Synapse", "Controls")
