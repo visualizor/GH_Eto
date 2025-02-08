@@ -269,7 +269,7 @@ namespace Synapse
                 {
                     dyna.BeginVertical();
                     dyna.BeginHorizontal();
-                    dyna.Add(c, stretchy, stretchy);
+                    dyna.AddAutoSized(c, xscale:stretchy, yscale:stretchy);
                     dyna.EndHorizontal();
                     dyna.EndVertical();
                 }

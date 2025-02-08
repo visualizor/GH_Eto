@@ -1337,6 +1337,7 @@ namespace Synapse
         {
             // Set a preferred size (can be changed to suit your design).
             Size = new Size(50, 25);
+            this.Cursor = Cursors.Pointer;
 
             // Handle mouse clicks.
             MouseDown += (sender, e) =>

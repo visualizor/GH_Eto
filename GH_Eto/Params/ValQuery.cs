@@ -400,10 +400,12 @@ return valstr;", prm));
                         {
                             Relisten(ctrl);
                             listening = true;
+                            outputs.AppendRange(GetCtrlValue(ctrl), pth);
                         }
                         else if (!listening)
                         {
                             listening = true;
+                            outputs.AppendRange(GetCtrlValue(ctrl), pth);
                         }
                         else
                         {
