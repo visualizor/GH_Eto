@@ -85,10 +85,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Containers\EtoDynaLO.cs" />
+    <Compile Include="Containers\EtoExpander.cs" />
+    <Compile Include="Containers\EtoGroupBox.cs" />
+    <Compile Include="Containers\EtoScroll.cs" />
+    <Compile Include="Containers\EtoStackLO.cs" />
+    <Compile Include="Containers\EtoTableLO.cs" />
+    <Compile Include="Containers\EtoTabView.cs" />
     <Compile Include="Ctrls\EtoSwitch.cs" />
     <Compile Include="Graphs\EtoDiv.cs" />
     <Compile Include="Obsoletes\EtoDynamicLO_OBSOLETE.cs" />
-    <Compile Include="Containers\EtoExpander.cs" />
+    <Compile Include="Obsoletes\EtoXpdr_OBSOLETE.cs" />
     <Compile Include="Containers\EtoGrid.cs" />
     <Compile Include="Containers\WebCtrls.cs" />
     <Compile Include="Containers\RCP.cs" />
@@ -99,10 +105,10 @@
     <Compile Include="Obsoletes\EtoToggle_OBSOLETE.cs" />
     <Compile Include="Ctrls\NumUpDnGH.cs" />
     <Compile Include="Ctrls\Slider2D.cs" />
-    <Compile Include="Containers\EtoGroupBox.cs" />
-    <Compile Include="Containers\EtoScroll.cs" />
-    <Compile Include="Containers\EtoTableLO.cs" />
-    <Compile Include="Containers\EtoTabView.cs" />
+    <Compile Include="Obsoletes\EtoGrpBox_OBSOLETE.cs" />
+    <Compile Include="Obsoletes\EtoScroll_OBSOLETE.cs" />
+    <Compile Include="Obsoletes\EtoTableLO_OBSOLETE.cs" />
+    <Compile Include="Obsoletes\EtoTabView_OBSOLETE.cs" />
     <Compile Include="Obsoletes\EtoButton_OBSOLETE.cs" />
     <Compile Include="Ctrls\EtoCheckBox.cs" />
     <Compile Include="Ctrls\EtoComboBox.cs" />
@@ -126,7 +132,6 @@
     <Compile Include="Params\EtoFont.cs" />
     <Compile Include="Ctrls\EtoNumUD.cs" />
     <Compile Include="Ctrls\EtoSlider.cs" />
-    <Compile Include="Containers\EtoStackLO.cs" />
     <Compile Include="Ctrls\EtoTextBox.cs" />
     <Compile Include="Containers\EtoWindow.cs" />
     <Compile Include="Params\EtoFormStyle.cs" />

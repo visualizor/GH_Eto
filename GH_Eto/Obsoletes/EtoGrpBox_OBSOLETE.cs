@@ -1,48 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using Eto.Forms;
+using wf=System.Windows.Forms;
 using Eto.Drawing;
+using Eto.Forms;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-using wf = System.Windows.Forms;
-using GH_IO.Serialization;
 
 namespace Synapse
 {
-    public class EtoExpander : GH_Component
+    public class EtoGrpBox_OBSOLETE : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the EtoExpander class.
+        /// Initializes a new instance of the EtoGroupBox class.
         /// </summary>
-        public EtoExpander()
-          : base("SnpExpander", "SXpdr",
-              "expand/collapse controls",
+        public EtoGrpBox_OBSOLETE()
+          : base("SnpGroup", "SGr",
+              "group box container",
               "Synapse", "Containers")
         {
-        }
-
-        protected bool stretchy = false;
-        protected void OnStretch(object s, EventArgs e)
-        {
-            stretchy = !stretchy;
-            ExpireSolution(true);
         }
 
         public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
         {
             base.AppendAdditionalMenuItems(menu);
-            try
-            {
-                menu.Items.Add(stretchy ? "Fix control sizes" : "Flex control sizes", null, OnStretch);
-                wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
-                click.ToolTipText = "put all properties of this control in a check list";
-            }
-            catch (NullReferenceException) { }
+            wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
+            click.ToolTipText = "put all properties of this control in a check list";
             Util.ListPropLoc = Attributes.Pivot;
-            Expander dummy = new Expander();
+            GroupBox dummy = new GroupBox();
             Util.ListPropType = dummy.GetType();
             dummy.Dispose();
         }
@@ -84,9 +70,8 @@ namespace Synapse
             DA.GetDataList(0, props);
             DA.GetDataList(1, vals);
             DA.GetDataList(2, ctrls);
-            Message = stretchy ? "ResizeCtrl" : "FixedCtrl";
 
-            Expander xpdr = new Expander();
+            GroupBox gb = new GroupBox(); // container doesn't need id initialized
 
             for (int i = 0; i < props.Count; i++)
             {
@@ -104,12 +89,12 @@ namespace Synapse
                     if (val is GH_Point pt)
                     {
                         Size winsize = new Size((int)pt.Value.X, (int)pt.Value.Y);
-                        xpdr.Size = winsize;
+                        gb.Size = winsize;
                     }
                     else if (val is GH_Vector vec)
                     {
                         Size winsize = new Size((int)vec.Value.X, (int)vec.Value.Y);
-                        xpdr.Size = winsize;
+                        gb.Size = winsize;
                     }
                     else if (val is GH_String sstr)
                     {
@@ -117,7 +102,7 @@ namespace Synapse
                         bool xp = int.TryParse(xy[0], out int x);
                         bool yp = int.TryParse(xy[1], out int y);
                         if (xp && yp)
-                            xpdr.Size = new Size(x, y);
+                            gb.Size = new Size(x, y);
                         else
                             AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " text cannot be parsed as Size object");
                     }
@@ -125,26 +110,26 @@ namespace Synapse
                     {
                         int x = (int)grec.Value.X.Length;
                         int y = (int)grec.Value.Y.Length;
-                        xpdr.Size = new Size(x, y);
+                        gb.Size = new Size(x, y);
                     }
                     else if (val is GH_ComplexNumber gcomp)
                     {
                         int x = (int)gcomp.Value.Real;
                         int y = (int)gcomp.Value.Imaginary;
-                        xpdr.Size = new Size(x, y);
+                        gb.Size = new Size(x, y);
                     }
                     else
-                        try { Util.SetProp(xpdr, "Size", Util.GetGooVal(val)); }
+                        try { Util.SetProp(gb, "Size", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
                 else if (n.ToLower() == "padding")
                 {
                     if (val is GH_Integer ghi)
-                        xpdr.Padding = ghi.Value;
+                        gb.Padding = ghi.Value;
                     else if (val is GH_String gstr)
                     {
                         if (int.TryParse(gstr.Value, out int v))
-                            xpdr.Padding = v;
+                            gb.Padding = v;
                         else if (gstr.Value.Split(',') is string[] xy)
                         {
                             if (xy.Length == 2)
@@ -152,7 +137,7 @@ namespace Synapse
                                 bool i0 = int.TryParse(xy[0], out int n0);
                                 bool i1 = int.TryParse(xy[1], out int n1);
                                 if (i0 && i1)
-                                    xpdr.Padding = new Padding(n0, n1);
+                                    gb.Padding = new Padding(n0, n1);
                                 else
                                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " text cannot be parsed as Padding object");
                             }
@@ -163,50 +148,57 @@ namespace Synapse
                                 bool i2 = int.TryParse(xy[2], out int n2);
                                 bool i3 = int.TryParse(xy[3], out int n3);
                                 if (i0 && i1 && i2 && i3)
-                                    xpdr.Padding = new Padding(n0, n1, n2, n3);
+                                    gb.Padding = new Padding(n0, n1, n2, n3);
                                 else
                                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " text cannot be parsed as Padding object");
                             }
                         }
                     }
                     else if (val is GH_Number gnum)
-                        xpdr.Padding = (int)gnum.Value;
+                        gb.Padding = (int)gnum.Value;
                     else if (val is GH_Point pt)
-                        xpdr.Padding = new Padding((int)pt.Value.X, (int)pt.Value.Y);
+                        gb.Padding = new Padding((int)pt.Value.X, (int)pt.Value.Y);
                     else if (val is GH_Vector vec)
-                        xpdr.Padding = new Padding((int)vec.Value.X, (int)vec.Value.Y);
+                        gb.Padding = new Padding((int)vec.Value.X, (int)vec.Value.Y);
                     else if (val is GH_Rectangle grec)
                     {
                         int x = (int)grec.Value.X.Length;
                         int y = (int)grec.Value.Y.Length;
-                        xpdr.Padding = new Padding(x, y);
+                        gb.Padding = new Padding(x, y);
                     }
                     else if (val is GH_ComplexNumber gcomp)
                     {
                         int x = (int)gcomp.Value.Real;
                         int y = (int)gcomp.Value.Imaginary;
-                        xpdr.Padding = new Padding(x, y);
+                        gb.Padding = new Padding(x, y);
                     }
                     else
-                        try { Util.SetProp(xpdr, "Padding", Util.GetGooVal(val)); }
+                        try { Util.SetProp(gb, "Padding", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
+                else if (n.ToLower() == "text" || n.ToLower() == "title")
+                {
+                    if (val is GH_String gstr)
+                        gb.Text = gstr.Value;
+                    else
+                        gb.Text = val.ToString();
+                }
                 else
-                    try { Util.SetProp(xpdr, n, Util.GetGooVal(val)); }
+                    try { Util.SetProp(gb, n, Util.GetGooVal(val)); }
                     catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
             }
 
             DynamicLayout content = new DynamicLayout() { DefaultPadding = 1, };
             foreach (GH_ObjectWrapper ghobj in ctrls)
                 if (ghobj.Value is Control ctrl)
-                    content.AddAutoSized(ctrl,xscale:stretchy, yscale:stretchy);
+                    content.AddAutoSized(ctrl);
                 else
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " one or more object cannot be added\n are they non-Synapse components?");
-            xpdr.Content = content;
+            gb.Content = content;
 
-            DA.SetData(1, new GH_ObjectWrapper(xpdr));
+            DA.SetData(1, new GH_ObjectWrapper(gb));
 
-            PropertyInfo[] allprops = xpdr.GetType().GetProperties();
+            PropertyInfo[] allprops = gb.GetType().GetProperties();
             List<string> printouts = new List<string>();
             foreach (PropertyInfo prop in allprops)
                 if (prop.CanWrite)
@@ -214,17 +206,11 @@ namespace Synapse
             DA.SetDataList(0, printouts);
         }
 
-        public override bool Write(GH_IWriter writer)
-        {
-            writer.SetBoolean("stretchy", stretchy);
-            return base.Write(writer);
-        }
-        public override bool Read(GH_IReader reader)
-        {
-            reader.TryGetBoolean("stretchy", ref stretchy);
-            return base.Read(reader);
-        }
 
+        public override GH_Exposure Exposure
+        {
+            get { return GH_Exposure.hidden; }
+        }
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -233,7 +219,7 @@ namespace Synapse
         {
             get
             {
-                return Properties.Resources.expander;
+                return Properties.Resources.group;
             }
         }
 
@@ -242,7 +228,7 @@ namespace Synapse
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("3D4DB0AE-8C94-42DD-860D-D111C623FEA4"); }
+            get { return new Guid("48e7d711-7310-43dd-b10f-059c1d4b1b49"); }
         }
     }
 }

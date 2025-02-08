@@ -6,41 +6,27 @@ using Eto.Drawing;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-using wf = System.Windows.Forms;
-using GH_IO.Serialization;
+using wf=System.Windows.Forms;
 
 namespace Synapse
 {
-    public class EtoScroll : GH_Component
+    public class EtoScroll_OBSOLETE : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the EtoScroll class.
         /// </summary>
-        public EtoScroll()
+        public EtoScroll_OBSOLETE()
           : base("SnpScroll", "SScroll",
               "scrollable container",
               "Synapse", "Containers")
         {
         }
 
-        protected bool stretchy = false;
-
-        protected void OnStretch(object s, EventArgs e)
-        {
-            stretchy = !stretchy;
-            ExpireSolution(true);
-        }
-
         public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
         {
             base.AppendAdditionalMenuItems(menu);
-            try
-            {
-                wf.ToolStripMenuItem stretch = menu.Items.Add(stretchy ? "Fix control sizes" : "Flex control sizes", null, OnStretch) as wf.ToolStripMenuItem;
-                wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
-                click.ToolTipText = "put all properties of this control in a check list";
-            }
-            catch (NullReferenceException) { }
+            wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
+            click.ToolTipText = "put all properties of this control in a check list";
             Util.ListPropLoc = Attributes.Pivot;
             Scrollable dummy = new Scrollable();
             Util.ListPropType = dummy.GetType();
@@ -84,13 +70,12 @@ namespace Synapse
             DA.GetDataList(0, props);
             DA.GetDataList(1, vals);
             DA.GetDataList(2, ctrls);
-            Message = stretchy ? "ResizeCtrl" : "FixedCtrl";
 
             Scrollable scroll = new Scrollable();
             DynamicLayout layout = new DynamicLayout();
             foreach (GH_ObjectWrapper gho in ctrls)
                 if (gho.Value is Control c)
-                    layout.AddAutoSized(c, xscale:stretchy, yscale:stretchy);
+                    layout.AddAutoSized(c);
             scroll.Content = layout;
 
             for (int i = 0; i < props.Count; i++)
@@ -169,7 +154,7 @@ namespace Synapse
                         }
                     }
                     else if (val is GH_Integer pad)
-                        scroll.Padding = new Padding(pad.Value);
+                        scroll.Padding =  new Padding(pad.Value);
                     else if (val is GH_Rectangle grec)
                     {
                         int x = (int)grec.Value.X.Length;
@@ -186,7 +171,7 @@ namespace Synapse
                         try { Util.SetProp(scroll, "Padding", Util.GetGooVal(val)); }
                         catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
                 }
-                else
+                else   
                     try { Util.SetProp(scroll, n, Util.GetGooVal(val)); }
                     catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
             }
@@ -201,15 +186,9 @@ namespace Synapse
             DA.SetDataList(0, printouts);
         }
 
-        public override bool Write(GH_IWriter writer)
+        public override GH_Exposure Exposure
         {
-            writer.SetBoolean("stretchy", stretchy);
-            return base.Write(writer);
-        }
-        public override bool Read(GH_IReader reader)
-        {
-            reader.TryGetBoolean("stretchy", ref stretchy);
-            return base.Read(reader);
+            get { return GH_Exposure.hidden; }
         }
 
         /// <summary>
@@ -228,7 +207,7 @@ namespace Synapse
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("BF3F19DC-699E-4FBF-9514-DCDC20637380"); }
+            get { return new Guid("1b71fb11-0ad7-4f5d-b713-77ec5a6272ec"); }
         }
     }
 }

@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using wf=System.Windows.Forms;
+using wf = System.Windows.Forms;
 using Eto.Drawing;
 using Eto.Forms;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
+using GH_IO.Serialization;
 
-namespace Synapse.Containers
+namespace Synapse
 {
     public class EtoGroupBox : GH_Component
     {
@@ -22,11 +23,24 @@ namespace Synapse.Containers
         {
         }
 
+        protected bool stretchy = false;
+
+        protected void OnStretch(object s, EventArgs e)
+        {
+            stretchy = !stretchy;
+            ExpireSolution(true);
+        }
+
         public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
         {
             base.AppendAdditionalMenuItems(menu);
-            wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
-            click.ToolTipText = "put all properties of this control in a check list";
+            try
+            {
+                wf.ToolStripMenuItem stretch = menu.Items.Add(stretchy ? "Fix control sizes" : "Flex control sizes", null, OnStretch) as wf.ToolStripMenuItem;
+                wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
+                click.ToolTipText = "put all properties of this control in a check list";
+            }
+            catch (NullReferenceException) { }
             Util.ListPropLoc = Attributes.Pivot;
             GroupBox dummy = new GroupBox();
             Util.ListPropType = dummy.GetType();
@@ -70,6 +84,7 @@ namespace Synapse.Containers
             DA.GetDataList(0, props);
             DA.GetDataList(1, vals);
             DA.GetDataList(2, ctrls);
+            Message = stretchy ? "ResizeCtrl" : "FixedCtrl";
 
             GroupBox gb = new GroupBox(); // container doesn't need id initialized
 
@@ -191,7 +206,7 @@ namespace Synapse.Containers
             DynamicLayout content = new DynamicLayout() { DefaultPadding = 1, };
             foreach (GH_ObjectWrapper ghobj in ctrls)
                 if (ghobj.Value is Control ctrl)
-                    content.AddAutoSized(ctrl);
+                    content.AddAutoSized(ctrl,xscale:stretchy,yscale:stretchy);
                 else
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " one or more object cannot be added\n are they non-Synapse components?");
             gb.Content = content;
@@ -204,6 +219,17 @@ namespace Synapse.Containers
                 if (prop.CanWrite)
                     printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
             DA.SetDataList(0, printouts);
+        }
+
+        public override bool Write(GH_IWriter writer)
+        {
+            writer.SetBoolean("stretchy", stretchy);
+            return base.Write(writer);
+        }
+        public override bool Read(GH_IReader reader)
+        {
+            reader.TryGetBoolean("stretchy", ref stretchy);
+            return base.Read(reader);
         }
 
         /// <summary>
@@ -222,7 +248,7 @@ namespace Synapse.Containers
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("48e7d711-7310-43dd-b10f-059c1d4b1b49"); }
+            get { return new Guid("08826A3F-4757-47C8-AE23-224C0CA9BBE9"); }
         }
     }
 }

@@ -6,41 +6,26 @@ using Eto.Drawing;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using wf = System.Windows.Forms;
-using GH_IO.Serialization;
 
-namespace Synapse.Containers
+namespace Synapse
 {
-    public class EtoTabView : GH_Component
+    public class EtoTabView_OBSOLETE : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the EtoTabView class.
         /// </summary>
-        public EtoTabView()
+        public EtoTabView_OBSOLETE()
           : base("SnpTabbedView", "STabs",
               "tabbed view",
               "Synapse", "Containers")
         {
         }
 
-        protected bool stretchy = true;
-
-        protected void OnStretch(object s, EventArgs e)
-        {
-            stretchy = !stretchy;
-            ExpireSolution(true);
-        }
-
         public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
         {
             base.AppendAdditionalMenuItems(menu);
-            try
-            {
-                menu.Items.Add(stretchy ? "Fix control sizes" : "Flex control sizes", null, OnStretch);
-                wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
-                click.ToolTipText = "put all properties of this control in a check list";
-            }
-            catch (NullReferenceException) { }
-
+            wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
+            click.ToolTipText = "put all properties of this control in a check list";
             Util.ListPropLoc = Attributes.Pivot;
             TabControl dummy = new TabControl();
             Util.ListPropType = dummy.GetType();
@@ -89,11 +74,9 @@ namespace Synapse.Containers
             DA.GetDataList(1, vals);
             DA.GetDataList(2, ctrls);
             DA.GetDataList(3, tabs);
-            Message = stretchy ? "ResizeCtrl" : "FixedCtrl";
-
 
             TabControl tabview = new TabControl();
-            for (int i = 0; i < tabs.Count; i++)
+            for (int i=0; i<tabs.Count; i++)
             {
                 TabPage tp = new TabPage() { Text = tabs[i], };
                 try
@@ -101,7 +84,7 @@ namespace Synapse.Containers
                     if (ctrls[i].Value is Control ctrl)
                     {
                         DynamicLayout layout = new DynamicLayout();
-                        layout.AddAutoSized(ctrl,xscale:stretchy,yscale:stretchy);
+                        layout.AddAutoSized(ctrl);
                         tp.Content = layout;
                     }
                 }
@@ -123,7 +106,7 @@ namespace Synapse.Containers
                     return;
                 }
 
-                if (n.ToLower() == "backgroundcolor" || n.ToLower() == "color" || n.ToLower() == "background color")
+                if (n.ToLower() == "backgroundcolor" || n.ToLower() == "color" || n.ToLower() =="background color")
                 {
                     if (val is GH_Colour gclr)
                         tabview.BackgroundColor = Color.FromArgb(gclr.Value.ToArgb());
@@ -163,17 +146,10 @@ namespace Synapse.Containers
             DA.SetDataList(0, printouts);
         }
 
-        public override bool Write(GH_IWriter writer)
+        public override GH_Exposure Exposure
         {
-            writer.SetBoolean("stretchy", stretchy);
-            return base.Write(writer);
+            get { return GH_Exposure.hidden; }
         }
-        public override bool Read(GH_IReader reader)
-        {
-            reader.TryGetBoolean("stretchy", ref stretchy);
-            return base.Read(reader);
-        }
-
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -191,7 +167,7 @@ namespace Synapse.Containers
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("2A8ADE80-3E75-47C4-9BFF-009C2111BB99"); }
+            get { return new Guid("b9e39632-45c5-4452-a3ae-dd2d2ccba1f7"); }
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Synapse
         }
 
         protected bool hz = false;
-        protected bool stretchy = true;
+        protected bool stretchy = false;
         protected void OnStretch(object s, EventArgs e)
         {
             stretchy = !stretchy;

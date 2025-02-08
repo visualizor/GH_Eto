@@ -7,40 +7,27 @@ using Eto.Drawing;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-using wf = System.Windows.Forms;
-using GH_IO.Serialization;
+using wf=System.Windows.Forms;
 
 namespace Synapse
 {
-    public class EtoExpander : GH_Component
+    public class EtoXpdr_OBSOLETE : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the EtoExpander class.
         /// </summary>
-        public EtoExpander()
+        public EtoXpdr_OBSOLETE()
           : base("SnpExpander", "SXpdr",
               "expand/collapse controls",
               "Synapse", "Containers")
         {
         }
 
-        protected bool stretchy = false;
-        protected void OnStretch(object s, EventArgs e)
-        {
-            stretchy = !stretchy;
-            ExpireSolution(true);
-        }
-
         public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
         {
             base.AppendAdditionalMenuItems(menu);
-            try
-            {
-                menu.Items.Add(stretchy ? "Fix control sizes" : "Flex control sizes", null, OnStretch);
-                wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
-                click.ToolTipText = "put all properties of this control in a check list";
-            }
-            catch (NullReferenceException) { }
+            wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
+            click.ToolTipText = "put all properties of this control in a check list";
             Util.ListPropLoc = Attributes.Pivot;
             Expander dummy = new Expander();
             Util.ListPropType = dummy.GetType();
@@ -84,7 +71,6 @@ namespace Synapse
             DA.GetDataList(0, props);
             DA.GetDataList(1, vals);
             DA.GetDataList(2, ctrls);
-            Message = stretchy ? "ResizeCtrl" : "FixedCtrl";
 
             Expander xpdr = new Expander();
 
@@ -196,10 +182,10 @@ namespace Synapse
                     catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
             }
 
-            DynamicLayout content = new DynamicLayout() { DefaultPadding = 1, };
+            DynamicLayout content = new DynamicLayout() { DefaultPadding = 1,};
             foreach (GH_ObjectWrapper ghobj in ctrls)
                 if (ghobj.Value is Control ctrl)
-                    content.AddAutoSized(ctrl,xscale:stretchy, yscale:stretchy);
+                    content.AddAutoSized(ctrl);
                 else
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " one or more object cannot be added\n are they non-Synapse components?");
             xpdr.Content = content;
@@ -214,17 +200,10 @@ namespace Synapse
             DA.SetDataList(0, printouts);
         }
 
-        public override bool Write(GH_IWriter writer)
+        public override GH_Exposure Exposure 
         {
-            writer.SetBoolean("stretchy", stretchy);
-            return base.Write(writer);
+            get { return GH_Exposure.hidden; }
         }
-        public override bool Read(GH_IReader reader)
-        {
-            reader.TryGetBoolean("stretchy", ref stretchy);
-            return base.Read(reader);
-        }
-
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -242,7 +221,7 @@ namespace Synapse
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("3D4DB0AE-8C94-42DD-860D-D111C623FEA4"); }
+            get { return new Guid("44814b0c-094b-4224-b1e0-a7b92b5c402c"); }
         }
     }
 }

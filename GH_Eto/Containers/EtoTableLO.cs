@@ -6,7 +6,8 @@ using System.Reflection;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-using wf=System.Windows.Forms;
+using wf = System.Windows.Forms;
+using GH_IO.Serialization;
 
 namespace Synapse
 {
@@ -22,11 +23,25 @@ namespace Synapse
         {
         }
 
+        protected bool stretchy = false;
+
+        protected void OnStretch(object s, EventArgs e)
+        {
+            stretchy = !stretchy;
+            ExpireSolution(true);
+        }
+
         public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
         {
             base.AppendAdditionalMenuItems(menu);
-            wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
-            click.ToolTipText = "put all properties of this control in a check list";
+            try
+            {
+                menu.Items.Add(stretchy ? "Fix Ctrl sizes" : "Resize controls", null, OnStretch);
+                wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
+                click.ToolTipText = "put all properties of this control in a check list";
+            }
+            catch (NullReferenceException) { }
+
             Util.ListPropLoc = Attributes.Pivot;
             TableLayout dummy = new TableLayout();
             Util.ListPropType = dummy.GetType();
@@ -78,6 +93,7 @@ namespace Synapse
             DA.GetData(4, ref sizeobj);
             DA.GetDataList(2, ctrls);
             DA.GetDataList(3, locs);
+            Message = stretchy ? "ResizeCtrl" : "FixedCtrl";
 
             // initialize with dimensions
             TableLayout table;
@@ -264,7 +280,7 @@ namespace Synapse
                     {
                         int x = int.Parse(coor[0]);
                         int y = int.Parse(coor[1]);
-                        table.Add(c, x, y);
+                        table.Add(c, x, y, stretchy, stretchy);
                     }
                     catch (Exception ex)
                     {
@@ -285,6 +301,18 @@ namespace Synapse
             DA.SetDataList(0, printouts);
         }
 
+        public override bool Write(GH_IWriter writer)
+        {
+            writer.SetBoolean("stretchy", stretchy);
+            return base.Write(writer);
+        }
+        public override bool Read(GH_IReader reader)
+        {
+            reader.TryGetBoolean("stretchy", ref stretchy);
+            return base.Read(reader);
+        }
+
+
         /// <summary>
         /// Provides an Icon for the component.
         /// </summary>
@@ -301,7 +329,7 @@ namespace Synapse
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("3539ebc6-f995-42ed-be41-f57f7136bb6d"); }
+            get { return new Guid("488C976A-B116-46D6-B3FE-FDC94675032E"); }
         }
     }
 }
