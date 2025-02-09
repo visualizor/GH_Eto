@@ -1419,4 +1419,215 @@ namespace Synapse
         }
     }
 
+    public class RangeSliderEventArgs : EventArgs
+    {
+        public double LowerValue { get; }
+        public double UpperValue { get; }
+
+        public RangeSliderEventArgs(double l, double u)
+        {
+            LowerValue = l;
+            UpperValue = u;
+        }
+    }
+
+    internal class RangeSlider : Drawable
+    {
+        private double min = 5.5;
+        private double max = 13.5;
+        private double step = 0.5; // increment
+        private double lowerVal = 6.5;
+        private double upperVal = 11.0;
+
+        private readonly int knobR = 8;
+        private readonly int trackH = 4;
+        private readonly int padding = 15;
+
+        private bool draggingLower = false;
+        private bool draggingUpper = false;
+        public Color AccentColor { get; set; } = Colors.MediumTurquoise;
+        public Color FontColor { get; set; } = Colors.DarkGray;
+
+        public double MinValue
+        {
+            get => min;
+            set
+            {
+                double rangeLength = max - min; // Preserve original range length
+
+                if (value > max) // If min is set beyond current max, shift max
+                {
+                    min = value;
+                    max = min + rangeLength; // Maintain range size
+
+                    lowerVal = min; // Reset knobs to new bounds
+                    upperVal = max;
+                }
+                else
+                {
+                    min = value;
+                    lowerVal = Math.Max(lowerVal, min); // Keep lowerVal in range
+                }
+
+                Invalidate();
+            }
+        }
+
+        public double MaxValue
+        {
+            get => max;
+            set
+            {
+                double rangeLength = max - min; // Preserve original range length
+
+                if (value < min) // If max is set below current min, shift min
+                {
+                    max = value;
+                    min = max - rangeLength; // Maintain range size
+
+                    lowerVal = min; // Reset knobs to new bounds
+                    upperVal = max;
+                }
+                else
+                {
+                    max = value;
+                    upperVal = Math.Min(upperVal, max); // Keep upperVal in range
+                }
+
+                Invalidate();
+            }
+        }
+
+
+        public double Step
+        {
+            get => step;
+            set
+            {
+                if (value > 0)
+                    step = value;
+            }
+        }
+
+        public double LowerValue { get => lowerVal; }
+        public double UpperValue { get => upperVal; }
+
+        public event EventHandler<RangeSliderEventArgs> ValueChanged;
+
+
+
+        /// <summary>
+        /// main constructor
+        /// </summary>
+        public RangeSlider()
+        {
+            Size = new Size(200, 40); // Set control size
+            MouseDown += OnMouseDown;
+            MouseMove += OnMouseMove;
+            MouseUp += OnMouseUp;
+            Paint += OnPaint;
+        }
+
+        private float ValueToPosition(double val)
+        {
+            return padding + (float)((val - min) / (max - min) * (Width - 2 * padding));
+        }
+
+        private double PositionToValue(float position)
+        {
+            double rawValue = min + (position - padding) / (Width - 2 * padding) * (max - min);
+            double snappedValue = Math.Round((rawValue - min) / step) * step + min;
+            return Math.Max(min, Math.Min(max, snappedValue)); // Clamp to range
+        }
+
+        private void OnPaint(object sender, PaintEventArgs e)
+        {
+            var g = e.Graphics;
+            var trackY = Height / 2;
+
+            float lowerX = ValueToPosition(lowerVal);
+            float upperX = ValueToPosition(upperVal);
+
+            // Draw track
+            g.FillRectangle(Brushes.LightGrey, padding, trackY - trackH / 2, Width - 2 * padding, trackH);
+
+            // Draw selected range
+            g.FillRectangle(AccentColor, lowerX, trackY - trackH / 2-1, upperX - lowerX, trackH+2);
+
+            // Draw knobs
+            g.FillEllipse(Brushes.White, lowerX - knobR, trackY - knobR, knobR * 2, knobR * 2);
+            g.FillEllipse(Brushes.White, upperX - knobR, trackY - knobR, knobR * 2, knobR * 2);
+            g.DrawEllipse(Pens.DarkGray, lowerX - knobR, trackY - knobR, knobR * 2, knobR * 2);
+            g.DrawEllipse(Pens.DarkGray, upperX - knobR, trackY - knobR, knobR * 2, knobR * 2);
+
+            // draw values above knobs
+            float textOffsetY = trackY - knobR - 17; // Adjust height above knobs
+            g.DrawText(SystemFonts.Default(), FontColor, lowerX - 10, textOffsetY, $"{lowerVal}");
+            g.DrawText(SystemFonts.Default(), FontColor, upperX - 10, textOffsetY, $"{upperVal}");
+        
+
+            // Draw values at the ends
+            /*g.DrawText(SystemFonts.Default(), Brushes.Black, padding, trackY + 10, $"{lowerVal}");
+            g.DrawText(SystemFonts.Default(), Brushes.Black, Width - padding - 30, trackY + 10, $"{upperVal}");*/
+        }
+
+        private void OnMouseDown(object sender, MouseEventArgs e)
+        {
+            float lowerX = ValueToPosition(lowerVal);
+            float upperX = ValueToPosition(upperVal);
+
+            if (Math.Abs(e.Location.X - lowerX) <= knobR)
+            {
+                draggingLower = true;
+            }
+            else if (Math.Abs(e.Location.X - upperX) <= knobR)
+            {
+                draggingUpper = true;
+            }
+        }
+
+        private void OnMouseMove(object sender, MouseEventArgs e)
+        {
+            bool changed = false;
+
+            if (draggingLower)
+            {
+                double newLowerVal = Math.Max(min, Math.Min(upperVal - step, PositionToValue(e.Location.X)));
+                if (newLowerVal != lowerVal)
+                {
+                    lowerVal = newLowerVal;
+                    changed = true;
+                }
+            }
+            else if (draggingUpper)
+            {
+                double newUpperVal = Math.Min(max, Math.Max(lowerVal + step, PositionToValue(e.Location.X)));
+                if (newUpperVal != upperVal)
+                {
+                    upperVal = newUpperVal;
+                    changed = true;
+                }
+            }
+
+            if (changed)
+            {
+                Invalidate();
+                OnValueChanged();
+            }
+        }
+
+
+
+        private void OnMouseUp(object sender, MouseEventArgs e)
+        {
+            draggingLower = false;
+            draggingUpper = false;
+        }
+
+        private void OnValueChanged()
+        {
+            ValueChanged?.Invoke(this, new RangeSliderEventArgs(lowerVal, upperVal));
+        }
+
+    }
 }

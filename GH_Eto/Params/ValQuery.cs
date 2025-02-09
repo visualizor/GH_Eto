@@ -162,6 +162,11 @@ namespace Synapse
                 listenees.Add(esw.ID);
                 esw.Toggled += OnCtrl;
             }
+            else if (ctrl is RangeSlider rsl)
+            {
+                listenees.Add(rsl.ID);
+                rsl.ValueChanged += OnCtrl;
+            }
             else
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " unrecognized control detected");
         }
@@ -207,6 +212,8 @@ namespace Synapse
                 val_out.Add(new GH_ObjectWrapper(cp.Value.ToString()));
             else if (ctrl is ESwitch esw)
                 val_out.Add(new GH_ObjectWrapper(esw.IsOn));
+            else if (ctrl is RangeSlider rsl)
+                val_out.Add(new GH_ObjectWrapper(new Interval(rsl.LowerValue, rsl.UpperValue)));
             else if (ctrl is WebForm webf)
             {
                 GH_ObjectWrapper[] vs = new GH_ObjectWrapper[webf.OrderedKeys.Count];

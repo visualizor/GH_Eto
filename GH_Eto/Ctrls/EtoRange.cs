@@ -1,25 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Eto.Forms;
-using Eto.Drawing;
+
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-using Grasshopper.Kernel.Data;
-using Grasshopper.Kernel.Parameters;
-using Grasshopper;
+using Rhino.Geometry;
 
 namespace Synapse
 {
-    public class EtoGrid : GH_Component
+    public class EtoRange : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the EtoGridView class.
+        /// Initializes a new instance of the EtoRange class.
         /// </summary>
-        public EtoGrid()
-          : base("SynapseGridView", "SGV",
-              "contains data in a tabular format",
+        public EtoRange()
+          : base("SnpRangeSlider", "SRange",
+              "slider with upper and lower ends",
               "Synapse", "Controls")
         {
         }
@@ -35,7 +30,6 @@ namespace Synapse
             pManager.AddGenericParameter("Property Value", "V", "values for the property", GH_ParamAccess.list);
             pManager[1].DataMapping = GH_DataMapping.Flatten;
             pManager[1].Optional = true;
-            pManager.AddTextParameter("Data", "D", "data to display\nuse a tree, each branch a row, first branch the headers\nmake sure each branch matches first branch's list length", GH_ParamAccess.tree);
         }
 
         /// <summary>
@@ -44,7 +38,7 @@ namespace Synapse
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
             pManager.AddTextParameter("All Properties", "A", "list of all accessible properties", GH_ParamAccess.list);
-            pManager.AddGenericParameter("Control", "C", "control to go into a container or the listener", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Control", "C", "slider control", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -58,50 +52,29 @@ namespace Synapse
             DA.GetDataList(0, props);
             DA.GetDataList(1, vals);
 
-            DA.GetDataTree(2, out GH_Structure<GH_String> ghtree);
-
-            //to text, skip header row
-            List<string[]> ds = new List<string[]>();
-            for (int bi = 1; bi < ghtree.Branches.Count; bi++)
+            RangeSlider rsl = new RangeSlider() { ID = Guid.NewGuid().ToString(), };
+            for (int i = 0; i < props.Count; i++)
             {
-                string[] t = ghtree.Branches[bi].Select(i => i.Value).ToArray();
-                ds.Add(t);
-            }
-            // instantiate gridview
-            GridView gv = new GridView { DataStore = ds.ToArray(), };
-            for (int hi = 0; hi < ghtree.Branches[0].Count; hi++)
-            {
-                GridColumn gc = new GridColumn
+                string n = props[i];
+                object val;
+                try { val = vals[i].Value; }
+                catch (ArgumentOutOfRangeException)
                 {
-                    HeaderText = ghtree.Branches[0][hi].Value,
-                    DataCell = new TextBoxCell(hi),
-                };
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "P, V should correspond each other");
+                    return;
+                }
 
-                gv.Columns.Add(gc);
-
+                try { Util.SetProp(rsl, n, Util.GetGooVal(val)); }
+                catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
             }
 
-            DA.SetData(1, new GH_ObjectWrapper(gv));
+                DA.SetData(1, new GH_ObjectWrapper(rsl));
+
         }
 
 
-        protected void SortDS(GridView g, int coli)
-        {
-            if (!(g.DataStore is string[][] d) || d.Length == 0)
-                return;
-
-            string[][] sorted = d.OrderBy(r => r[coli]).ToArray();
-
-            g.DataStore = sorted;
-            for (int ri = 0; ri < sorted.Length; ri++)
-                g.ReloadData(ri);
-        }
-
-        public override GH_Exposure Exposure
-        {
-            get { return GH_Exposure.primary; }
-            
-        }
+        public override GH_Exposure Exposure => GH_Exposure.hidden;
+        //TODO: delete this once ready
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -110,7 +83,7 @@ namespace Synapse
         {
             get
             {
-                return Properties.Resources.gridview;
+                return Properties.Resources.domsl;
             }
         }
 
@@ -119,7 +92,7 @@ namespace Synapse
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("cb41ea70-ba6f-40e6-97e1-60f285036f6c"); }
+            get { return new Guid("DBC68FBD-AC36-4BBB-8DB2-0B8B87FB0E05"); }
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Synapse.Containers
         {
         }
 
-        protected bool stretchy = true;
+        protected bool stretchy = false;
 
         protected void OnStretch(object s, EventArgs e)
         {

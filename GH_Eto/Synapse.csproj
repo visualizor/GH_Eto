@@ -91,11 +91,12 @@
     <Compile Include="Containers\EtoStackLO.cs" />
     <Compile Include="Containers\EtoTableLO.cs" />
     <Compile Include="Containers\EtoTabView.cs" />
+    <Compile Include="Ctrls\EtoRange.cs" />
     <Compile Include="Ctrls\EtoSwitch.cs" />
     <Compile Include="Graphs\EtoDiv.cs" />
     <Compile Include="Obsoletes\EtoDynamicLO_OBSOLETE.cs" />
     <Compile Include="Obsoletes\EtoXpdr_OBSOLETE.cs" />
-    <Compile Include="Containers\EtoGrid.cs" />
+    <Compile Include="Graphs\EtoGrid.cs" />
     <Compile Include="Containers\WebCtrls.cs" />
     <Compile Include="Containers\RCP.cs" />
     <Compile Include="Ctrls\DomSlider.cs" />
