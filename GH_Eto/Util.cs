@@ -719,6 +719,10 @@ namespace Synapse
             }
         }
     }
+    
+    /// <summary>
+    /// deprecated. use RangeSlider
+    /// </summary>
     internal class DomainSlider: ImageView, INotifyPropertyChanged
     {
         protected Bitmap img;
@@ -1430,7 +1434,6 @@ namespace Synapse
             UpperValue = u;
         }
     }
-
     internal class RangeSlider : Drawable
     {
         private double min = 5.5;

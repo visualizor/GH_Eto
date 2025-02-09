@@ -7,12 +7,12 @@ using Eto.Drawing;
 
 namespace Synapse.Ctrls
 {
-    public class DomSlider : GH_Component
+    public class DomSlider_OBSOLETE : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the DomSlider class.
         /// </summary>
-        public DomSlider()
+        public DomSlider_OBSOLETE()
           : base("SnpDomSlider", "SDomSl",
               "domain slider",
               "Synapse", "Controls")
@@ -231,7 +231,7 @@ namespace Synapse.Ctrls
 
         public override GH_Exposure Exposure
         {
-            get { return GH_Exposure.secondary; }
+            get { return GH_Exposure.hidden; }
         }
 
         /// <summary>

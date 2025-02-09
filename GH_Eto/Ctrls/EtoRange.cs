@@ -73,7 +73,7 @@ namespace Synapse
         }
 
 
-        public override GH_Exposure Exposure => GH_Exposure.hidden;
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
         //TODO: delete this once ready
 
         /// <summary>

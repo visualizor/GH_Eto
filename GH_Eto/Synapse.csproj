@@ -99,7 +99,7 @@
     <Compile Include="Graphs\EtoGrid.cs" />
     <Compile Include="Containers\WebCtrls.cs" />
     <Compile Include="Containers\RCP.cs" />
-    <Compile Include="Ctrls\DomSlider.cs" />
+    <Compile Include="Obsoletes\DomSlider_OBSOLETE.cs" />
     <Compile Include="Ctrls\EtoBtn.cs" />
     <Compile Include="Ctrls\EtoColorPicker.cs" />
     <Compile Include="Ctrls\EtoPickFile.cs" />
