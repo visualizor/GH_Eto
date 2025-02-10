@@ -9,7 +9,7 @@
 
 
 ## Overview
-Grasshopper plugin that makes graphic user interfaces with the help of `Eto.Forms`. Currently compiled on a Windows machine.
+Grasshopper plugin that makes graphic user interfaces with the help of `Eto.Forms`. Currently compiled on a Windows machine. Special thanks to [Weston](https://www.linkedin.com/in/closedcurve/) for test-driving, providing valueable feedback and bug reports!
 
 First, check out this introductory [article](https://willwang6.wixsite.com/precision/post/2019/01/01/how-to-use-etoforms-in-rhinograsshopper-part-1) on `Eto.Forms` and its use within the Grasshopper context, as well as the [guide](https://developer.rhino3d.com/guides/rhinopython/eto-forms-python/) that McNeel has put together.
 
