@@ -92,7 +92,7 @@ namespace Synapse.Containers
             Message = stretchy ? "ResizeCtrl" : "FixedCtrl";
 
 
-            TabControl tabview = new TabControl();
+            TabControl tabview = new TabControl() { ID = Guid.NewGuid().ToString(), };
             for (int i = 0; i < tabs.Count; i++)
             {
                 TabPage tp = new TabPage() { Text = tabs[i], };

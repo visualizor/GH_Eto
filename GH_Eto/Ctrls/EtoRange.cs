@@ -24,12 +24,14 @@ namespace Synapse
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
+            pManager.AddIntervalParameter("Domain", "D", "interval within which to adjust values\nthis may be overriden by MinValue or MaxValue via P/V", GH_ParamAccess.item, new Interval(0, 20));
             pManager.AddTextParameter("Property", "P", "property to set", GH_ParamAccess.list);
-            pManager[0].DataMapping = GH_DataMapping.Flatten;
-            pManager[0].Optional = true;
-            pManager.AddGenericParameter("Property Value", "V", "values for the property", GH_ParamAccess.list);
             pManager[1].DataMapping = GH_DataMapping.Flatten;
             pManager[1].Optional = true;
+            pManager.AddGenericParameter("Property Value", "V", "values for the property", GH_ParamAccess.list);
+            pManager[2].DataMapping = GH_DataMapping.Flatten;
+            pManager[2].Optional = true;
+            
         }
 
         /// <summary>
@@ -49,10 +51,18 @@ namespace Synapse
         {
             List<string> props = new List<string>();
             List<GH_ObjectWrapper> vals = new List<GH_ObjectWrapper>();
-            DA.GetDataList(0, props);
-            DA.GetDataList(1, vals);
+            Interval Mm = Interval.Unset;
+            DA.GetDataList(1, props);
+            DA.GetDataList(2, vals);
+            DA.GetData(0, ref Mm);
 
-            RangeSlider rsl = new RangeSlider() { ID = Guid.NewGuid().ToString(), };
+            RangeSlider rsl = new RangeSlider()
+            {
+                ID = Guid.NewGuid().ToString(),
+                MaxValue = Mm.T1,
+                MinValue = Mm.T0,
+            };
+
             for (int i = 0; i < props.Count; i++)
             {
                 string n = props[i];
@@ -74,7 +84,6 @@ namespace Synapse
 
 
         public override GH_Exposure Exposure => GH_Exposure.secondary;
-        //TODO: delete this once ready
 
         /// <summary>
         /// Provides an Icon for the component.

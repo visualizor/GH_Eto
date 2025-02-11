@@ -157,6 +157,11 @@ namespace Synapse
                 listenees.Add(webf.ID);
                 webf.DocumentLoading += OnWebView;
             }
+            else if (ctrl is TabControl tabs)
+            {
+                listenees.Add(tabs.ID);
+                tabs.SelectedIndexChanged += OnCtrl;
+            }
             else if (ctrl is ESwitch esw)
             {
                 listenees.Add(esw.ID);
@@ -212,6 +217,8 @@ namespace Synapse
                 val_out.Add(new GH_ObjectWrapper(cp.Value.ToString()));
             else if (ctrl is ESwitch esw)
                 val_out.Add(new GH_ObjectWrapper(esw.IsOn));
+            else if (ctrl is TabControl tabs)
+                val_out.Add(new GH_ObjectWrapper(tabs.SelectedIndex));
             else if (ctrl is RangeSlider rsl)
                 val_out.Add(new GH_ObjectWrapper(new Interval(rsl.LowerValue, rsl.UpperValue)));
             else if (ctrl is WebForm webf)
