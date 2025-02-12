@@ -106,6 +106,9 @@ namespace Synapse
 
     }
 
+    /// <summary>
+    /// tagging whether eto form is a standalone window or in a rhino panel
+    /// </summary>
     internal enum EWinTag
     {
         None,

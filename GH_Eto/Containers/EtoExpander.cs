@@ -86,7 +86,7 @@ namespace Synapse
             DA.GetDataList(2, ctrls);
             Message = stretchy ? "ResizeCtrl" : "FixedCtrl";
 
-            Expander xpdr = new Expander();
+            Expander xpdr = new Expander() { ID = Guid.NewGuid().ToString() ,};
 
             for (int i = 0; i < props.Count; i++)
             {

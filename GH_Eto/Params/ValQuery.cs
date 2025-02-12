@@ -60,7 +60,7 @@ namespace Synapse
                     btn.KeyDown += OnEnterDn;
                     btn.KeyUp += OnEnterUp;
                 }
-                
+
             }
             else if (ctrl is LatentTB tb)
             {
@@ -162,6 +162,11 @@ namespace Synapse
                 listenees.Add(tabs.ID);
                 tabs.SelectedIndexChanged += OnCtrl;
             }
+            else if (ctrl is Expander xpdr)
+            {
+                listenees.Add(xpdr.ID);
+                xpdr.ExpandedChanged += OnCtrl;
+            }
             else if (ctrl is ESwitch esw)
             {
                 listenees.Add(esw.ID);
@@ -218,7 +223,15 @@ namespace Synapse
             else if (ctrl is ESwitch esw)
                 val_out.Add(new GH_ObjectWrapper(esw.IsOn));
             else if (ctrl is TabControl tabs)
+            {
                 val_out.Add(new GH_ObjectWrapper(tabs.SelectedIndex));
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "Listening to an interactive container. Listen to children controls directly to get their values");
+            }
+            else if (ctrl is Expander xpdr)
+            {
+                val_out.Add(new GH_ObjectWrapper(xpdr.Expanded));
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "Listening to an interactive container. Listen to children controls directly to get their values");
+            }
             else if (ctrl is RangeSlider rsl)
                 val_out.Add(new GH_ObjectWrapper(new Interval(rsl.LowerValue, rsl.UpperValue)));
             else if (ctrl is WebForm webf)

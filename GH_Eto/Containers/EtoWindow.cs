@@ -36,18 +36,17 @@ namespace Synapse
         {
             // test if window will be shown in rhino 8
             Type ext = typeof(Rhino.UI.EtoExtensions);
-            MethodInfo extMethod = ext.GetMethod(
+            UISync = ext.GetMethod(
                 "UseRhinoStyle",
                 BindingFlags.Public | BindingFlags.Static,
                 null,
                 new Type[] { typeof(Form) },
                 null
                 );
-            r8plus = extMethod != null;
         }
 
         internal Form EWindow = null;
-        internal bool r8plus = false;
+        internal MethodInfo UISync;
 
         /// <summary>
         /// initialize a new window
@@ -63,21 +62,10 @@ namespace Synapse
                 Tag = EWinTag.Indie,
             };
 
-            if (uitheme && r8plus)
+            if (uitheme && UISync!=null)
             {
                 //use system light/dark theme
-                /*Type ext = typeof(Rhino.UI.EtoExtensions);
-                MethodInfo extMethod = ext.GetMethod(
-                    "UseRhinoStyle",
-                    BindingFlags.Public | BindingFlags.Static,
-                    null,
-                    new Type[] { typeof(Form) }, // plus any other parameters if needed
-                    null
-                    );
-                extMethod?.Invoke(null, new object[] { ew });*/
-                
-                //old code that won't run in Rhino7
-                Rhino.UI.EtoExtensions.UseRhinoStyle(ew);
+                UISync.Invoke(null, new object[] { ew });
             }
 
 
@@ -163,7 +151,7 @@ namespace Synapse
                 wf.ToolStripMenuItem m = menu.Items.Add("Repaint", null, OnRepaint) as wf.ToolStripMenuItem;
                 m.ToolTipText = "check to allow instant control updates\ncontrol values not guaranteed to stay";
                 m.Checked = ctrlredo;
-                if (r8plus)
+                if (UISync!=null)
                 {
                     wf.ToolStripMenuItem theme = menu.Items.Add("Use System Colors", null, OnTheme) as wf.ToolStripMenuItem;
                     theme.Checked = uitheme;
