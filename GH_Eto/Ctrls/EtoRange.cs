@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
@@ -78,8 +79,14 @@ namespace Synapse
                 catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
             }
 
-                DA.SetData(1, new GH_ObjectWrapper(rsl));
+            DA.SetData(1, new GH_ObjectWrapper(rsl));
 
+            PropertyInfo[] allprops = rsl.GetType().GetProperties();
+            List<string> printouts = new List<string>();
+            foreach (PropertyInfo prop in allprops)
+                if (prop.CanWrite)
+                    printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
+            DA.SetDataList(0, printouts);
         }
 
 

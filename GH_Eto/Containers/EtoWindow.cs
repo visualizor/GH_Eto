@@ -12,7 +12,6 @@ using wf = System.Windows.Forms;
 using GH_IO.Serialization;
 using Grasshopper;
 using Rhino.UI;
-using System.Xml.Linq;
 
 // In order to load the result of this wizard, you will also need to
 // add the output bin/ folder of this project to the list of loaded
@@ -35,9 +34,20 @@ namespace Synapse
               "main window",
               "Synapse", "Containers")
         {
+            // test if window will be shown in rhino 8
+            Type ext = typeof(Rhino.UI.EtoExtensions);
+            MethodInfo extMethod = ext.GetMethod(
+                "UseRhinoStyle",
+                BindingFlags.Public | BindingFlags.Static,
+                null,
+                new Type[] { typeof(Form) },
+                null
+                );
+            r8plus = extMethod != null;
         }
 
         internal Form EWindow = null;
+        internal bool r8plus = false;
 
         /// <summary>
         /// initialize a new window
@@ -53,19 +63,23 @@ namespace Synapse
                 Tag = EWinTag.Indie,
             };
 
-            //use system light/dark theme
-            Type ext = typeof(Rhino.UI.EtoExtensions);
-            MethodInfo extMethod = ext.GetMethod(
-                "UseRhinoStyle",
-                BindingFlags.Public | BindingFlags.Static,
-                null,
-                new Type[] { typeof(Form) }, // plus any other parameters if needed
-                null
-                );
-            extMethod?.Invoke(null, new object[] { ew });
-            /*old code that won't run in Rhino7
-             * try { Rhino.UI.EtoExtensions.UseRhinoStyle(ew); }
-            catch (Exception) { }*/
+            if (uitheme && r8plus)
+            {
+                //use system light/dark theme
+                /*Type ext = typeof(Rhino.UI.EtoExtensions);
+                MethodInfo extMethod = ext.GetMethod(
+                    "UseRhinoStyle",
+                    BindingFlags.Public | BindingFlags.Static,
+                    null,
+                    new Type[] { typeof(Form) }, // plus any other parameters if needed
+                    null
+                    );
+                extMethod?.Invoke(null, new object[] { ew });*/
+                
+                //old code that won't run in Rhino7
+                Rhino.UI.EtoExtensions.UseRhinoStyle(ew);
+            }
+
 
             ew.Closing += EWClosing;
             ew.GotFocus += GhDocCheck;
@@ -92,6 +106,7 @@ namespace Synapse
         internal bool ctrlfill = true;
         internal bool ctrlredo = false;
         internal bool ghowned = false;
+        internal bool uitheme = true;
 
         /// <summary>
         /// set the "A" output
@@ -123,10 +138,23 @@ namespace Synapse
             ghowned = !ghowned;
             ExpireSolution(false);
         }
+        private void OnTheme(object s, EventArgs e)
+        {
+            uitheme = !uitheme;
+            try
+            {
+                EWindow.Close();
+                EWindow = null;
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show(ex.Message, MessageBoxType.Warning);
+            }
+            ExpireSolution(true);
+        }
         public override void AppendAdditionalMenuItems(wf.ToolStripDropDown menu)
         {
             base.AppendAdditionalMenuItems(menu);
-            // watch out for compatibility issues on Mac with winforms
             try
             {
                 wf.ToolStripMenuItem i = menu.Items.Add("Fill Window", null, OnFill) as wf.ToolStripMenuItem;
@@ -135,24 +163,32 @@ namespace Synapse
                 wf.ToolStripMenuItem m = menu.Items.Add("Repaint", null, OnRepaint) as wf.ToolStripMenuItem;
                 m.ToolTipText = "check to allow instant control updates\ncontrol values not guaranteed to stay";
                 m.Checked = ctrlredo;
+                if (r8plus)
+                {
+                    wf.ToolStripMenuItem theme = menu.Items.Add("Use System Colors", null, OnTheme) as wf.ToolStripMenuItem;
+                    theme.Checked = uitheme;
+                    theme.ToolTipText = uitheme?"uncheck and recompute controls to adopt user specs":"ignores user spec and follow Rhino UI's color scheme";
+                }
                 wf.ToolStripMenuItem o = menu.Items.Add(
                     ghowned ? "Follow Rhino" : "Follow GH",
                     Properties.Resources.window, OnOwnerChange) as wf.ToolStripMenuItem;
+                
+
                 menu.Items.Add(new wf.ToolStripSeparator());
                 wf.ToolStripMenuItem click = menu.Items.Add("List Properties", null, Util.OnListProps) as wf.ToolStripMenuItem;
                 click.ToolTipText = "put all properties of this control in a check list";
-                Util.ListPropLoc = Attributes.Pivot;
-                Form dummy = new Form();
-                Util.ListPropType = dummy.GetType();
-                dummy.Dispose();
             }
             catch { }
+            Util.ListPropLoc = Attributes.Pivot;
+            Form dummy = new Form();
+            Util.ListPropType = dummy.GetType();
+            dummy.Dispose();
         }
 
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
+        protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddBooleanParameter("Show", "S", "set on true to show window", GH_ParamAccess.item, false);
             pManager.AddTextParameter("Property", "P", "property of window to set", GH_ParamAccess.list);
@@ -169,7 +205,7 @@ namespace Synapse
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
+        protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddTextParameter("All Properties", "A", "list of all accessible properties", GH_ParamAccess.list);
             pManager.AddGenericParameter("Window", "W", "the window object", GH_ParamAccess.item);
@@ -471,6 +507,7 @@ namespace Synapse
             writer.SetBoolean("ctrlfill", ctrlfill);
             writer.SetBoolean("ctrlredo", ctrlredo);
             writer.SetBoolean("ghowned", ghowned);
+            writer.SetBoolean("uitheme", uitheme);
             return base.Write(writer);
         }
         public override bool Read(GH_IReader reader)
@@ -478,6 +515,7 @@ namespace Synapse
             reader.TryGetBoolean("ctrlfill", ref ctrlfill);
             reader.TryGetBoolean("ctrlredo", ref ctrlredo);
             reader.TryGetBoolean("ghowned", ref ghowned);
+            reader.TryGetBoolean("uitheme", ref uitheme);
             return base.Read(reader);
         }
 
