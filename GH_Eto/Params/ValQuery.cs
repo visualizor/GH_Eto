@@ -112,8 +112,8 @@ namespace Synapse
                     csl.slider.ValueChanged += OnCtrl;
                 else
                 {
-                    csl.slider.MouseUp += OnCtrl;
-                    csl.slider.KeyUp += OnEnterUp;
+                    csl.slider.MouseUp += OnSlMouseUp;
+                    //csl.slider.KeyUp += OnEnterUp;
                     csl.UserInputClosed += OnCtrl;
                 }
             }
@@ -288,6 +288,19 @@ namespace Synapse
                 btnpress[btn.ID] = true;
             else return;
             ExpireSolution(true);
+        }
+
+        protected void OnSlMouseUp(object s, MouseEventArgs e)
+        {
+            if (s is Slider sl)
+                if (sl.Tag is ComboSlider csl)
+            {
+                if (e.Buttons == MouseButtons.Alternate)
+                    csl.OnUserVal(s, e);
+                else
+                    ExpireSolution(true);
+            }
+            
         }
         protected void OnCtrl(object s, EventArgs e)
         {

@@ -391,16 +391,16 @@ namespace Synapse
         {
             if (e.Key == Keys.Escape)
             {
-                ParentSL.OnUserInputClosed(e);
-                Close();
+                //ParentSL.OnUserInputClosed(e);
+                Close(); //this would trigger unfocus. no need to call above line
                 return;
             }
             else if (e.Key == Keys.Enter)
             {
                 if (double.TryParse(InputBox.Text, out double userval))
                     ParentSL.SetVal(userval); // out-of-bounds safeguard already built in :)
-                ParentSL.OnUserInputClosed(e);
-                Close();
+                //ParentSL.OnUserInputClosed(e);
+                Close();//this would trigger unfocus. no need to call above line
                 return;
             }
         }
@@ -436,11 +436,12 @@ namespace Synapse
                 MinValue = 0,
                 MaxValue = 10,
                 Value = 5,
+                Tag = this,
             };
             min = slider.MinValue * coef;
             max = slider.MaxValue * coef;
-            slider.MouseDoubleClick += OnUserVal;
-            slider.MouseUp += OnRightMouse;
+            //slider.MouseDoubleClick += OnUserVal;
+            
             slider.ValueChanged += OnSlide;
             UpdateTickers();
 
@@ -466,7 +467,7 @@ namespace Synapse
             val = slider.Value * coef;
             label.Text = val.ToString();
         }
-        protected void OnUserVal(object s, MouseEventArgs e)
+        public void OnUserVal(object s, MouseEventArgs e)
         {
             SliderTB tb = new SliderTB(this)
             {
@@ -486,11 +487,7 @@ namespace Synapse
                 MessageBox.Show(string.Format("ComboSlider: OnUserVal\nContact developer for this error:\n{0}", ex.Message));
             }
         }
-        protected void OnRightMouse(object s, MouseEventArgs e)
-        {
-            if (e.Buttons == MouseButtons.Alternate)
-                OnUserVal(s, e);
-        }
+        
 
         public void SetVal(double v)
         {
@@ -643,7 +640,10 @@ namespace Synapse
             }
         }
     }
-
+    
+    /// <summary>
+    /// deprecated. use RangeSlider
+    /// </summary>
     internal class ComboDomSl: StackLayout
     {
         public DomainSlider DomSl;
@@ -721,8 +721,7 @@ namespace Synapse
                     break;
             }
         }
-    }
-    
+    }    
     /// <summary>
     /// deprecated. use RangeSlider
     /// </summary>
