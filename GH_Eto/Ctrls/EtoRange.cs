@@ -25,7 +25,7 @@ namespace Synapse
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddIntervalParameter("Domain", "D", "interval within which to adjust values\nthis may be overriden by MinValue or MaxValue via P/V", GH_ParamAccess.item, new Interval(0, 20));
+            pManager.AddIntervalParameter("Domain", "D", "Extent of slider values\nMay conflict with setting MinValue or MaxValue via P/V", GH_ParamAccess.item, new Interval(0, 20));
             pManager.AddTextParameter("Property", "P", "property to set", GH_ParamAccess.list);
             pManager[1].DataMapping = GH_DataMapping.Flatten;
             pManager[1].Optional = true;

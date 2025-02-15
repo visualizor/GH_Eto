@@ -33,8 +33,9 @@ namespace Synapse
 
         protected async void Trigger(string txt = "select objects for Synapse", bool nothing = true)
         {
-            await Task.Delay(1);
             running = true;
+            await Task.Delay(1);
+            
             run = false;
             if(RhinoGet.GetMultipleObjects(txt, nothing, otype, out picked) == Result.Success)
                 OnPingDocument().ScheduleSolution(1, (doc) => ExpireSolution(false));
@@ -74,6 +75,8 @@ namespace Synapse
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            if (running) return;
+
             int ot = -1;
             bool click = false;
             bool ontrue = false;

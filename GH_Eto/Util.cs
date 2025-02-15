@@ -422,6 +422,7 @@ namespace Synapse
     {
         public Slider slider;
         public Label label;
+        public int maxdeci = 3;
         public double coef=1.0;
         public double val;
         public bool Live { get; set; } = false;
@@ -437,7 +438,7 @@ namespace Synapse
                 MaxValue = 10,
                 Value = 5,
                 Tag = this,
-            };
+            }; //using tag to track parent
             min = slider.MinValue * coef;
             max = slider.MaxValue * coef;
             //slider.MouseDoubleClick += OnUserVal;
@@ -447,7 +448,7 @@ namespace Synapse
 
             label = new Label();
             val = slider.Value * coef;
-            label.Text = val.ToString();
+            label.Text = val.ToString("0."+new string('#',maxdeci));
 
             Orientation = Orientation.Horizontal;
             Items.Add(slider);
@@ -455,7 +456,6 @@ namespace Synapse
             Spacing = 2;
         }
 
-        //TODO: incorporate custom event for when user key in values
         public event EventHandler UserInputClosed;
         public virtual void OnUserInputClosed(EventArgs e)
         {
@@ -465,7 +465,7 @@ namespace Synapse
         protected void OnSlide(object s, EventArgs e)
         {
             val = slider.Value * coef;
-            label.Text = val.ToString();
+            label.Text = val.ToString("0." + new string('#', maxdeci));
         }
         public void OnUserVal(object s, MouseEventArgs e)
         {
@@ -1313,7 +1313,7 @@ namespace Synapse
     internal class ESwitch : Drawable
     {
         private bool _isOn;
-        public Color ActiveColor = Colors.DarkGray;
+        public Color ActiveColor = Colors.DimGray;
         public Color InactiveColor = Colors.LightGrey;
         public Color KnobColor = Colors.White;
 
@@ -1443,6 +1443,8 @@ namespace Synapse
         private double step = 0.5; // increment
         private double lowerVal = 6.5;
         private double upperVal = 11.0;
+        private int maxdeci = 3;
+        private string labelformat = "0.###";
 
         private readonly int knobR = 8;
         private readonly int trackH = 4;
@@ -1450,8 +1452,8 @@ namespace Synapse
 
         private bool draggingLower = false;
         private bool draggingUpper = false;
-        public Color AccentColor { get; set; } = Colors.MediumTurquoise;
-        public Color FontColor { get; set; } = Colors.DarkGray;
+        public Color AccentColor { get; set; } = Colors.DimGray;
+        public Color FontColor { get; set; } = Colors.Gray;
 
         public double MinValue
         {
@@ -1503,6 +1505,15 @@ namespace Synapse
             }
         }
 
+        public int MaxDecimals
+        {
+            get => maxdeci;
+            set
+            {
+                maxdeci = value;
+                labelformat = "0." + new string('#', maxdeci);
+            }
+        }
 
         public double Step
         {
@@ -1518,7 +1529,6 @@ namespace Synapse
         public double UpperValue { get => upperVal; }
 
         public event EventHandler<RangeSliderEventArgs> ValueChanged;
-
 
 
         /// <summary>
@@ -1567,8 +1577,8 @@ namespace Synapse
 
             // draw values above knobs
             float textOffsetY = trackY - knobR - 17; // Adjust height above knobs
-            g.DrawText(SystemFonts.Default(), FontColor, lowerX - 10, textOffsetY, $"{lowerVal}");
-            g.DrawText(SystemFonts.Default(), FontColor, upperX - 10, textOffsetY, $"{upperVal}");
+            g.DrawText(SystemFonts.Default(), FontColor, lowerX - 10, textOffsetY, $"{lowerVal.ToString(labelformat)}");
+            g.DrawText(SystemFonts.Default(), FontColor, upperX - 10, textOffsetY, $"{upperVal.ToString(labelformat)}");
         
 
             // Draw values at the ends
@@ -1617,7 +1627,7 @@ namespace Synapse
             if (changed)
             {
                 Invalidate();
-                OnValueChanged();
+                OnValueChanged(); //raise value changed event
             }
         }
 

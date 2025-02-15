@@ -135,7 +135,7 @@ namespace Synapse
                         else
                             AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " couldn't parse integer");
                     else if (val is GH_Number gnum)
-                        csl.UpdateTickers((int)Math.Round(gnum.Value,0));
+                        csl.UpdateTickers((int)Math.Round(gnum.Value));
                     else
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " tick count input not a valid number");
                 }
@@ -336,6 +336,20 @@ namespace Synapse
                     else
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " input cannot be interpreted as booleans");
                 }
+                else if (n.ToLower() == "decimals")
+                {
+                    if (val is GH_Integer gint)
+                        csl.maxdeci = gint.Value;
+                    else if (val is GH_String gstr)
+                        if (int.TryParse(gstr.Value, out int ct))
+                            csl.maxdeci = ct;
+                        else
+                            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " couldn't parse integer");
+                    else if (val is GH_Number gnum)
+                        csl.maxdeci = (int)Math.Round(gnum.Value);
+                    else
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Decimals should be set with an integer");
+                }
                 else
                     try { Util.SetProp(csl, n, Util.GetGooVal(val)); }
                     catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
@@ -347,6 +361,7 @@ namespace Synapse
                 "MaxValue: number",
                 "Value: number",
                 "TickCount: integer",
+                "Decimals: integer",
                 "Enabled: boolean", 
                 "SnapToTick: boolean",
                 "SliderWidth: integer",
