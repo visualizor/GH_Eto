@@ -16,7 +16,7 @@ namespace Synapse
         public EtoLegend()
           : base("SnpLegend", "SLegend",
               "chart legend",
-              "Synapse", "Graphs")
+              "Synapse", "Graphics")
         {
         }
 

@@ -20,7 +20,7 @@ namespace Synapse
             NickName = "SHrch";
             Description = "rectangular areas showing proportions";
             Category = "Synapse";
-            SubCategory = "Graphs";
+            SubCategory = "Graphics";
         }
 
         /// <summary>

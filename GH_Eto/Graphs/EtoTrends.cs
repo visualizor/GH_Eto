@@ -18,7 +18,7 @@ namespace Synapse
         public EtoTrends()
           : base("SnpTrends", "STrends",
               "line graph",
-              "Synapse", "Graphs")
+              "Synapse", "Graphics")
         {
         }
 

@@ -16,7 +16,7 @@ namespace Synapse
         public EtoBars()
           : base("SnpHistogram", "SHisto",
               "histograms/bar chart",
-              "Synapse", "Graphs")
+              "Synapse", "Graphics")
         {
         }
 

@@ -20,7 +20,7 @@ namespace Synapse
         public EtoGrid()
           : base("SnpGridView", "SGV",
               "shows data in a tabular format",
-              "Synapse", "Graphs")
+              "Synapse", "Graphics")
         {
         }
 

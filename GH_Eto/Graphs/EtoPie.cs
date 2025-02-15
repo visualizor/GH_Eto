@@ -17,7 +17,7 @@ namespace Synapse
         public EtoPie()
           : base("SnpPieChart", "SPie",
               "pie chart",
-              "Synapse", "Graphs")
+              "Synapse", "Graphics")
         {
         }
 

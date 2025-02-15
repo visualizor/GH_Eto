@@ -18,7 +18,7 @@ namespace Synapse
         public EtoDiv()
           : base("SnpDivider", "SDiv",
               "Divider line for organizing controls",
-              "Synapse", "Graphs")
+              "Synapse", "Graphics")
         {
         }
 
@@ -118,6 +118,7 @@ namespace Synapse
             return base.Read(reader);
         }
 
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
 
 
         /// <summary>
