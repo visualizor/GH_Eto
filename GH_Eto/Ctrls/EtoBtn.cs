@@ -39,15 +39,16 @@ namespace Synapse.Ctrls
                 to.Checked = trueonly;
                 to.ToolTipText = !trueonly ? "check to only fire a true after clicking" : "uncheck to get true while pressed, false after released";
                 click.ToolTipText = "put all properties of this control in a check list";
-                Util.ListPropLoc = Attributes.Pivot;
-                Button dummy = new Button();
-                Util.ListPropType = dummy.GetType();
-                dummy.Dispose();
+                
             }
             catch (NullReferenceException)
             {
                 
             }
+            Util.ListPropLoc = Attributes.Pivot;
+            Button dummy = new Button();
+            Util.ListPropType = dummy.GetType();
+            dummy.Dispose();
         }
 
         protected void OnTO(object s, EventArgs e)

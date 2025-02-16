@@ -93,6 +93,7 @@
     <Compile Include="Containers\EtoTabView.cs" />
     <Compile Include="Ctrls\EtoRange.cs" />
     <Compile Include="Ctrls\EtoSwitch.cs" />
+    <Compile Include="Graphs\EtoBars_.cs" />
     <Compile Include="Graphs\EtoDiv.cs" />
     <Compile Include="Obsoletes\EtoDynamicLO_OBSOLETE.cs" />
     <Compile Include="Obsoletes\EtoXpdr_OBSOLETE.cs" />

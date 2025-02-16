@@ -104,6 +104,15 @@ namespace Synapse
             gdoc.ScheduleSolution(1);
         }
 
+        public static IGH_DocumentObject CtrlCanvasInit(wdraw.PointF loc, Guid cid)
+        {
+            var gcv = Instances.ActiveCanvas;
+            var gsrv = Instances.ComponentServer;
+            var gdoc = gcv.Document;
+            gcv.InstantiateNewObject(cid, loc, false);
+            return gdoc.Objects.Last();
+        }
+
     }
 
     /// <summary>
@@ -1630,7 +1639,6 @@ namespace Synapse
                 OnValueChanged(); //raise value changed event
             }
         }
-
 
 
         private void OnMouseUp(object sender, MouseEventArgs e)
