@@ -15,9 +15,9 @@ namespace Synapse
         /// </summary>
         public EtoBars_()
           : base("SnpHistogram", "SnpHisto",
-              "Description",
+              "experiment with pair init",
               "Synapse", "Graphics")
-        {
+        { //this object is to test pair initialization!
         }
 
         public override void AddedToDocument(GH_Document document)
@@ -26,6 +26,7 @@ namespace Synapse
             var lochere = Attributes.Pivot;
             wdrw.PointF loc = new wdrw.PointF(lochere.X-150, lochere.Y);
             Guid cid = new Guid("0644169d-4da6-41c7-88c0-ff0eaa9663e4");
+            //guid can be hard coded. just look for it in the comp to be pair-init'd
             GH_Component addedcomp = Util.CtrlCanvasInit(loc, cid) as GH_Component;
             Params.Input[0].AddSource(addedcomp.Params.Output[0]);
         }

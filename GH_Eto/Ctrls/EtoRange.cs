@@ -25,7 +25,7 @@ namespace Synapse
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddIntervalParameter("Domain", "D", "Extent of slider values\nMay conflict with setting MinValue or MaxValue via P/V", GH_ParamAccess.item, new Interval(0, 20));
+            pManager.AddIntervalParameter("Domain", "D", "Extent of slider values\nOverridden if \"Range\" is provided in P/V", GH_ParamAccess.item, new Interval(0, 20));
             pManager.AddTextParameter("Property", "P", "property to set", GH_ParamAccess.list);
             pManager[1].DataMapping = GH_DataMapping.Flatten;
             pManager[1].Optional = true;
@@ -60,8 +60,7 @@ namespace Synapse
             RangeSlider rsl = new RangeSlider()
             {
                 ID = Guid.NewGuid().ToString(),
-                MaxValue = Mm.T1,
-                MinValue = Mm.T0,
+                Range = Mm,
             };
 
             for (int i = 0; i < props.Count; i++)
@@ -75,8 +74,23 @@ namespace Synapse
                     return;
                 }
 
-                try { Util.SetProp(rsl, n, Util.GetGooVal(val)); }
-                catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                if (n.ToLower() == "range" || n.ToLower() == "domain")
+                {
+                    if (val is GH_Interval gitvl)
+                        rsl.Range = gitvl.Value;
+                    else if (val is Interval itvl)
+                        rsl.Range = itvl;
+                    else
+                    {
+                        try { Util.SetProp(rsl, "Range", Util.GetGooVal(val)); }
+                        catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                    }
+                }
+                else
+                {
+                    try { Util.SetProp(rsl, n, Util.GetGooVal(val)); }
+                    catch (Exception ex) { AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); }
+                }
             }
 
             DA.SetData(1, new GH_ObjectWrapper(rsl));

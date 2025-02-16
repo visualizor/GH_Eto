@@ -12,6 +12,7 @@ using System.ComponentModel;
 using wdraw = System.Drawing;
 using wf = System.Windows.Forms;
 using Grasshopper.GUI.Canvas;
+using rhg = Rhino.Geometry;
 
 namespace Synapse
 {
@@ -104,6 +105,12 @@ namespace Synapse
             gdoc.ScheduleSolution(1);
         }
 
+        /// <summary>
+        /// instantiate a control on canvas
+        /// </summary>
+        /// <param name="loc">location</param>
+        /// <param name="cid">component GUID</param>
+        /// <returns>document object just added</returns>
         public static IGH_DocumentObject CtrlCanvasInit(wdraw.PointF loc, Guid cid)
         {
             var gcv = Instances.ActiveCanvas;
@@ -1463,55 +1470,61 @@ namespace Synapse
         private bool draggingUpper = false;
         public Color AccentColor { get; set; } = Colors.DimGray;
         public Color FontColor { get; set; } = Colors.Gray;
+        public bool AltKnob { get; set; } = false;
 
-        public double MinValue
+        public rhg.Interval Range
         {
-            get => min;
+            get => new rhg.Interval(min, max);
             set
             {
-                double rangeLength = max - min; // Preserve original range length
+                // Capture the old range length and knob fractions
+                double oldRange = max - min;
+                double fracLower = 0.0;
+                double fracUpper = 1.0;
 
-                if (value > max) // If min is set beyond current max, shift max
+                if (Math.Abs(oldRange) > double.Epsilon)
                 {
-                    min = value;
-                    max = min + rangeLength; // Maintain range size
+                    fracLower = (lowerVal - min) / oldRange;
+                    fracUpper = (upperVal - min) / oldRange;
+                }
 
-                    lowerVal = min; // Reset knobs to new bounds
-                    upperVal = max;
-                }
-                else
+                // Assign new min and max from the Interval
+                min = value.T0;
+                max = value.T1;
+
+                // Handle cases where T1 < T0 by swapping
+                double newRange = max - min;
+                if (newRange < 0)
                 {
-                    min = value;
-                    lowerVal = Math.Max(lowerVal, min); // Keep lowerVal in range
+                    double temp = min;
+                    min = max;
+                    max = temp;
+                    newRange = -newRange;
                 }
+
+                // Recalculate knob positions based on the fractions
+                lowerVal = SnapToStep(min + fracLower * newRange);
+                upperVal = SnapToStep(min + fracUpper * newRange);
+
+                // Clamp knobs to ensure valid positions
+                if (lowerVal < min) lowerVal = min;
+                if (upperVal > max) upperVal = max;
+                if (upperVal < lowerVal) upperVal = lowerVal;
 
                 Invalidate();
             }
         }
-
-        public double MaxValue
+        /// <summary>
+        /// util method to snap val to step increments
+        /// </summary>
+        /// <param name="v">value to modify</param>
+        /// <returns>snapped value</returns>
+        private double SnapToStep(double v)
         {
-            get => max;
-            set
-            {
-                double rangeLength = max - min; // Preserve original range length
-
-                if (value < min) // If max is set below current min, shift min
-                {
-                    max = value;
-                    min = max - rangeLength; // Maintain range size
-
-                    lowerVal = min; // Reset knobs to new bounds
-                    upperVal = max;
-                }
-                else
-                {
-                    max = value;
-                    upperVal = Math.Min(upperVal, max); // Keep upperVal in range
-                }
-
-                Invalidate();
-            }
+            // Snap value to multiples of 'step' starting from 'min'
+            double snapped = min + Math.Round((v - min) / step) * step;
+            // Clamp to ensure it doesn't go beyond min or max
+            return Math.Max(min, Math.Min(snapped, max));
         }
 
         public int MaxDecimals
@@ -1545,7 +1558,7 @@ namespace Synapse
         /// </summary>
         public RangeSlider()
         {
-            Size = new Size(200, 40); // Set control size
+            Size = new Size(200, 45); // Set control size
             MouseDown += OnMouseDown;
             MouseMove += OnMouseMove;
             MouseUp += OnMouseUp;
@@ -1578,11 +1591,41 @@ namespace Synapse
             // Draw selected range
             g.FillRectangle(AccentColor, lowerX, trackY - trackH / 2-1, upperX - lowerX, trackH+2);
 
-            // Draw knobs
-            g.FillEllipse(Brushes.White, lowerX - knobR, trackY - knobR, knobR * 2, knobR * 2);
-            g.FillEllipse(Brushes.White, upperX - knobR, trackY - knobR, knobR * 2, knobR * 2);
-            g.DrawEllipse(Pens.DarkGray, lowerX - knobR, trackY - knobR, knobR * 2, knobR * 2);
-            g.DrawEllipse(Pens.DarkGray, upperX - knobR, trackY - knobR, knobR * 2, knobR * 2);
+            // Draw circle knobs
+            if (AltKnob)
+            {
+                g.FillEllipse(Brushes.White, lowerX - knobR, trackY - knobR, knobR * 2, knobR * 2);
+                g.FillEllipse(Brushes.White, upperX - knobR, trackY - knobR, knobR * 2, knobR * 2);
+                g.DrawEllipse(Pens.DimGray, lowerX - knobR, trackY - knobR, knobR * 2, knobR * 2);
+                g.DrawEllipse(Pens.DimGray, upperX - knobR, trackY - knobR, knobR * 2, knobR * 2);
+            }
+            //Draw pointy knob
+            else
+            {
+                // Define pentagon for lower knob
+                PointF[] lowerKnobPoints = new PointF[]
+                {
+                    new PointF(lowerX - knobR+2.75f, trackY - knobR), // top-left
+                    new PointF(lowerX + knobR-2.75f, trackY - knobR), // top-right
+                    new PointF(lowerX + knobR-2.75f, trackY+trackH/2+2),              // mid-right
+                    new PointF(lowerX, trackY + knobR+2),     // bottom point
+                    new PointF(lowerX - knobR+2.75f, trackY+trackH/2+2),              // mid-left
+                };
+                g.FillPolygon(Brushes.White, lowerKnobPoints);
+                g.DrawPolygon(Pens.DimGray, lowerKnobPoints);
+
+                // Define pentagon for upper knob
+                PointF[] upperKnobPoints = new PointF[]
+                {
+                    new PointF(upperX - knobR+2.75f, trackY - knobR),
+                    new PointF(upperX + knobR-2.75f, trackY - knobR),
+                    new PointF(upperX + knobR-2.75f, trackY + trackH / 2 + 2),
+                    new PointF(upperX, trackY + knobR+2),
+                    new PointF(upperX - knobR+2.75f, trackY + trackH / 2 + 2),
+                };
+                g.FillPolygon(Brushes.White, upperKnobPoints);
+                g.DrawPolygon(Pens.DimGray, upperKnobPoints);
+            }
 
             // draw values above knobs
             float textOffsetY = trackY - knobR - 17; // Adjust height above knobs
@@ -1600,13 +1643,13 @@ namespace Synapse
             float lowerX = ValueToPosition(lowerVal);
             float upperX = ValueToPosition(upperVal);
 
-            if (Math.Abs(e.Location.X - lowerX) <= knobR)
-            {
-                draggingLower = true;
-            }
-            else if (Math.Abs(e.Location.X - upperX) <= knobR)
+            if (Math.Abs(e.Location.X - upperX) <= knobR)
             {
                 draggingUpper = true;
+            }
+            else if (Math.Abs(e.Location.X - lowerX) <= knobR)
+            {
+                draggingLower = true;
             }
         }
 
