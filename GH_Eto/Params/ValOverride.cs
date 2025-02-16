@@ -15,7 +15,7 @@ namespace Synapse
         /// </summary>
         public ValOverride()
           : base("SnpOverride", "SSetVal",
-              "override control values\nthis lets you set the primary value of a control without re-instantiating the entire window",
+              "override control values without re-instantiating the entire window",
               "Synapse", "Parameters")
         {
         }
@@ -25,10 +25,9 @@ namespace Synapse
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Control", "C", "controls to set value for", GH_ParamAccess.list);
-            pManager.AddGenericParameter("Value", "V", "for the following elements this tries to set the primary value\nTextBox: text\nButton: label text\nLabel: text\nCheckBox: boolean (checked)\nGroupBox: label text\nExpander: boolean (expanded)", GH_ParamAccess.list);
-            pManager[0].DataMapping = GH_DataMapping.Flatten;
-            pManager[1].DataMapping = GH_DataMapping.Flatten;
+            pManager.AddTextParameter("Property", "P", "Property names of the control to alter", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Value", "V", "Values to set as the properties\nMatch P list\nEnforce data types - refer to A outputs on components", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Control","S","Any Synapse component\nMostly for controls", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -46,101 +45,46 @@ namespace Synapse
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             List<GH_ObjectWrapper> v = new List<GH_ObjectWrapper>();
-            List<GH_ObjectWrapper> c = new List<GH_ObjectWrapper>();
-            DA.GetDataList(0, c);
+            List<string> p = new List<string>();
+            GH_ObjectWrapper gobj = null;
+            DA.GetDataList(0, p);
             DA.GetDataList(1, v);
-            bool[] r = new bool[c.Count];
+            DA.GetData(2, ref gobj);
+            bool[] r = new bool[p.Count];
 
-            for(int i = 0; i < c.Count; i++)
+            if (gobj.Value is Control ctrl)
             {
-                if (c[i].Value is Control ctrl)
+                for (int i = 0; i < p.Count; i++)
                 {
-                    GH_ObjectWrapper v_wrapped;
-                    try { v_wrapped = v[i]; }
-                    catch (Exception ex)
+                    string n = p[i];
+                    object val;
+                    try { val = v[i].Value; }
+                    catch (ArgumentOutOfRangeException)
                     {
-                        if (ex is IndexOutOfRangeException || ex is ArgumentOutOfRangeException)
-                            v_wrapped = v.Last();
-                        else
-                            throw ex;
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "P, V should correspond each other");
+                        return;
                     }
 
-                    if (ctrl is TextBox tb)
-                        if (v_wrapped.Value is GH_String gstr)
-                        {
-                            tb.Text = gstr.Value;
-                            r.SetValue(true, i);
-                        }
-                        else
-                            r.SetValue(false, i);
-                    else if (ctrl is Button btn)
-                        if (v_wrapped.Value is GH_String gstr)
-                        {
-                            btn.Text = gstr.Value;
-                            r.SetValue(true, i);
-                        }
-                        else
-                            r.SetValue(false, i);
-                    else if (ctrl is Label lbl)
-                        if (v_wrapped.Value is GH_String gstr)
-                        {
-                            lbl.Text = gstr.Value;
-                            r.SetValue(true, i);
-                        }
-                        else
-                            r.SetValue(false, i);
-                    else if (ctrl is CheckBox cb)
-                        if (v_wrapped.Value is GH_Boolean gb)
-                        {
-                            cb.Checked = gb.Value;
-                            r.SetValue(true, i);
-                        }
-                        else
-                            r.SetValue(false, i);
-                    else if (ctrl is GroupBox gb)
-                        if (v_wrapped.Value is GH_String gstr)
-                        {
-                            gb.Text = gstr.Value;
-                            r.SetValue(true, i);
-                        }
-                        else
-                            r.SetValue(false, i);
-                    else if (ctrl is Expander xpdr)
-                        if (v_wrapped.Value is GH_Boolean gbool)
-                        {
-                            xpdr.Expanded = gbool.Value;
-                            r.SetValue(true, i);
-                        }
-                        else
-                            r.SetValue(false, i);
-                    /*else if (ctrl is ComboSlider csl)
-                        if (v_wrapped.Value is GH_Integer gint)
-                        {
-                            csl.slider.Value = (int)(gint.Value / csl.coef);
-                            r.SetValue(true, i);
-                        }
-                        else if (v_wrapped.Value is GH_Number gn)
-                        {
-                            csl.slider.Value = (int)(gn.Value / csl.coef);
-                            r.SetValue(true, i);
-                        }
-                        else
-                            r.SetValue(false, i);*/
-                    else
-                    {
-                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format(" control[{0}] cannot be set", i));
+                    try 
+                    { 
+                        Util.SetProp(ctrl, n, Util.GetGooVal(val));
+                        r.SetValue(true, i);
+                    }
+                    catch (Exception ex) 
+                    { 
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); 
                         r.SetValue(false, i);
                     }
-                        
                 }
-                else
-                {
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format(" control[{0}] not a valid control",i));
-                    r.SetValue(false, i);
-                }
+                DA.SetDataList(0, r);
+            }
+            else
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "object not recognized as a valid Synapse component");
+                return;
             }
 
-            DA.SetDataList(0, r);
+            
         }
 
         /// <summary>
@@ -164,7 +108,7 @@ namespace Synapse
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("bb66300f-c96e-4253-9c8a-a9faa341c052"); }
+            get { return new Guid("BC63AD12-A0C4-4DC2-AB35-8A57B2C6F722"); }
         }
     }
 }

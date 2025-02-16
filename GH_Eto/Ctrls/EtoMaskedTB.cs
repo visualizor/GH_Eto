@@ -177,6 +177,9 @@ All other characters are treated as literal and cannot be moved or deleted.
 ");
         }
 
+
+        public override GH_Exposure Exposure => GH_Exposure.primary | GH_Exposure.obscure;
+
         /// <summary>
         /// Provides an Icon for the component.
         /// </summary>

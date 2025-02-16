@@ -70,6 +70,21 @@ namespace Synapse
         }
 
         /// <summary>
+        /// helper method to list out all properties of an object
+        /// </summary>
+        /// <param name="DA">data access object</param>
+        /// <param name="i">index of target output, must be list</param>
+        /// <param name="o">object</param>
+        public static void OutputProps (IGH_DataAccess DA, int i, object o)
+        {
+            PropertyInfo[] allprops = o.GetType().GetProperties();
+            List<string> printouts = new List<string>();
+            foreach (PropertyInfo prop in allprops)
+                if (prop.CanWrite)
+                    printouts.Add(prop.Name + ": " + prop.PropertyType.ToString());
+            DA.SetDataList(i, printouts);
+        }
+        /// <summary>
         /// location to initialize value list for component properties
         /// </summary>
         public static wdraw.PointF ListPropLoc = wdraw.PointF.Empty;

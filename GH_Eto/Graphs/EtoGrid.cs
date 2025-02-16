@@ -80,7 +80,7 @@ namespace Synapse
                 gv.Columns.Add(gc);
 
             }
-
+            Util.OutputProps(DA, 0, gv);
             DA.SetData(1, new GH_ObjectWrapper(gv));
         }
 

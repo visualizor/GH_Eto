@@ -217,6 +217,8 @@ namespace Synapse
             DA.SetDataList(0, printouts);
         }
 
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
+
         /// <summary>
         /// Provides an Icon for the component.
         /// </summary>
