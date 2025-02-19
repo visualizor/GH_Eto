@@ -87,6 +87,7 @@
     <Compile Include="Containers\EtoDynaLO.cs" />
     <Compile Include="Containers\EtoExpander.cs" />
     <Compile Include="Containers\EtoGroupBox.cs" />
+    <Compile Include="Containers\EtoPopUp.cs" />
     <Compile Include="Containers\EtoScroll.cs" />
     <Compile Include="Containers\EtoStackLO.cs" />
     <Compile Include="Containers\EtoTableLO.cs" />
