@@ -140,8 +140,9 @@
     <Compile Include="Params\EtoSize.cs" />
     <Compile Include="Params\EtoTableXY.cs" />
     <Compile Include="Params\ReSolve.cs" />
-    <Compile Include="Params\RHSelect.cs" />
+    <Compile Include="Obsoletes\RHSelect_OBSOLETE.cs" />
     <Compile Include="Obsoletes\ValOverride_OBSOLETE.cs" />
+    <Compile Include="Params\RHSelect.cs" />
     <Compile Include="Params\ValOverride.cs" />
     <Compile Include="SynapseInfo.cs" />
     <Compile Include="Params\ValQuery.cs" />

@@ -23,7 +23,7 @@ namespace Synapse
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
+        protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddTextParameter("Property", "P", "Property names of the control to alter", GH_ParamAccess.list);
             pManager.AddGenericParameter("Value", "V", "Values to set as the properties\nMatch P list\nEnforce data types - refer to A outputs on components", GH_ParamAccess.list);
@@ -33,7 +33,7 @@ namespace Synapse
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
+        protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddBooleanParameter("Success", "S", "whether the value was set successfully\nfailure typically caused by wrong data type i.e. feeding an integer type into a text type", GH_ParamAccess.list);
         }

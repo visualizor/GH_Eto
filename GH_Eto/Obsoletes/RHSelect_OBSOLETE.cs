@@ -7,19 +7,17 @@ using Rhino.DocObjects;
 using Rhino.Commands;
 using Grasshopper.Kernel.Parameters;
 using Rhino.Input;
-using System.Windows.Forms;
-using Grasshopper.Kernel.Types;
 
 namespace Synapse
 {
-    public class RHSelect : GH_Component
+    public class RHSelect_OBSOLETE : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the RHSelect class.
         /// </summary>
-        public RHSelect()
+        public RHSelect_OBSOLETE()
           : base("RHSelect", "Select",
-              "trigger a selection from Rhino viewport by button",
+              "trigger a selection from Rhino viewport by mouse click",
               "Synapse", "Parameters")
         {
             run = false;
@@ -33,25 +31,24 @@ namespace Synapse
         protected ObjectType otype;
         protected ObjRef[] picked;
 
-        protected async void Trigger(string txt, bool nothing = true)
+        protected async void Trigger(string txt = "select objects for Synapse", bool nothing = true)
         {
             running = true;
             await Task.Delay(1);
-
+            
             run = false;
-            if (RhinoGet.GetMultipleObjects(txt, nothing, otype, out picked) == Result.Success)
+            if(RhinoGet.GetMultipleObjects(txt, nothing, otype, out picked) == Result.Success)
                 OnPingDocument().ScheduleSolution(1, (doc) => ExpireSolution(false));
             running = false;
         }
-
 
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddBooleanParameter("Trigger", "T", "flip to true and THEN false to trigger selection", GH_ParamAccess.item, false);
-            pManager.AddTextParameter("Prompt", "P", "text prompt in the Rhino cmd", GH_ParamAccess.item, "select objects for Synapse");
+            pManager.AddBooleanParameter("Trigger", "T", "flip to true and then false to trigger selection\nunless \"OnTrue\" is true", GH_ParamAccess.item, false);
+            pManager.AddBooleanParameter("OnTrue", "B", "true to trigger selection whenver T is true\nfalse to act like a button", GH_ParamAccess.item, false);
             pManager.AddIntegerParameter("Mode", "M", "mode of selection", GH_ParamAccess.item, -1);
             Param_Integer pint = pManager[2] as Param_Integer;
             pint.AddNamedValue("Anything", -1);
@@ -70,7 +67,6 @@ namespace Synapse
         {
             pManager.AddTextParameter("GUID", "I", "guid of selected", GH_ParamAccess.list);
             pManager.AddGeometryParameter("Object", "O", "selected geometry", GH_ParamAccess.list);
-            pManager.AddGenericParameter("Attribute", "A", "selected object attribute", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -83,32 +79,30 @@ namespace Synapse
 
             int ot = -1;
             bool click = false;
-            string msg = "select objects for Synapse";
+            bool ontrue = false;
             DA.GetData(0, ref click);
-            DA.GetData(1, ref msg);
+            DA.GetData(1, ref ontrue);
             DA.GetData(2, ref ot);
             otype = ot == -1 ? ObjectType.AnyObject : (ObjectType)ot;
-            
-
-            if (running) return;
 
             if (click && !run)
                 run = true;
-            else if (!click && run)
-                Trigger(msg);
+            else if (!click && run && !running)
+                Trigger();
+            else if (click && run && ontrue && !running)
+                Trigger();
             else
             {
                 run = false;
                 running = false;
             }
-            
+
             if (picked != null)
             {
                 DA.SetDataList(0, picked.Select(i => i.ObjectId.ToString()));
                 DA.SetDataList(1, picked.Select(i => i.Geometry()));
-                DA.SetDataList(2, picked.Select((i) => new GH_ObjectWrapper(i.Object().Attributes)));
             }
-
+            
         }
 
         /// <summary>
@@ -124,7 +118,7 @@ namespace Synapse
 
         public override GH_Exposure Exposure
         {
-            get { return GH_Exposure.secondary; }
+            get { return GH_Exposure.secondary| GH_Exposure.hidden; }
         }
 
         /// <summary>
@@ -132,7 +126,7 @@ namespace Synapse
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("97E371C2-3847-4303-B723-D61D130F5FAA"); }
+            get { return new Guid("6021cb96-4644-40ad-b68a-8650fb96a911"); }
         }
     }
 }
