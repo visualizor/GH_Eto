@@ -24,7 +24,7 @@ namespace Synapse
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddBooleanParameter("Show", "T", "trigger to show pop up window", GH_ParamAccess.item, false);
+            pManager.AddBooleanParameter("Show", "T", "true to trigger pop up window", GH_ParamAccess.item, false);
             pManager.AddTextParameter("Message", "M", "message to display", GH_ParamAccess.item, "no message");
             pManager.AddIntegerParameter("Urgency", "U", "type of message shown", GH_ParamAccess.item, 0);
             Param_Integer prm2 = pManager[2] as Param_Integer;
@@ -59,7 +59,7 @@ namespace Synapse
         }
 
 
-        public override GH_Exposure Exposure => GH_Exposure.hidden;
+        public override GH_Exposure Exposure => GH_Exposure.secondary|GH_Exposure.obscure;
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -68,7 +68,7 @@ namespace Synapse
         {
             get
             {
-                return null;
+                return Properties.Resources.msgbox;
             }
         }
 
