@@ -69,8 +69,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("0.4.2")]
-[assembly: AssemblyFileVersion("0.4.2")]
+[assembly: AssemblyVersion("0.5")]
+[assembly: AssemblyFileVersion("0.5")]
 
 // Make compatible with Rhino Installer Engine
 [assembly: AssemblyInformationalVersion("2")]

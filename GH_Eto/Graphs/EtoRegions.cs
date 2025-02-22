@@ -16,9 +16,9 @@ namespace Synapse
         public EtoRegions()
           : base()
         {
-            Name = "SnpHierarchy";
-            NickName = "SHrch";
-            Description = "rectangular areas showing proportions";
+            Name = "SnpProportion";
+            NickName = "SPrPr";
+            Description = "rectangular regions with area showing proportions";
             Category = "Synapse";
             SubCategory = "Graphics";
         }

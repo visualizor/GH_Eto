@@ -27,7 +27,7 @@ namespace Synapse
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
+        protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddTextParameter("Property", "P", "property to set", GH_ParamAccess.list);
             pManager[0].DataMapping = GH_DataMapping.Flatten;
@@ -41,7 +41,7 @@ namespace Synapse
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
+        protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddTextParameter("All Properties", "A", "list of all accessible properties", GH_ParamAccess.list);
             pManager.AddGenericParameter("Control", "C", "control to go into a container or the listener", GH_ParamAccess.item);
@@ -97,6 +97,8 @@ namespace Synapse
                 g.ReloadData(ri);
         }
 
+
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
         /// <summary>
         /// Provides an Icon for the component.
         /// </summary>
