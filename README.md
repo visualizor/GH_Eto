@@ -37,10 +37,10 @@ These are mostly helper components working in tandem. Some `Eto.Forms` objects r
 A special component in parameters is the `ValueQuery` component. It listens to any control element and reports its value. This is the critical link between the GUI a user creates and the Grasshopper canvas. For example, when wired to a `SynapseTextBox`, this component will refresh and report the text content whenever a user types in the text box. Sometimes a "container" may be queried too such as the `WebCtrls` component.
 #### Examples
 A walkthrough of Synapse component and how they are set up can be found [here](https://www.youtube.com/embed/tbC_d84EmuU). Skip to about 3:30 mark for the actual Synapse set-up. Download the [example file](https://github.com/visualizor/GH_Eto/raw/master/SynapseExample.gh) yourself and see thigns in action.
-#### Fixed Interface
-For simplicity in working with Grasshopper's data flow model, Synapse components were created to never be edited while they are shown. Each time the "S" is toggled to `true` on the `SynapseWindow`, a new `Eto.Forms.Form` is painted. If certain controls must be edited, the window should be closed first. Therefore controls cannot be modified dynamically while the GUI is in use.
+#### Static Interface
+For simplicity in working with Grasshopper's data flow model, Synapse components were created to never be edited while they are shown. Each time the "S" was toggled to `true` on the `SynapseWindow`, a new `Eto.Forms.Form` was painted. If certain controls must be edited, the window should be closed first. Therefore controls could not be modified dynamically while the GUI was in use.
 
-*v0.3 onwards, there is an option to enable live property edit in the context menu of `SWindow` component. However edits through "P" and "V" parameters will trigger a window re-instantiation. Use `ValueOverride` if you wish to dynamically change control values (only a few component can be altered this way).*
+*v0.3 onwards, there is an option to enable live property edit in the context menu of `SWindow` component. However edits through "P" and "V" parameters will trigger a window re-instantiation. Since v0.5, you can use `ValueOverride` if you wish to dynamically change control values.*
 ## FAQs
 #### Why are controls disappearing in the GUI?
 This is likely due to changing parameters on the Grasshopper component. Once a Synapse window is shown, controls upstream often cannot be updated without re-launching new windows.
