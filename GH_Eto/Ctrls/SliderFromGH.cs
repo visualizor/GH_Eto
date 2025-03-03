@@ -9,7 +9,7 @@ using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Special;
 using Grasshopper.Kernel.Types;
 
-namespace Synapse.Ctrls
+namespace Synapse
 {
     public class SliderFromGH : LabeledSlider
     {

@@ -6,6 +6,7 @@ using Eto.Drawing;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using wf=System.Windows.Forms;
+using GH_IO.Serialization;
 
 namespace Synapse
 {
@@ -372,6 +373,18 @@ namespace Synapse
                 "Width: integer",
                 "Orientation: Eto.Forms.Orientation",
             });
+        }
+
+
+        public override bool Write(GH_IWriter writer)
+        {
+            writer.SetBoolean("live", live);
+            return base.Write(writer);
+        }
+        public override bool Read(GH_IReader reader)
+        {
+            reader.TryGetBoolean("live", ref live);
+            return base.Read(reader);
         }
 
         /// <summary>
