@@ -482,6 +482,7 @@ namespace Synapse
             label.Text = val.ToString("0."+new string('#',maxdeci));
 
             Orientation = Orientation.Horizontal;
+            VerticalContentAlignment = VerticalAlignment.Center;
             Items.Add(slider);
             Items.Add(label);
             Spacing = 2;
