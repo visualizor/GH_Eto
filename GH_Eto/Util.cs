@@ -1345,9 +1345,9 @@ namespace Synapse
     internal class ESwitch : Drawable
     {
         private bool _isOn;
-        public Color ActiveColor = Colors.DimGray;
-        public Color InactiveColor = Colors.LightGrey;
-        public Color KnobColor = Colors.White;
+        private Color _activeColor = Colors.DimGray;
+        private Color _inactiveColor = Colors.LightGrey;
+        private Color _knobColor = Colors.White;
 
         /// <summary>
         ///  Fires whenever the toggle changes state.
@@ -1365,8 +1365,47 @@ namespace Synapse
                 if (_isOn != value)
                 {
                     _isOn = value;
-                    Invalidate();//queues repaint
+                    Invalidate(); // queues repaint
                     OnToggled();
+                }
+            }
+        }
+
+        public Color ActiveColor
+        {
+            get => _activeColor;
+            set
+            {
+                if (_activeColor != value)
+                {
+                    _activeColor = value;
+                    Invalidate();
+                }
+            }
+        }
+
+        public Color InactiveColor
+        {
+            get => _inactiveColor;
+            set
+            {
+                if (_inactiveColor != value)
+                {
+                    _inactiveColor = value;
+                    Invalidate();
+                }
+            }
+        }
+
+        public Color KnobColor
+        {
+            get => _knobColor;
+            set
+            {
+                if (_knobColor != value)
+                {
+                    _knobColor = value;
+                    Invalidate();
                 }
             }
         }
@@ -1390,7 +1429,6 @@ namespace Synapse
             Paint += OnPaint;
         }
 
-        
         private void OnPaint(object sender, PaintEventArgs e)
         {
             var g = e.Graphics;
@@ -1423,7 +1461,7 @@ namespace Synapse
             g.FillEllipse(togglecirclr, cirX, cirY, cirDia, cirDia);
         }
 
-        // ADDS a helper method for the rounded rectangle
+        // Adds a helper method for the rounded rectangle
         private void AddRoundedRectangle(GraphicsPath path, RectangleF rect, float radius)
         {
             // Ensure radius isn't bigger than half the smallest dimension
@@ -1450,12 +1488,12 @@ namespace Synapse
             path.CloseFigure();
         }
 
-
         protected virtual void OnToggled()
         {
             Toggled?.Invoke(this, EventArgs.Empty);
         }
     }
+
 
     public class RangeSliderEventArgs : EventArgs
     {
