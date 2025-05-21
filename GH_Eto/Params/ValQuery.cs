@@ -177,6 +177,12 @@ namespace Synapse
                 listenees.Add(rsl.ID);
                 rsl.ValueChanged += OnCtrl;
             }
+            else if (ctrl is Form ef)
+            {
+                listenees.Add(ef.ID);
+                ef.Shown += OnCtrl;
+                ef.Closed += OnCtrl;
+            }
             else
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, " unrecognized control detected");
         }
@@ -243,6 +249,8 @@ namespace Synapse
                         i);
                 val_out.AddRange(vs);
             }
+            else if (ctrl is Form ef)
+                val_out.Add(new GH_ObjectWrapper(ef.Visible));
             else
                 val_out.Add(new GH_ObjectWrapper());
 

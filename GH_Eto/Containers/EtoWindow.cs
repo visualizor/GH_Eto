@@ -60,6 +60,7 @@ namespace Synapse
                 Width = 400,
                 Title = "an Eto window",
                 Tag = EWinTag.Indie,
+                ID = Guid.NewGuid().ToString(),
             };
 
             if (uitheme && UISync!=null)
