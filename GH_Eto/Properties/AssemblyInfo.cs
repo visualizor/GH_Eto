@@ -11,6 +11,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("Will Wang")]
 [assembly: AssemblyProduct("Synapse")]
 [assembly: AssemblyCopyright(@"
+Eto authors
+Copyright © 2011-2022 Curtis Wensley. All Rights Reserved.
+Copyright © 2012-2013 Vivek Jhaveri. All Rights Reserved.
+
 Synapse, Grasshopper plugin to make GUIs based on Eto.Forms
 Copyright © 2025  Zichu Will Wang
 
