@@ -51,8 +51,8 @@
       <HintPath>C:\Program Files\Rhino 7\System\Eto.Wpf.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="GH_IO, Version=8.15.25019.13001, Culture=neutral, PublicKeyToken=6a29997d2e6b4f97, processorArchitecture=MSIL">
-      <HintPath>..\packages\Grasshopper.8.15.25019.13001\lib\net48\GH_IO.dll</HintPath>
+    <Reference Include="GH_IO">
+      <HintPath>C:\Program Files\Rhino 7\Plug-ins\Grasshopper\GH_IO.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Grasshopper">

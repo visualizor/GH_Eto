@@ -52,7 +52,53 @@ namespace Synapse
             DA.GetData(2, ref gobj);
             bool[] r = new bool[p.Count];
 
-            if (gobj.Value is Control ctrl)
+            if (gobj.Value is ComboSlider cslider)
+            {
+                for (int i = 0; i < p.Count; i++)
+                {
+                    string n = p[i];
+                    object val;
+                    try { val = v[i].Value; }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "P, V should correspond each other");
+                        return;
+                    }
+                    r[i] = true;
+                    switch (n) 
+                    {
+                        case "Max":
+                            if (val is GH_Number gnumM)
+                                cslider.SetMax(gnumM.Value);
+                            else if (val is GH_Integer gintM)
+                                cslider.SetMax(gintM.Value);
+                            else
+                                r[i] =false;
+                            break;
+                        case "Min":
+                            if (val is GH_Number gnumm)
+                                cslider.SetMin(gnumm.Value);
+                            else if (val is GH_Integer gintm)
+                                cslider.SetMin(gintm.Value);
+                            else
+                                r[i] = false;
+                            break;
+                        case "Value":
+                            if (val is GH_Number gnumv)
+                                cslider.SetVal(gnumv.Value);
+                            else if (val is GH_Integer gintv)
+                                cslider.SetVal(gintv.Value);
+                            else
+                                r[i] = false;
+                            break;
+                        default:
+                            r[i] = false;
+                            break;
+                    }
+                }
+                DA.SetDataList(0, r);
+            }
+            else if (gobj.Value is Control ctrl)
             {
                 for (int i = 0; i < p.Count; i++)
                 {
@@ -68,12 +114,12 @@ namespace Synapse
                     try 
                     { 
                         Util.SetProp(ctrl, n, Util.GetGooVal(val));
-                        r.SetValue(true, i);
+                        r[i] = true;
                     }
                     catch (Exception ex) 
                     { 
-                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message); 
-                        r.SetValue(false, i);
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, ex.Message);
+                        r[i] = false;
                     }
                 }
                 DA.SetDataList(0, r);
