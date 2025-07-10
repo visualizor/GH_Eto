@@ -62,7 +62,8 @@
     <Reference Include="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
     <Reference Include="PresentationFramework" />
     <Reference Include="Rhino.UI">
-      <HintPath>C:\Program Files\Rhino 8\System\Rhino.UI.dll</HintPath>
+      <HintPath>C:\Program Files\Rhino 7\System\Rhino.UI.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="RhinoCommon">
       <HintPath>C:\Program Files\Rhino 7\System\RhinoCommon.dll</HintPath>
