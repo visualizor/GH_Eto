@@ -30,6 +30,10 @@ using Rhino.PlugIns;
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SynapseRCP")]
 [assembly: AssemblyCopyright(@"
+Eto authors
+Copyright © 2011-2022 Curtis Wensley. All Rights Reserved.
+Copyright © 2012-2013 Vivek Jhaveri. All Rights Reserved.
+
 Synapse, Grasshopper plugin to make GUIs based on Eto.Forms
 Copyright © 2025  Zichu Will Wang
 
@@ -69,8 +73,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("0.5")]
-[assembly: AssemblyFileVersion("0.5")]
+[assembly: AssemblyVersion("0.5.1")]
+[assembly: AssemblyFileVersion("0.5.1")]
 
 // Make compatible with Rhino Installer Engine
 [assembly: AssemblyInformationalVersion("2")]

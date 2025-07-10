@@ -11,6 +11,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("Will Wang")]
 [assembly: AssemblyProduct("Synapse")]
 [assembly: AssemblyCopyright(@"
+Eto authors
+Copyright © 2011-2022 Curtis Wensley. All Rights Reserved.
+Copyright © 2012-2013 Vivek Jhaveri. All Rights Reserved.
+
 Synapse, Grasshopper plugin to make GUIs based on Eto.Forms
 Copyright © 2025  Zichu Will Wang
 
@@ -49,5 +53,5 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.5")]
-[assembly: AssemblyFileVersion("0.5")]
+[assembly: AssemblyVersion("0.5.1")]
+[assembly: AssemblyFileVersion("0.5.1")]
