@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using Eto.Drawing;
 using Eto.Forms;
-using Eto.Drawing;
-using Grasshopper.Kernel.Types;
 using Grasshopper;
+using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Special;
+using Grasshopper.Kernel.Types;
+using Rhino;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
+using rhg = Rhino.Geometry;
 using wdraw = System.Drawing;
 using wf = System.Windows.Forms;
-using Grasshopper.GUI.Canvas;
-using rhg = Rhino.Geometry;
 
 namespace Synapse
 {
@@ -133,6 +134,62 @@ namespace Synapse
             var gdoc = gcv.Document;
             gcv.InstantiateNewObject(cid, loc, false);
             return gdoc.Objects.Last();
+        }
+
+        /// <summary>
+        /// Expire/schedule on the correct document.
+        /// If obj is inside a cluster (possibly nested), bubble outward until the outermost owner,
+        /// then expire that (cluster or obj) on the final outer doc so the canvas solves.
+        /// </summary>
+        public static void ClusterSafeExpire(IGH_DocumentObject obj, bool recompute = true, int delayMs = 1)
+        {
+            if (obj == null) return;
+
+            RhinoApp.InvokeOnUiThread((Action)(() =>
+            {
+                var innerDoc = obj.OnPingDocument();
+                if (innerDoc == null) return;
+
+                // Always expire the object in its own doc (marks it dirty).
+                innerDoc.ScheduleSolution(delayMs, _ =>
+                {
+                    if (!ReferenceEquals(obj.OnPingDocument(), innerDoc)) return;
+                    obj.ExpireSolution(recompute);
+                });
+
+                // Now bubble outward through clusters and expire the outermost owner.
+                IGH_DocumentObject target = obj;
+                var doc = innerDoc;
+
+                while (TryFindOwningCluster(doc, out var cluster, out var outerDoc)
+                       && cluster != null && outerDoc != null)
+                {
+                    target = cluster;
+                    doc = outerDoc;
+                }
+
+                // If we bubbled at least one level, target will be a cluster component.
+                // Expire that on the final outer doc so the canvas actually solves.
+                if (!ReferenceEquals(target, obj))
+                {
+                    doc.ScheduleSolution(delayMs, _ =>
+                    {
+                        if (!ReferenceEquals(target.OnPingDocument(), doc)) return;
+                        target.ExpireSolution(recompute);
+                    });
+                }
+            }));
+        }
+
+        private static bool TryFindOwningCluster(GH_Document maybeInternalDoc, out GH_Cluster cluster,out GH_Document outerDoc)
+        {
+            outerDoc = null;
+
+            cluster = maybeInternalDoc.Owner as GH_Cluster;
+            if (cluster == null) return false;
+
+            outerDoc = cluster.OnPingDocument();
+            return outerDoc != null;
         }
 
     }

@@ -263,14 +263,14 @@ namespace Synapse
             if (s is Button btn)
                 btnpress[btn.ID] = true;
             else return;
-            ExpireSolution(true);
+            Util.ClusterSafeExpire(this);
         }
         public void OnBtnUp(object s, EventArgs e)
         {
             if (s is Button btn)
                 btnpress[btn.ID] = false;
             else return;
-            ExpireSolution(true);
+            Util.ClusterSafeExpire(this);
         }
         public void OnEnterDn(object s, KeyEventArgs e)
         {
@@ -278,7 +278,7 @@ namespace Synapse
             {
                 if (s is Button btn)
                     btnpress[btn.ID] = true;
-                ExpireSolution(true);
+                Util.ClusterSafeExpire(this);
             }
         }
         public void OnEnterUp(object s, KeyEventArgs e)
@@ -287,7 +287,7 @@ namespace Synapse
             {
                 if (s is Button btn)
                     btnpress[btn.ID] = false;
-                ExpireSolution(true);
+                Util.ClusterSafeExpire(this);
             }
         }
         public void OnBtnClick(object s, EventArgs e)
@@ -295,7 +295,7 @@ namespace Synapse
             if (s is Button btn)
                 btnpress[btn.ID] = true;
             else return;
-            ExpireSolution(true);
+            Util.ClusterSafeExpire(this);
         }
 
         protected void OnSlMouseUp(object s, MouseEventArgs e)
@@ -303,16 +303,16 @@ namespace Synapse
             if (s is Slider sl)
                 if (sl.Tag is ComboSlider csl)
             {
-                if (e.Buttons == MouseButtons.Alternate)
-                    csl.OnUserVal(s, e);
-                else
-                    ExpireSolution(true);
+                    if (e.Buttons == MouseButtons.Alternate)
+                        csl.OnUserVal(s, e);
+                    else
+                        Util.ClusterSafeExpire(this);
             }
             
         }
         protected void OnCtrl(object s, EventArgs e)
         {
-            ExpireSolution(true);
+            Util.ClusterSafeExpire(this);
         }
         protected void OnWebView(object s, WebViewLoadingEventArgs e)
         {
@@ -372,7 +372,7 @@ return valstr;", prm));
 
                     e.Cancel = true;
                 }
-            ExpireSolution(true); //safe, we're in event handler so not expiring during a solution
+            Util.ClusterSafeExpire(this); //safe, we're in event handler so not expiring during a solution
         }
         #endregion
 
